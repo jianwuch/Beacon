@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.igrs.beacon">
-
+  <!--使用蓝牙所需要的权限-->
+  <uses-permission android:name="android.permission.BLUETOOTH" />
+  <!--使用扫描和设置蓝牙的权限（申明这一个权限必须申明上面一个权限）-->
+  <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+  <uses-feature android:name="android.hardware.location.gps" />
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
   <application
       android:allowBackup="true"
       android:icon="@mipmap/ic_launcher"

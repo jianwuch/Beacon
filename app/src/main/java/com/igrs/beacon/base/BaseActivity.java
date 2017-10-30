@@ -1,4 +1,4 @@
-package base;
+package com.igrs.beacon.base;
 
 import android.os.Bundle;
 import android.os.PersistableBundle;
