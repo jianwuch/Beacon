@@ -7,31 +7,36 @@ import android.view.View;
 import android.view.ViewGroup;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import com.igrs.beacon.util.DialogManager;
+
+import static android.icu.lang.UCharacter.GraphemeClusterBreak.T;
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BaseFragment extends Fragment {
-    private Unbinder unbinder;
+public abstract class BaseFragment extends Fragment {
     private int mLayoutId;
+    private DialogManager mDialogManager;
     public BaseFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(setContentView(), container, false);
-        unbinder = ButterKnife.bind(this, view);
-        return view;
-    }
-
-    protected int setContentView() {
-       return 0;
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
-        unbinder.unbind();
+        dissmissProgress();
+    }
+
+    public void showProcess() {
+        if (mDialogManager == null && null != getActivity()) {
+            mDialogManager = new DialogManager(getActivity());
+        }
+        mDialogManager.showProgress();
+    }
+
+    public void dissmissProgress() {
+        if (null != mDialogManager) {
+            mDialogManager.dissmissDialog();
+        }
     }
 }
