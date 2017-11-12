@@ -60,6 +60,9 @@ public abstract class BaseListFragment extends BaseFragment {
         if (null != onRefreshListener) {
             swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
         }
+
+        //点击事件
+
     }
 
     @Override

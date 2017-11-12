@@ -1,12 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-  <TextView
-      android:id="@+id/device_info"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/device_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/formTitleTextVeiw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Beacon类型:" />
+
+        <TextView
+            android:id="@+id/beacon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="其他beacon"
+            tools:text="beacon前缀" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/formTitleTextVeiw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UUID:" />
+
+        <TextView
+            android:id="@+id/uuid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="UUID" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/formTitleTextVeiw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MAC:" />
+
+        <TextView
+            android:id="@+id/mac"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="MAC" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/formTitleTextVeiw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Major:" />
+
+        <TextView
+            android:id="@+id/mac"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Major" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/formTitleTextVeiw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Minor:" />
+
+
+        <TextView
+            android:id="@+id/minor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="Minor" />
+    </LinearLayout>
 
 </LinearLayout>
