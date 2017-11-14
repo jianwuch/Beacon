@@ -15,12 +15,6 @@ import butterknife.Unbinder;
 public class BaseActivity extends AppCompatActivity {
     private Unbinder mUnbinder;
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState,
-            @Nullable PersistableBundle persistentState) {
-        super.onCreate(savedInstanceState, persistentState);
-    }
-
-    @Override
     public void setContentView(@LayoutRes int layoutResID) {
         super.setContentView(layoutResID);
         mUnbinder = ButterKnife.bind(BaseActivity.this);

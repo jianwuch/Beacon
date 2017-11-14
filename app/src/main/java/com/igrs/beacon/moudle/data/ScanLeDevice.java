@@ -12,6 +12,8 @@ public class ScanLeDevice {
     private int riis;
     private byte[] scanRecord;
 
+    public ScanLeDevice() {
+    }
     public ScanLeDevice(BluetoothDevice bluetoothDevice, int riis, byte[] scanRecord) {
         this.bluetoothDevice = bluetoothDevice;
         this.riis = riis;

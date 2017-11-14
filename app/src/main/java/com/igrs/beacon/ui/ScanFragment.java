@@ -1,28 +1,34 @@
 package com.igrs.beacon.ui;
 
-import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import com.igrs.beacon.base.BaseFragment;
+import com.igrs.beacon.R;
 import com.igrs.beacon.base.BaseListFragment;
+import com.igrs.beacon.moudle.data.BleBeacon;
+import com.igrs.beacon.ui.adapter.ScanBleAdapter;
 
 /**
  * Created by jove.chen on 2017/11/10.
  */
 
-public class ScanFragment extends BaseListFragment {
+public class ScanFragment extends BaseListFragment<BleBeacon> {
 
     @Override
     protected RecyclerView.Adapter initAdapter() {
-        return null;
+        return new ScanBleAdapter(R.layout.scan_device_info, mDatas);
     }
 
     @Override
     protected SwipeRefreshLayout.OnRefreshListener initRefreshListener() {
         return null;
+    }
+
+    @Override
+    protected void loadData() {
+        //测试代码
+        for (int i = 0; i < 10; i++) {
+            mDatas.add(new BleBeacon());
+        }
+        notifyAdapter();
     }
 }

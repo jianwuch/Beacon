@@ -1,6 +1,5 @@
 package com.igrs.beacon.base;
 
-import android.gesture.GestureOverlayView;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -14,18 +13,21 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import com.igrs.beacon.R;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by jove.chen on 2017/11/10.
  */
 
-public abstract class BaseListFragment extends BaseFragment {
+public abstract class BaseListFragment<T> extends BaseFragment {
     @BindView(R.id.recycle_view) RecyclerView recycleView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     Unbinder unbinder;
     private View mRootView;
     private SwipeRefreshLayout.OnRefreshListener onRefreshListener;
     private RecyclerView.Adapter adapter;
+    protected List<T> mDatas;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,9 +62,9 @@ public abstract class BaseListFragment extends BaseFragment {
         if (null != onRefreshListener) {
             swipeRefreshLayout.setOnRefreshListener(onRefreshListener);
         }
-
-        //点击事件
-
+        mDatas = new ArrayList<>();
+        //加载数据
+        loadData();
     }
 
     @Override
@@ -71,6 +73,12 @@ public abstract class BaseListFragment extends BaseFragment {
         unbinder.unbind();
     }
 
+    public void notifyAdapter() {
+        if (null != adapter) {
+            adapter.notifyDataSetChanged();
+        }
+    }
     protected abstract RecyclerView.Adapter initAdapter();
     protected abstract SwipeRefreshLayout.OnRefreshListener initRefreshListener();
+    protected abstract void loadData();
 }

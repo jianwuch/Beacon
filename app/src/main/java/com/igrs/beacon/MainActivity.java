@@ -1,49 +1,41 @@
 package com.igrs.beacon;
 
-import android.net.Uri;
-import android.support.annotation.IdRes;
-import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
-import android.widget.FrameLayout;
-import com.igrs.beacon.base.BaseActivity;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import butterknife.BindView;
-import com.igrs.beacon.ui.ConnectFragment;
-import com.roughike.bottombar.BottomBar;
-import com.roughike.bottombar.OnTabReselectListener;
+import butterknife.ButterKnife;
+import com.igrs.beacon.base.BaseActivity;
 
-public class MainActivity extends BaseActivity implements ConnectFragment.OnFragmentInteractionListener{
-    @BindView(R.id.bottomBar) BottomBar bottomBar;
-    @BindView(R.id.main_container) FrameLayout containerLayout;
+public class MainActivity extends BaseActivity {
+    @BindView(R.id.recycle_view) RecyclerView recycleView;
+    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.tool_bar) Toolbar toolBar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        bottomBar.setOnTabReselectListener(new OnTabReselectListener() {
-            @Override
-            public void onTabReSelected(@IdRes int tabId) {
-                switch (tabId){
-                    case R.id.tab_favorites:
-                        break;
-                    case R.id.tab_friends:
-                        break;
-                    case R.id.tab_nearby:
-                        break;
-                    default:
-                }
-            }
-        });
-
-        showFragment();
-    }
-
-    private void showFragment() {
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add(R.id.main_container, ConnectFragment.newInstance("", "")).commit();
+        setSupportActionBar(toolBar);
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
-
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_page_menu, menu);
+        return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.by_rssi:
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 }

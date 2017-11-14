@@ -29,4 +29,7 @@ public class BleBeacon extends ScanLeDevice {
     public BleBeacon(BluetoothDevice bluetoothDevice, int riis, byte[] scanRecord) {
         super(bluetoothDevice, riis, scanRecord);
     }
+
+    public BleBeacon() {
+    }
 }
