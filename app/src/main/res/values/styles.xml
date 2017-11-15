@@ -1,7 +1,7 @@
 <resources>
 
   <!-- Base application theme. -->
-  <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+  <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
     <!-- Customize your theme here. -->
     <item name="colorPrimary">@color/colorPrimary</item>
     <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -9,15 +9,19 @@
 
     <!--recycler分割线-->
     <item name="android:listDivider">@color/color_divider</item>
-  </style>
 
-  <style name="ActivityTheme" parent="Theme.AppCompat.Light.NoActionBar">
-
-
+    <!--保证actionMode覆盖在Toolbar上面-->
+    <item name="windowActionModeOverlay">true</item>
+    <item name="windowActionBarOverlay">true</item>
   </style>
 
   <style name="formTitleTextVeiw">
     <item name="android:textColor">@color/textColorPrimary</item>
     <item name="android:layout_marginRight">10dp</item>
+  </style>
+
+  <style name="chooseModeBatchType">
+    <item name="android:textSize">12sp</item>
+    <item name="android:background">@drawable/choose_btn_bg</item>
   </style>
 </resources>
