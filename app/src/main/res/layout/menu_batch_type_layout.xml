@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_alignParentBottom="true"
+    android:orientation="vertical">
+  <!--  <RadioGroup
+        android:id="@+id/batch_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:background="#cccccc">
+      <RadioButton
+          android:id="@+id/type_default"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="批量修改参数"/>
+
+      <RadioButton
+          android:id="@+id/type_name"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="批量修改名称"/>
+
+      <RadioButton
+          android:id="@+id/type_passworld"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:text="批量修改密码"/>
+    </RadioGroup>
+    <Button
+        android:id="@+id/choose_type"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="选中批量修改类型" />-->
+
+  <View
+      android:layout_width="match_parent"
+      android:layout_height="0.5dp"
+      android:background="?android:attr/listDivider" />
+  <LinearLayout
+      android:padding="5dp"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@android:color/white"
+      android:gravity="center_horizontal"
+      android:orientation="horizontal">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/choose_btn_bg"
+        android:text="修改参数" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:background="@drawable/choose_btn_bg"
+        android:text="修改密码" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="4dp"
+        android:background="@drawable/choose_btn_bg"
+        android:text="修改名称" />
+  </LinearLayout>
+</LinearLayout>

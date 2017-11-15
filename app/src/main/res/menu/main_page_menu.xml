@@ -2,20 +2,6 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <group android:id="@+id/sort_group"
-      android:enabled="true"
-      android:checkableBehavior="single">
-    <item android:id="@+id/by_rssi"
-        app:showAsAction="always"
-        android:title="强度排序"
-        android:icon="@drawable/sort_rssi_selector" />
-
-    <item android:id="@+id/by_rssi"
-        app:showAsAction="always"
-        android:title="名称排序"
-        android:icon="@drawable/sort_name_selector"/>
-  </group>
-
   <item android:id="@+id/action_batch"
     android:title="批量处理"
     android:icon="@drawable/batch_processing"

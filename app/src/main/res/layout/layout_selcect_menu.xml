@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="?attr/actionBarSize"
+    android:background="@color/color_select_menu_bg"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:paddingLeft="@dimen/dp_10"
+    android:paddingRight="@dimen/dp_10"
+    android:layout_marginTop="-55dp">
+
+  <Button
+      android:id="@+id/cancle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textColor="@android:color/white"
+      android:text="取消"
+      android:background="@drawable/menu_btn_bg"/>
+
+  <TextView
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_weight="1"
+      android:textColor="@android:color/white"
+      android:gravity="center_horizontal"
+      android:text="已选(0)项"/>
+
+  <Button
+      android:id="@+id/select_all"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:textColor="@android:color/white"
+      android:text="全选"
+      android:background="@drawable/menu_btn_bg"/>
+</LinearLayout>
