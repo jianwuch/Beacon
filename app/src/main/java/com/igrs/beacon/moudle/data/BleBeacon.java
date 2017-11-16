@@ -1,12 +1,13 @@
 package com.igrs.beacon.moudle.data;
 
 import android.bluetooth.BluetoothDevice;
+import com.inuker.bluetooth.library.search.SearchResult;
 
 /**
  * Created by jove.chen on 2017/11/10.
  */
 
-public class BleBeacon extends ScanLeDevice {
+public class BleBeacon extends SearchResult {
     private String major;
     private String minor;
 
@@ -28,8 +29,5 @@ public class BleBeacon extends ScanLeDevice {
 
     public BleBeacon(BluetoothDevice bluetoothDevice, int riis, byte[] scanRecord) {
         super(bluetoothDevice, riis, scanRecord);
-    }
-
-    public BleBeacon() {
     }
 }

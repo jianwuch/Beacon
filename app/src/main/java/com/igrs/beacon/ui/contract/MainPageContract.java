@@ -11,14 +11,14 @@ import java.util.List;
 
 public class MainPageContract {
     public interface IHomeView extends IListViewView<List<BleBeacon>> {
-        void newBeacon();
+        public void newBeacon();
     }
 
-    public abstract class IHomePresenter  extends BasePresenter{
+    public static abstract class IHomePresenter  extends BasePresenter<IHomeView>{
 
         //设置过滤条件
-        abstract void setFilter();
+        public abstract void setFilter();
 
-        abstract void scanBeacon();
+        public abstract void scanBeacon();
     }
 }

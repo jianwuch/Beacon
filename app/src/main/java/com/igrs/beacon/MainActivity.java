@@ -16,19 +16,19 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.igrs.beacon.base.BaseActivity;
 import com.igrs.beacon.moudle.data.BleBeacon;
 import com.igrs.beacon.ui.adapter.ScanBleAdapter;
+import com.igrs.beacon.ui.basemvp.BaseMvpActivity;
+import com.igrs.beacon.ui.contract.MainPageContract;
+import com.igrs.beacon.ui.presenter.HomePresenter;
 import com.igrs.beacon.util.ToastUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.R.attr.mode;
-
-public class MainActivity extends BaseActivity implements ActionMode.Callback {
+public class MainActivity extends BaseMvpActivity<List<BleBeacon>, HomePresenter>
+        implements ActionMode.Callback, MainPageContract.IHomeView {
     @BindView(R.id.recycle_view) RecyclerView recycleView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
     @BindView(R.id.tool_bar) Toolbar toolBar;
@@ -55,7 +55,13 @@ public class MainActivity extends BaseActivity implements ActionMode.Callback {
         initEvent();
     }
 
+    @Override
+    public HomePresenter initPresenter() {
+        return new HomePresenter();
+    }
+
     private void loadData() {
+        presenter.start();
         for (int i = 0; i < 10; i++) {
             mDatas.add(new BleBeacon());
         }
@@ -90,7 +96,6 @@ public class MainActivity extends BaseActivity implements ActionMode.Callback {
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public boolean onCreateActionMode(ActionMode mode, Menu menu) {
@@ -132,7 +137,6 @@ public class MainActivity extends BaseActivity implements ActionMode.Callback {
         animator.start();
     }
 
-
     private void initEvent() {
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -153,7 +157,7 @@ public class MainActivity extends BaseActivity implements ActionMode.Callback {
         });
     }
 
-    @OnClick({R.id.type_default, R.id.type_name, R.id.type_password})
+    @OnClick({ R.id.type_default, R.id.type_name, R.id.type_password })
     public void gotoEdit(View view) {
 
         //// TODO: 2017/11/16 判断数据是否选择
@@ -183,5 +187,25 @@ public class MainActivity extends BaseActivity implements ActionMode.Callback {
             mAdapter.setChooseMode(false);
         }
         showBatchAnim(isEditMode);
+    }
+
+    @Override
+    public void showDataFromPresenter(List<BleBeacon> data) {
+
+    }
+
+    @Override
+    public void loadMorePage() {
+
+    }
+
+    @Override
+    public void refresh() {
+
+    }
+
+    @Override
+    public void newBeacon() {
+
     }
 }
