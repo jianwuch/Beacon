@@ -10,6 +10,15 @@
     android:paddingTop="@dimen/dp_5"
     android:animateLayoutChanges="true"
     android:descendantFocusability="blocksDescendants">
+
+  <CheckBox
+      android:id="@+id/checkbox"
+      android:layout_gravity="center_vertical"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:clickable="false"
+      android:visibility="gone"
+      tools:visibility="visible"/>
   <LinearLayout
       android:layout_width="0dp"
       android:layout_height="wrap_content"
@@ -70,9 +79,4 @@
       android:layout_gravity="center_vertical"
       android:src="@drawable/battery_level" />
 
-  <CheckBox
-      android:id="@+id/checkbox"
-      android:layout_gravity="center_vertical"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content" />
 </LinearLayout>

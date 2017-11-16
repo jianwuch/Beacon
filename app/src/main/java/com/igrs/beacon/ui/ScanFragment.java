@@ -15,7 +15,7 @@ public class ScanFragment extends BaseListFragment<BleBeacon> {
 
     @Override
     protected RecyclerView.Adapter initAdapter() {
-        return new ScanBleAdapter(R.layout.scan_device_info, mDatas);
+        return new ScanBleAdapter(R.layout.item_scan_device_info, mDatas);
     }
 
     @Override

@@ -27,7 +27,7 @@ public class ScanDevicesAdapter extends RecyclerView.Adapter<ScanDevicesAdapter.
     public DevicesVH onCreateViewHolder(ViewGroup parent, int viewType) {
 
         return new DevicesVH(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.scan_device_info, parent, false));
+                .inflate(R.layout.item_scan_device_info, parent, false));
     }
 
     @Override
