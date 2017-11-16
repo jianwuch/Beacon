@@ -1,7 +1,10 @@
 package com.igrs.beacon.ui.presenter;
 
-import com.igrs.beacon.R;
+import android.util.Log;
+import com.igrs.beacon.moudle.data.BeaconWithCheckable;
 import com.igrs.beacon.moudle.data.BleBeacon;
+import com.igrs.beacon.moudle.data.iBeaconClass;
+import com.igrs.beacon.moudle.data.iBeaconClass.iBeacon;
 import com.igrs.beacon.ui.contract.MainPageContract;
 import com.igrs.beacon.ui.model.ble.ClientManager;
 import com.inuker.bluetooth.library.search.SearchRequest;
@@ -9,6 +12,8 @@ import com.inuker.bluetooth.library.search.SearchResult;
 import com.inuker.bluetooth.library.search.response.SearchResponse;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -16,14 +21,15 @@ import java.util.List;
  */
 
 public class HomePresenter extends MainPageContract.IHomePresenter {
-    public List<BleBeacon> getmDatas() {
+    public List<BeaconWithCheckable> getmDatas() {
         return mDatas;
     }
 
-    private List<BleBeacon> mDatas;
+    private List<BeaconWithCheckable> mDatas;
     @Override
     public void start() {
         mDatas = new ArrayList<>();
+        mView.showDataFromPresenter(mDatas);
         scanBeacon();
     }
 
@@ -74,6 +80,16 @@ public class HomePresenter extends MainPageContract.IHomePresenter {
             if (mDevices.size() > 0) {
                 mRefreshLayout.showState(AppConstants.LIST);
             }*/
+            BeaconWithCheckable ibeacon = iBeaconClass.fromScanData(device);
+            if (ibeacon != null) {
+                addDevice(ibeacon);
+            }
+            Collections.sort(mDatas, new Comparator<iBeacon>() {
+                @Override
+                public int compare(iBeacon h1, iBeacon h2) {
+                    return h2.rssi - h1.rssi;
+                }
+            });
         }
 
         @Override
@@ -87,4 +103,21 @@ public class HomePresenter extends MainPageContract.IHomePresenter {
             BluetoothLog.w("MainActivity.onSearchCanceled");
         }
     };
+
+    private void addDevice(BeaconWithCheckable device) { //更新beacon信息
+        if(device==null) {
+            Log.d("DeviceScanActivity ", "device==null ");
+            return;
+        }
+
+        for(int i=0;i<mDatas.size();i++){
+            String btAddress = mDatas.get(i).bluetoothAddress;
+            if(btAddress.equals(device.bluetoothAddress)){
+                mDatas.add(i+1, device);
+                mDatas.remove(i);
+                break;
+            }
+        }
+        mDatas.add(device);
+    }
 }

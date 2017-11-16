@@ -7,7 +7,7 @@ import java.util.Arrays;
  * Created by jove.chen on 2017/10/31.
  */
 
-public class ScanLeDevice extends BaseCheckAble{
+public class ScanLeDevice extends BaseCheckable {
     private BluetoothDevice bluetoothDevice;
     private int riis;
     private byte[] scanRecord;

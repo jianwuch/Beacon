@@ -18,7 +18,9 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.OnClick;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.igrs.beacon.moudle.data.BleBeacon;
+import com.igrs.beacon.moudle.data.BeaconWithCheckable;
+import com.igrs.beacon.moudle.data.iBeaconClass;
+import com.igrs.beacon.moudle.data.iBeaconClass.iBeacon;
 import com.igrs.beacon.ui.adapter.ScanBleAdapter;
 import com.igrs.beacon.ui.basemvp.BaseMvpActivity;
 import com.igrs.beacon.ui.contract.MainPageContract;
@@ -27,7 +29,7 @@ import com.igrs.beacon.util.ToastUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends BaseMvpActivity<List<BleBeacon>, HomePresenter>
+public class MainActivity extends BaseMvpActivity<List<BeaconWithCheckable>, HomePresenter>
         implements ActionMode.Callback, MainPageContract.IHomeView {
     @BindView(R.id.recycle_view) RecyclerView recycleView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
@@ -41,7 +43,6 @@ public class MainActivity extends BaseMvpActivity<List<BleBeacon>, HomePresenter
     @BindView(R.id.type_name) TextView typeName;
 
     private ScanBleAdapter mAdapter;
-    private List<BleBeacon> mDatas;
     private ActionMode actionMode;
 
     @Override
@@ -62,20 +63,13 @@ public class MainActivity extends BaseMvpActivity<List<BleBeacon>, HomePresenter
 
     private void loadData() {
         presenter.start();
-        for (int i = 0; i < 10; i++) {
-            mDatas.add(new BleBeacon());
-        }
     }
 
     private void initRecycleView() {
-        mDatas = new ArrayList<>();
-        mAdapter = new ScanBleAdapter(R.layout.item_scan_device_info, mDatas);
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recycleView.setLayoutManager(layoutManager);
         recycleView.addItemDecoration(
                 new DividerItemDecoration(MainActivity.this, layoutManager.getOrientation()));
-        recycleView.setAdapter(mAdapter);
     }
 
     @Override
@@ -189,9 +183,22 @@ public class MainActivity extends BaseMvpActivity<List<BleBeacon>, HomePresenter
         showBatchAnim(isEditMode);
     }
 
-    @Override
-    public void showDataFromPresenter(List<BleBeacon> data) {
 
+    @Override
+    public void newBeacon() {
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void showDataFromPresenter(List<BeaconWithCheckable> data) {
+        if (mAdapter==null) {
+            mAdapter = new ScanBleAdapter(R.layout.item_scan_device_info);
+            recycleView.setAdapter(mAdapter);
+        }
+
+        if (mAdapter.getData()==null) {
+            mAdapter.setNewData(data);
+        }
     }
 
     @Override
@@ -201,11 +208,6 @@ public class MainActivity extends BaseMvpActivity<List<BleBeacon>, HomePresenter
 
     @Override
     public void refresh() {
-
-    }
-
-    @Override
-    public void newBeacon() {
 
     }
 }

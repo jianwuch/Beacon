@@ -4,7 +4,7 @@ package com.igrs.beacon.moudle.data;
  * Created by jove.chen on 2017/11/16.
  */
 
-public class BaseCheckAble {
+public class BaseCheckable {
     private boolean isChecked;
 
     public boolean isChecked() {
