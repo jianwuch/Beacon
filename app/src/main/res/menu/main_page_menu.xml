@@ -1,14 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-  <item android:id="@+id/action_batch"
-    android:title="批量处理"
-    android:icon="@drawable/batch_processing"
-    app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_batch"
+        android:icon="@drawable/batch_processing"
+        android:title="批量处理"
+        app:showAsAction="never" />
 
-  <item android:id="@+id/action_search"
-      android:title="二维码扫描"
-      android:icon="@drawable/qr_code"
-      app:showAsAction="never"/>
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/qr_code"
+        android:title="二维码扫描"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_setting"
+        android:icon="@android:drawable/ic_menu_edit"
+        android:title="设置"
+        app:showAsAction="never" />
 </menu>

@@ -2,11 +2,13 @@ package com.igrs.beacon.ui.presenter;
 
 import android.util.Log;
 
-import com.igrs.beacon.moudle.data.BeaconWithCheckable;
+import com.clj.fastble.BleManager;
+import com.clj.fastble.callback.BleScanCallback;
+import com.clj.fastble.data.BleDevice;
+import com.clj.fastble.scan.BleScanRuleConfig;
+import com.igrs.beacon.MyApplication;
 import com.igrs.beacon.moudle.data.iBeacon;
 import com.igrs.beacon.ui.contract.MainPageContract;
-import com.igrs.beacon.ui.model.ble.ClientManager;
-import com.inuker.bluetooth.library.search.SearchRequest;
 import com.inuker.bluetooth.library.search.SearchResult;
 import com.inuker.bluetooth.library.search.response.SearchResponse;
 import com.inuker.bluetooth.library.utils.BluetoothLog;
@@ -20,17 +22,28 @@ import java.util.List;
  * Created by jove.chen on 2017/11/16.
  */
 
-public class HomePresenter extends MainPageContract.IHomePresenter {
-    private static final String TAG = HomePresenter.class.getSimpleName();
+public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
+    private static final String TAG = HomePresenterByFastBle.class.getSimpleName();
     public List<iBeacon> getmDatas() {
         return mDatas;
     }
-
+    private BleManager bleManager;
     private List<iBeacon> mDatas;
     @Override
     public void start() {
         mDatas = new ArrayList<>();
         mView.showDataFromPresenter(mDatas);
+        bleManager = BleManager.getInstance();
+        bleManager.init(MyApplication.getInstance());
+
+        BleScanRuleConfig scanRuleConfig = new BleScanRuleConfig.Builder()
+//                .setServiceUuids(serviceUuids)      // 只扫描指定的服务的设备，可选
+//                .setDeviceName(true, names)   // 只扫描指定广播名的设备，可选
+//                .setDeviceMac(mac)                  // 只扫描指定mac的设备，可选
+//                .setAutoConnect(isAutoConnect)      // 连接时的autoConnect参数，可选，默认false
+                .setScanTimeOut(10000)              // 扫描超时时间，可选，默认10秒
+                .build();
+        BleManager.getInstance().initScanRule(scanRuleConfig);
         scanBeacon();
     }
 
@@ -45,10 +58,33 @@ public class HomePresenter extends MainPageContract.IHomePresenter {
     }
 
     private void searchDevice() {
-        SearchRequest request = new SearchRequest.Builder()
-                .searchBluetoothLeDevice(5000, 2).build();
+        if (!BleManager.getInstance().isSupportBle()) {
+            mView.showToast("不支持ble");
+        }
 
-        ClientManager.getClient().search(request, mSearchResponse);
+        bleManager.enableBluetooth();
+
+        bleManager.scan(new BleScanCallback() {
+            @Override
+            public void onScanStarted(boolean success) {
+
+            }
+
+            @Override
+            public void onScanning(BleDevice result) {
+                SearchResult bleDevice = new SearchResult(result.getDevice(), result.getRssi(), result.getScanRecord());
+                iBeacon ibeacon = iBeacon.fromScanData(bleDevice);
+                Log.d(TAG, Thread.currentThread().getName());
+                if (ibeacon != null) {
+                    addDevice(ibeacon);
+                }
+            }
+
+            @Override
+            public void onScanFinished(List<BleDevice> scanResultList) {
+                mView.showLoading(false);
+            }
+        });
     }
 
     private final SearchResponse mSearchResponse = new SearchResponse() {

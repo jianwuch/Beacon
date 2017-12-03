@@ -1,8 +1,9 @@
 package com.igrs.beacon.ui.contract;
 
-import com.igrs.beacon.moudle.data.BeaconWithCheckable;
+import com.igrs.beacon.moudle.data.iBeacon;
 import com.igrs.beacon.ui.basemvp.BasePresenter;
 import com.igrs.beacon.ui.basemvp.IListViewView;
+
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  */
 
 public class MainPageContract {
-    public interface IHomeView extends IListViewView<List<BeaconWithCheckable>> {
+    public interface IHomeView extends IListViewView<List<iBeacon>> {
         public void newBeacon();
     }
 

@@ -10,4 +10,6 @@ public interface IBaseView<T> {
 
     //显示数据
     void showDataFromPresenter(T data);
+
+    void showToast(String msg);
 }

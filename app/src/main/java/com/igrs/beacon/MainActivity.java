@@ -1,6 +1,7 @@
 package com.igrs.beacon;
 
 import android.animation.ObjectAnimator;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
@@ -15,21 +16,23 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.OnClick;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.igrs.beacon.moudle.data.BeaconWithCheckable;
-import com.igrs.beacon.moudle.data.iBeaconClass;
-import com.igrs.beacon.moudle.data.iBeaconClass.iBeacon;
+import com.igrs.beacon.moudle.data.iBeacon;
+import com.igrs.beacon.ui.UUIDManagerActivity;
 import com.igrs.beacon.ui.adapter.ScanBleAdapter;
 import com.igrs.beacon.ui.basemvp.BaseMvpActivity;
 import com.igrs.beacon.ui.contract.MainPageContract;
 import com.igrs.beacon.ui.presenter.HomePresenter;
+import com.igrs.beacon.ui.presenter.HomePresenterByFastBle;
 import com.igrs.beacon.util.ToastUtil;
-import java.util.ArrayList;
+
 import java.util.List;
 
-public class MainActivity extends BaseMvpActivity<List<BeaconWithCheckable>, HomePresenter>
+import butterknife.BindView;
+import butterknife.OnClick;
+
+public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterByFastBle>
         implements ActionMode.Callback, MainPageContract.IHomeView {
     @BindView(R.id.recycle_view) RecyclerView recycleView;
     @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
@@ -44,6 +47,7 @@ public class MainActivity extends BaseMvpActivity<List<BeaconWithCheckable>, Hom
 
     private ScanBleAdapter mAdapter;
     private ActionMode actionMode;
+    private static final int START_CODE_UUID = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +61,24 @@ public class MainActivity extends BaseMvpActivity<List<BeaconWithCheckable>, Hom
     }
 
     @Override
-    public HomePresenter initPresenter() {
-        return new HomePresenter();
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == START_CODE_UUID) {
+            switch (resultCode){
+                case RESULT_CANCELED:
+                    ToastUtil.ToastShort(this, "取消");
+                    break;
+                case RESULT_OK:
+                    String uuid = data.getStringExtra(UUIDManagerActivity.UUID_KEY);
+                    ToastUtil.ToastShort(this, uuid);
+                    break;
+            }
+            }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public HomePresenterByFastBle initPresenter() {
+        return new HomePresenterByFastBle();
     }
 
     private void loadData() {
@@ -86,6 +106,10 @@ public class MainActivity extends BaseMvpActivity<List<BeaconWithCheckable>, Hom
                 break;
             case R.id.action_search:
                 ToastUtil.ToastShort(MainActivity.this, "二维码扫描");
+                break;
+            case R.id.action_setting:
+                ToastUtil.ToastShort(MainActivity.this, "设置过滤");
+                startActivityForResult(new Intent(MainActivity.this, UUIDManagerActivity.class), START_CODE_UUID);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -149,6 +173,13 @@ public class MainActivity extends BaseMvpActivity<List<BeaconWithCheckable>, Hom
                 return false;
             }
         });
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadData();
+            }
+        });
     }
 
     @OnClick({ R.id.type_default, R.id.type_name, R.id.type_password })
@@ -190,9 +221,9 @@ public class MainActivity extends BaseMvpActivity<List<BeaconWithCheckable>, Hom
     }
 
     @Override
-    public void showDataFromPresenter(List<BeaconWithCheckable> data) {
+    public void showDataFromPresenter(List<iBeacon> data) {
         if (mAdapter==null) {
-            mAdapter = new ScanBleAdapter(R.layout.item_scan_device_info);
+            mAdapter = new ScanBleAdapter(R.layout.item_scan_device_info, data);
             recycleView.setAdapter(mAdapter);
         }
 
@@ -209,5 +240,13 @@ public class MainActivity extends BaseMvpActivity<List<BeaconWithCheckable>, Hom
     @Override
     public void refresh() {
 
+    }
+
+    @Override
+    public void showLoading(boolean isShow) {
+        super.showLoading(isShow);
+        if (!isShow) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
     }
 }
