@@ -30,12 +30,16 @@ public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
     private BleManager bleManager;
     private List<iBeacon> mDatas;
     @Override
+    public void setFilter() {
+
+    }
+
+    @Override
     public void start() {
         mDatas = new ArrayList<>();
         mView.showDataFromPresenter(mDatas);
         bleManager = BleManager.getInstance();
         bleManager.init(MyApplication.getInstance());
-
         BleScanRuleConfig scanRuleConfig = new BleScanRuleConfig.Builder()
 //                .setServiceUuids(serviceUuids)      // 只扫描指定的服务的设备，可选
 //                .setDeviceName(true, names)   // 只扫描指定广播名的设备，可选
@@ -45,11 +49,6 @@ public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
                 .build();
         BleManager.getInstance().initScanRule(scanRuleConfig);
         scanBeacon();
-    }
-
-    @Override
-    public void setFilter() {
-
     }
 
     @Override
@@ -64,6 +63,7 @@ public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
 
         bleManager.enableBluetooth();
 
+        mView.showLoading(true);
         bleManager.scan(new BleScanCallback() {
             @Override
             public void onScanStarted(boolean success) {

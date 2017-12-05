@@ -19,11 +19,11 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.igrs.beacon.moudle.data.iBeacon;
+import com.igrs.beacon.ui.FilterActivity;
 import com.igrs.beacon.ui.UUIDManagerActivity;
 import com.igrs.beacon.ui.adapter.ScanBleAdapter;
 import com.igrs.beacon.ui.basemvp.BaseMvpActivity;
 import com.igrs.beacon.ui.contract.MainPageContract;
-import com.igrs.beacon.ui.presenter.HomePresenter;
 import com.igrs.beacon.ui.presenter.HomePresenterByFastBle;
 import com.igrs.beacon.util.ToastUtil;
 
@@ -109,7 +109,8 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
                 break;
             case R.id.action_setting:
                 ToastUtil.ToastShort(MainActivity.this, "设置过滤");
-                startActivityForResult(new Intent(MainActivity.this, UUIDManagerActivity.class), START_CODE_UUID);
+//                startActivityForResult(new Intent(MainActivity.this, UUIDManagerActivity.class), START_CODE_UUID);
+                startActivity(new Intent(this, FilterActivity.class));
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -177,7 +178,7 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadData();
+                presenter.scanBeacon();
             }
         });
     }

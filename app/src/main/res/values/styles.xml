@@ -1,27 +1,41 @@
 <resources>
 
-  <!-- Base application theme. -->
-  <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-    <!-- Customize your theme here. -->
-    <item name="colorPrimary">@color/colorPrimary</item>
-    <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-    <item name="colorAccent">@color/colorAccent</item>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
 
-    <!--recycler分割线-->
-    <item name="android:listDivider">@color/color_divider</item>
+        <!--recycler分割线-->
+        <item name="android:listDivider">@color/color_divider</item>
 
-    <!--保证actionMode覆盖在Toolbar上面-->
-    <item name="windowActionModeOverlay">true</item>
-    <item name="windowActionBarOverlay">true</item>
-  </style>
+        <!--保证actionMode覆盖在Toolbar上面-->
+        <item name="windowActionModeOverlay">true</item>
+        <item name="windowActionBarOverlay">true</item>
+    </style>
 
-  <style name="formTitleTextVeiw">
-    <item name="android:textColor">@color/textColorPrimary</item>
-    <item name="android:layout_marginRight">10dp</item>
-  </style>
+    <style name="formTitleTextVeiw">
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:layout_marginRight">10dp</item>
+    </style>
 
-  <style name="chooseModeBatchType">
-    <item name="android:textSize">12sp</item>
-    <item name="android:background">@drawable/choose_btn_bg</item>
-  </style>
+    <style name="chooseModeBatchType">
+        <item name="android:textSize">12sp</item>
+        <item name="android:background">@drawable/choose_btn_bg</item>
+    </style>
+
+    <style name="btn_comm">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:background">@drawable/btn_bg</item>
+    </style>
+
+    <style name="scroll_item_style">
+        <item name="android:paddingRight">15dp</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:layout_height">@dimen/filter_item_height</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
 </resources>
