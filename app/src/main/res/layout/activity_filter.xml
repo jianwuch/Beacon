@@ -32,6 +32,7 @@
                 android:orientation="horizontal">
 
                 <TextView
+                    android:id="@+id/tv_uuid"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
@@ -86,7 +87,8 @@
                     android:id="@+id/ed_major_from"
                     android:layout_width="70dp"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/text_stroke_bg" />
+                    android:background="@drawable/text_stroke_bg"
+                    android:inputType="number" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -99,7 +101,8 @@
                     android:id="@+id/ed_major_to"
                     android:layout_width="70dp"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/text_stroke_bg" />
+                    android:background="@drawable/text_stroke_bg"
+                    android:inputType="number" />
             </LinearLayout>
 
             <android.support.v7.widget.SwitchCompat
@@ -119,7 +122,8 @@
                     android:id="@+id/ed_minor_from"
                     android:layout_width="70dp"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/text_stroke_bg" />
+                    android:background="@drawable/text_stroke_bg"
+                    android:inputType="number" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -132,7 +136,8 @@
                     android:id="@+id/ed_minor_to"
                     android:layout_width="70dp"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/text_stroke_bg" />
+                    android:background="@drawable/text_stroke_bg"
+                    android:inputType="number" />
             </LinearLayout>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>

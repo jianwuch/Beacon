@@ -9,9 +9,12 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import com.igrs.beacon.R;
 import com.igrs.beacon.base.BaseActivity;
+import com.igrs.beacon.config.FilterManager;
+import com.igrs.beacon.moudle.data.FilterConfig;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,18 +46,46 @@ public class FilterActivity extends BaseActivity implements CompoundButton.OnChe
     EditText edMinorFrom;
     @BindView(R.id.ed_minor_to)
     EditText edMinorTo;
+    @BindView(R.id.tv_uuid)
+    TextView tvUuid;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_filter);
-        ButterKnife.bind(this);
         initToolBar(toolBar, true, "过滤条件设置");
         initEvent();
     }
 
     private void initEvent() {
         switchUuid.setOnCheckedChangeListener(this);
+        switchMajor.setOnCheckedChangeListener(this);
+        switchMinor.setOnCheckedChangeListener(this);
+        toolBar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FilterConfig config = new FilterConfig();
+                config.enableUUID = switchUuid.isChecked();
+                config.enableMajor = switchMajor.isChecked();
+                config.enableMinor = switchMinor.isChecked();
+                if (config.enableUUID) {
+//                    config.filterUUID = tvUuid.getText().toString().trim();
+                    config.filterUUID = "";
+                }
+
+                if (config.enableMajor) {
+                    config.majorFrom = Integer.parseInt(edMajorFrom.getText().toString().trim());
+                    config.majorTo = Integer.parseInt(edMajorTo.getText().toString().trim());
+                }
+
+                if (config.enableMinor) {
+                    config.minorFrom = Integer.parseInt(edMinorFrom.getText().toString().trim());
+                    config.minorTo = Integer.parseInt(edMinorTo.getText().toString().trim());
+                }
+
+                FilterManager.saveNewConfig(config);
+            }
+        });
     }
 
 

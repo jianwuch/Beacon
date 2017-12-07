@@ -3,6 +3,7 @@ package com.igrs.beacon;
 import android.app.Application;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.igrs.beacon.config.FilterManager;
 import com.inuker.bluetooth.library.BluetoothContext;
 
 import greendao.DaoMaster;
@@ -25,5 +26,6 @@ public class MyApplication extends Application {
         instance = this;
         BluetoothContext.set(this);
         GreenDaoHelper.initDatabase();
+        FilterManager.init(this);
     }
 }
