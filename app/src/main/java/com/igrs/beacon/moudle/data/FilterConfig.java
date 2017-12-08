@@ -26,14 +26,22 @@ public class FilterConfig {
     public int minorTo;
 
     public FilterConfig(Context context) {
-        this.enableUUID = (boolean) SharedPreferencesUtils.getParam(context, AppConstans.SharedPreferencesKey.ENABLE_UUID, false);
-        this.enableMajor = (boolean) SharedPreferencesUtils.getParam(context, AppConstans.SharedPreferencesKey.ENABLE_MAJOR, false);
-        this.enableMinor = (boolean) SharedPreferencesUtils.getParam(context, AppConstans.SharedPreferencesKey.ENABLE_MINOR, false);
-        this.filterUUID = (String) SharedPreferencesUtils.getParam(context, AppConstans.SharedPreferencesKey.FILTER_UUID, "");
-        this.majorFrom = (int) SharedPreferencesUtils.getParam(context, AppConstans.SharedPreferencesKey.MAJOR_FROM, 0);
-        this.majorTo = (int) SharedPreferencesUtils.getParam(context, AppConstans.SharedPreferencesKey.MAJOR_TO, 0);
-        this.minorFrom = (int) SharedPreferencesUtils.getParam(context, AppConstans.SharedPreferencesKey.MINOR_FROM, 0);
-        this.minorTo = (int) SharedPreferencesUtils.getParam(context, AppConstans.SharedPreferencesKey.MINOR_TO, 0);
+        this.enableUUID = (boolean) SharedPreferencesUtils.getParam(context,
+                AppConstans.SharedPreferencesKey.ENABLE_UUID, false);
+        this.enableMajor = (boolean) SharedPreferencesUtils.getParam(context,
+                AppConstans.SharedPreferencesKey.ENABLE_MAJOR, false);
+        this.enableMinor = (boolean) SharedPreferencesUtils.getParam(context,
+                AppConstans.SharedPreferencesKey.ENABLE_MINOR, false);
+        this.filterUUID = (String) SharedPreferencesUtils.getParam(context,
+                AppConstans.SharedPreferencesKey.FILTER_UUID, "");
+        this.majorFrom = (int) SharedPreferencesUtils.getParam(context,
+                AppConstans.SharedPreferencesKey.MAJOR_FROM, 0);
+        this.majorTo = (int) SharedPreferencesUtils.getParam(context,
+                AppConstans.SharedPreferencesKey.MAJOR_TO, 0);
+        this.minorFrom = (int) SharedPreferencesUtils.getParam(context,
+                AppConstans.SharedPreferencesKey.MINOR_FROM, 0);
+        this.minorTo = (int) SharedPreferencesUtils.getParam(context,
+                AppConstans.SharedPreferencesKey.MINOR_TO, 0);
     }
 
     public FilterConfig() {

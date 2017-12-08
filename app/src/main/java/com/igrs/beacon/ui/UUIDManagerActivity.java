@@ -1,9 +1,12 @@
 package com.igrs.beacon.ui;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,6 +30,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import greendao.GreenDaoHelper;
+import java.util.regex.Pattern;
 
 /**
  * Created by jianw on 17-12-3.
@@ -34,14 +38,19 @@ import greendao.GreenDaoHelper;
 
 public class UUIDManagerActivity extends BaseActivity {
 
+    public static final int REQUEST_RESULT = 101;
     public static final String UUID_KEY = "uuid";
-    @BindView(R.id.recycle_view)
-    RecyclerView recycleView;
-    @BindView(R.id.tool_bar)
-    Toolbar toolBar;
+    @BindView(R.id.recycle_view) RecyclerView recycleView;
+    @BindView(R.id.tool_bar) Toolbar toolBar;
+    private TextInputLayout nameLayout, uuidLayout;
     private List<UUIDBean> mDatas;
 
     private UUIDListAdapter mAdapter;
+
+    public static void show(Activity context) {
+        context.startActivityForResult(new Intent(context, UUIDManagerActivity.class),
+                REQUEST_RESULT);
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,11 +70,13 @@ public class UUIDManagerActivity extends BaseActivity {
     }
 
     private void initRecyclerView() {
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager =
+                new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         mAdapter = new UUIDListAdapter(R.layout.item_uuid_manager, mDatas);
         recycleView.setLayoutManager(layoutManager);
         recycleView.setHasFixedSize(true);
-        recycleView.addItemDecoration(new DividerItemDecoration(this, layoutManager.getOrientation()));
+        recycleView.addItemDecoration(
+                new DividerItemDecoration(this, layoutManager.getOrientation()));
         recycleView.setAdapter(mAdapter);
     }
 
@@ -103,27 +114,59 @@ public class UUIDManagerActivity extends BaseActivity {
                 View view = getLayoutInflater().inflate(R.layout.dialog_add_uuid, null, false);
                 final EditText name = ((EditText) view.findViewById(R.id.name));
                 final EditText uuid = ((EditText) view.findViewById(R.id.uuid));
-                AlertDialog alertDialog = new AlertDialog.Builder(UUIDManagerActivity.this)
-                        .setTitle("增加白名单")
-                        .setView(view)
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                nameLayout = view.findViewById(R.id.input_layout_name);
+                uuidLayout = view.findViewById(R.id.input_layout_uuid);
+                final AlertDialog alertDialog =
+                        new AlertDialog.Builder(UUIDManagerActivity.this).setTitle("增加白名单")
+                                .setView(view)
+                                .setPositiveButton("添加", null)
+                                .create();
+                alertDialog.show();
+                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE)
+                        .setOnClickListener(new View.OnClickListener() {
                             @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
+                            public void onClick(View v) {
                                 String nameStr = name.getText().toString().trim();
                                 String uuidStr = uuid.getText().toString().trim();
-                                if (TextUtils.isEmpty(nameStr) || TextUtils.isEmpty(uuidStr)) {
-                                    ToastUtil.ToastShort(UUIDManagerActivity.this, "两项必填");
-                                    return;
+                                if (checkUUID(nameStr, uuidStr)) {
+                                    UUIDBean uuid1 = new UUIDBean(nameStr, uuidStr);
+                                    GreenDaoHelper.getDaoSession().getUUIDBeanDao().insert(uuid1);
+                                    mAdapter.addData(uuid1);
+                                    alertDialog.dismiss();
                                 }
-                                UUIDBean uuid1 = new UUIDBean(nameStr, uuidStr);
-                                GreenDaoHelper.getDaoSession().getUUIDBeanDao().insert(uuid1);
-                                mDatas.add(uuid1);
-                                mAdapter.notifyDataSetChanged();
                             }
-                        })
-                        .show();
+                        });
                 break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private boolean checkUUID(String name, String uuid) {
+        if (TextUtils.isEmpty(name)) {
+            nameLayout.setError("必填");
+            return false;
+        }
+
+        if (TextUtils.isEmpty(uuid)) {
+            uuidLayout.setError("必填");
+            return false;
+        }
+        List<UUIDBean> data = mAdapter.getData();
+        for (int i = 0; i < data.size(); i++) {
+            if (data.get(i).name.equals(name)) {
+                nameLayout.setError("名称已存在");
+                return false;
+            }
+        }
+
+        if (!isUUID(uuid)) {
+            uuidLayout.setError("格式不对");
+        }
+        return true;
+    }
+
+    private boolean isUUID(String uuid) {
+        String reg = "[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}";
+        return Pattern.matches(reg, "0000xxxx-0000-1000-8000-00805F9B34FB");
     }
 }

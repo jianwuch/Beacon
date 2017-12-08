@@ -2,6 +2,7 @@ package com.igrs.beacon.config;
 
 import android.content.Context;
 
+import android.text.TextUtils;
 import com.igrs.beacon.moudle.data.FilterConfig;
 import com.igrs.beacon.util.SharedPreferencesUtils;
 
@@ -36,16 +37,32 @@ public class FilterManager {
         filterConfig = config;
 
         //保存sharepreferances
-        SharedPreferencesUtils.setParam(mContext, AppConstans.SharedPreferencesKey.ENABLE_UUID, config.enableUUID);
-        SharedPreferencesUtils.setParam(mContext, AppConstans.SharedPreferencesKey.ENABLE_MAJOR, config.enableMajor);
-        SharedPreferencesUtils.setParam(mContext, AppConstans.SharedPreferencesKey.ENABLE_MINOR, config.enableMinor);
+        SharedPreferencesUtils.setParam(mContext, AppConstans.SharedPreferencesKey.ENABLE_UUID,
+                config.enableUUID);
+        SharedPreferencesUtils.setParam(mContext, AppConstans.SharedPreferencesKey.ENABLE_MAJOR,
+                config.enableMajor);
+        SharedPreferencesUtils.setParam(mContext, AppConstans.SharedPreferencesKey.ENABLE_MINOR,
+                config.enableMinor);
 
-        SharedPreferencesUtils.setParam(mContext, AppConstans.SharedPreferencesKey.FILTER_UUID, config.filterUUID);
+        if (config.enableUUID && !TextUtils.isEmpty(config.filterUUID)) {
+            SharedPreferencesUtils.setParam(mContext, AppConstans.SharedPreferencesKey.FILTER_UUID,
+                    config.filterUUID);
+        }
 
-        SharedPreferencesUtils.setParam(mContext, AppConstans.SharedPreferencesKey.MAJOR_FROM, config.majorFrom);
-        SharedPreferencesUtils.setParam(mContext, AppConstans.SharedPreferencesKey.MAJOR_TO, config.majorTo);
-        SharedPreferencesUtils.setParam(mContext, AppConstans.SharedPreferencesKey.MINOR_FROM, config.minorFrom);
-        SharedPreferencesUtils.setParam(mContext, AppConstans.SharedPreferencesKey.MINOR_TO, config.minorTo);
+        if (config.enableMajor) {
+            SharedPreferencesUtils.setParam(mContext, AppConstans.SharedPreferencesKey.MAJOR_FROM,
+                    config.majorFrom);
+            SharedPreferencesUtils.setParam(mContext, AppConstans.SharedPreferencesKey.MAJOR_TO,
+                    config.majorTo);
+        }
+
+        if (config.enableMinor) {
+            SharedPreferencesUtils.setParam(mContext, AppConstans.SharedPreferencesKey.MINOR_FROM,
+                    config.minorFrom);
+            SharedPreferencesUtils.setParam(mContext, AppConstans.SharedPreferencesKey.MINOR_TO,
+                    config.minorTo);
+        }
+
     }
 
     private FilterManager() {
