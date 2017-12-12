@@ -1,16 +1,17 @@
 package com.igrs.beacon.moudle.data;
 
 import android.bluetooth.BluetoothDevice;
-import android.widget.Checkable;
-
+import com.clj.fastble.data.BleDevice;
 import com.igrs.beacon.util.iBeaconUtil;
 import com.inuker.bluetooth.library.search.SearchResult;
+import java.io.Serializable;
 
 /**
  * Created by jianw on 17-11-30.
  */
 
-public class iBeacon extends BaseCheckable{
+public class iBeacon extends BaseCheckable implements Serializable{
+    public BleDevice bleDevice;
     public String name;
     public int major;
     public int minor;
@@ -21,6 +22,10 @@ public class iBeacon extends BaseCheckable{
 
     public static iBeacon fromScanData(SearchResult searchResult) {
         return fromScanData(searchResult.device, searchResult.rssi, searchResult.scanRecord);
+    }
+
+    public static iBeacon fromScanData(BleDevice bleDevice) {
+        return fromScanData(bleDevice.getDevice(), bleDevice.getRssi(), bleDevice.getScanRecord());
     }
 
     public static iBeacon fromScanData(BluetoothDevice device, int rssi, byte[] scanData) {

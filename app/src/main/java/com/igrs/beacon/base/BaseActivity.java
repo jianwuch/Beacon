@@ -1,25 +1,25 @@
 package com.igrs.beacon.base;
 
-import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.annotation.LayoutRes;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import com.igrs.beacon.util.DialogManager;
 
 /**
  * Created by jove.chen on 2017/10/27.
  */
 
 public class BaseActivity extends AppCompatActivity {
+    public static final String INTENT_KEY = "key1";
     private Unbinder mUnbinder;
+    public DialogManager dialogManager;
     @Override
     public void setContentView(@LayoutRes int layoutResID) {
         super.setContentView(layoutResID);
         mUnbinder = ButterKnife.bind(BaseActivity.this);
+        dialogManager = new DialogManager(this);
     }
 
     /**
@@ -35,5 +35,14 @@ public class BaseActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         mUnbinder.unbind();
+        showLoading(false);
+    }
+
+    public void showLoading(boolean isShow) {
+        if (isShow) {
+            dialogManager.showProgress();
+        } else {
+            dialogManager.dissmissDialog();
+        }
     }
 }
