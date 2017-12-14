@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Created by jianw on 17-11-30.
  */
 
-public class iBeacon extends BaseCheckable implements Serializable{
+public class iBeacon extends BaseCheckable implements Serializable {
     public BleDevice bleDevice;
     public String name;
     public int major;
@@ -21,39 +21,45 @@ public class iBeacon extends BaseCheckable implements Serializable{
     public int rssi;
 
     public static iBeacon fromScanData(SearchResult searchResult) {
-        return fromScanData(searchResult.device, searchResult.rssi, searchResult.scanRecord);
+        return fromScanData(
+                new BleDevice(searchResult.device, searchResult.rssi, searchResult.scanRecord, 0),
+                searchResult.device, searchResult.rssi, searchResult.scanRecord);
     }
 
     public static iBeacon fromScanData(BleDevice bleDevice) {
-        return fromScanData(bleDevice.getDevice(), bleDevice.getRssi(), bleDevice.getScanRecord());
+        return fromScanData(bleDevice, bleDevice.getDevice(), bleDevice.getRssi(),
+                bleDevice.getScanRecord());
     }
 
-    public static iBeacon fromScanData(BluetoothDevice device, int rssi, byte[] scanData) {
+    public static iBeacon fromScanData(BleDevice bleDevice, BluetoothDevice device, int rssi,
+            byte[] scanData) {
 
         int startByte = 2;
         boolean patternFound = false;
         while (startByte <= 5) {
-            if (((int) scanData[startByte + 2] & 0xff) == 0x02 &&
-                    ((int) scanData[startByte + 3] & 0xff) == 0x15) {
+            if (((int) scanData[startByte + 2] & 0xff) == 0x02
+                    && ((int) scanData[startByte + 3] & 0xff) == 0x15) {
                 // yes!  This is an iBeacon
                 patternFound = true;
                 break;
-            } else if (((int) scanData[startByte] & 0xff) == 0x2d &&
-                    ((int) scanData[startByte + 1] & 0xff) == 0x24 &&
-                    ((int) scanData[startByte + 2] & 0xff) == 0xbf &&
-                    ((int) scanData[startByte + 3] & 0xff) == 0x16) {
+            } else if (((int) scanData[startByte] & 0xff) == 0x2d
+                    && ((int) scanData[startByte + 1] & 0xff) == 0x24
+                    && ((int) scanData[startByte + 2] & 0xff) == 0xbf
+                    && ((int) scanData[startByte + 3] & 0xff) == 0x16) {
                 iBeacon iBeacon = new iBeacon();
+                iBeacon.bleDevice = bleDevice;
                 iBeacon.major = 0;
                 iBeacon.minor = 0;
                 iBeacon.proximityUuid = "00000000-0000-0000-0000-000000000000";
                 iBeacon.txPower = -55;
                 return iBeacon;
-            } else if (((int) scanData[startByte] & 0xff) == 0xad &&
-                    ((int) scanData[startByte + 1] & 0xff) == 0x77 &&
-                    ((int) scanData[startByte + 2] & 0xff) == 0x00 &&
-                    ((int) scanData[startByte + 3] & 0xff) == 0xc6) {
+            } else if (((int) scanData[startByte] & 0xff) == 0xad
+                    && ((int) scanData[startByte + 1] & 0xff) == 0x77
+                    && ((int) scanData[startByte + 2] & 0xff) == 0x00
+                    && ((int) scanData[startByte + 3] & 0xff) == 0xc6) {
 
                 iBeacon iBeacon = new iBeacon();
+                iBeacon.bleDevice = bleDevice;
                 iBeacon.major = 0;
                 iBeacon.minor = 0;
                 iBeacon.proximityUuid = "00000000-0000-0000-0000-000000000000";
@@ -63,16 +69,18 @@ public class iBeacon extends BaseCheckable implements Serializable{
             startByte++;
         }
 
-
         if (patternFound == false) {
             // This is not an iBeacon
             return null;
         }
 
         iBeacon iBeacon = new iBeacon();
+        iBeacon.bleDevice = bleDevice;
 
-        iBeacon.major = (scanData[startByte + 20] & 0xff) * 0x100 + (scanData[startByte + 21] & 0xff);
-        iBeacon.minor = (scanData[startByte + 22] & 0xff) * 0x100 + (scanData[startByte + 23] & 0xff);
+        iBeacon.major =
+                (scanData[startByte + 20] & 0xff) * 0x100 + (scanData[startByte + 21] & 0xff);
+        iBeacon.minor =
+                (scanData[startByte + 22] & 0xff) * 0x100 + (scanData[startByte + 23] & 0xff);
         iBeacon.txPower = (int) scanData[startByte + 24]; // this one is signed
         iBeacon.rssi = rssi;
 

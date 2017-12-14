@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.igrs.beacon.moudle.data.iBeacon;
+import com.igrs.beacon.ui.ConfigurationActivity;
 import com.igrs.beacon.ui.FilterActivity;
 import com.igrs.beacon.ui.UUIDManagerActivity;
 import com.igrs.beacon.ui.adapter.ScanBleAdapter;
@@ -160,8 +161,15 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                mAdapter.setChecked(position);
-                ToastUtil.ToastShort(MainActivity.this, "单击这一项：" + position);
+                if (mAdapter.getChooseMode()) {
+
+                    //多选模式
+                    mAdapter.setChecked(position);
+                } else {
+
+                    //跳转模式
+                    ConfigurationActivity.show(MainActivity.this, mAdapter.getItem(position).bleDevice);
+                }
             }
         });
         mAdapter.setOnItemLongClickListener(new BaseQuickAdapter.OnItemLongClickListener() {

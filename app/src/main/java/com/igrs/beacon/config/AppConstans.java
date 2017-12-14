@@ -17,6 +17,8 @@ public class AppConstans {
 
         String MINOR_FROM = "minor_from";
         String MINOR_TO = "minor_to";
+
+        String PASS_WORD = "password";
     }
 
     public interface UUID_STR {
