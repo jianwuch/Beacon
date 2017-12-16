@@ -16,10 +16,15 @@ import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-
+import android.widget.Toast;
+import butterknife.BindView;
+import butterknife.OnClick;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.igrs.beacon.moudle.data.iBeacon;
 import com.igrs.beacon.ui.ConfigurationActivity;
+import com.igrs.beacon.ui.CustomScanActivity;
 import com.igrs.beacon.ui.FilterActivity;
 import com.igrs.beacon.ui.UUIDManagerActivity;
 import com.igrs.beacon.ui.adapter.ScanBleAdapter;
@@ -27,11 +32,7 @@ import com.igrs.beacon.ui.basemvp.BaseMvpActivity;
 import com.igrs.beacon.ui.contract.MainPageContract;
 import com.igrs.beacon.ui.presenter.HomePresenterByFastBle;
 import com.igrs.beacon.util.ToastUtil;
-
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.OnClick;
 
 public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterByFastBle>
         implements ActionMode.Callback, MainPageContract.IHomeView {
@@ -63,8 +64,20 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == START_CODE_UUID) {
-            switch (resultCode){
+
+        IntentResult intentResult =
+                IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+        if (intentResult != null) {
+            if (intentResult.getContents() == null) {
+                Toast.makeText(this, "内容为空", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(this, "扫描成功", Toast.LENGTH_LONG).show();
+                // ScanResult 为 获取到的字符串
+                String ScanResult = intentResult.getContents();
+                Toast.makeText(this, ScanResult, Toast.LENGTH_LONG).show();
+            }
+        } else if (requestCode == START_CODE_UUID) {
+            switch (resultCode) {
                 case RESULT_CANCELED:
                     ToastUtil.ToastShort(this, "取消");
                     break;
@@ -73,7 +86,7 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
                     ToastUtil.ToastShort(this, uuid);
                     break;
             }
-            }
+        }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -106,11 +119,11 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
                 ToastUtil.ToastShort(MainActivity.this, "batch");
                 break;
             case R.id.action_search:
-                ToastUtil.ToastShort(MainActivity.this, "二维码扫描");
+                customScan();
                 break;
             case R.id.action_setting:
                 ToastUtil.ToastShort(MainActivity.this, "设置过滤");
-//                startActivityForResult(new Intent(MainActivity.this, UUIDManagerActivity.class), START_CODE_UUID);
+                //                startActivityForResult(new Intent(MainActivity.this, UUIDManagerActivity.class), START_CODE_UUID);
                 startActivity(new Intent(this, FilterActivity.class));
                 break;
         }
@@ -168,7 +181,8 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
                 } else {
 
                     //跳转模式
-                    ConfigurationActivity.show(MainActivity.this, mAdapter.getItem(position).bleDevice);
+                    ConfigurationActivity.show(MainActivity.this,
+                            mAdapter.getItem(position).bleDevice);
                 }
             }
         });
@@ -223,7 +237,6 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
         showBatchAnim(isEditMode);
     }
 
-
     @Override
     public void newBeacon() {
         mAdapter.notifyDataSetChanged();
@@ -231,12 +244,12 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
 
     @Override
     public void showDataFromPresenter(List<iBeacon> data) {
-        if (mAdapter==null) {
+        if (mAdapter == null) {
             mAdapter = new ScanBleAdapter(R.layout.item_scan_device_info, data);
             recycleView.setAdapter(mAdapter);
         }
 
-        if (mAdapter.getData()==null) {
+        if (mAdapter.getData() == null) {
             mAdapter.setNewData(data);
         }
     }
@@ -254,8 +267,16 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
     @Override
     public void showLoading(boolean isShow) {
         super.showLoading(isShow);
-        if (!isShow) {
+        if (swipeRefreshLayout != null && !isShow) {
             swipeRefreshLayout.setRefreshing(false);
         }
+    }
+
+    // 你也可以使用简单的扫描功能，但是一般扫描的样式和行为都是可以自定义的，这里就写关于自定义的代码了
+    // 你可以把这个方法作为一个点击事件
+    public void customScan() {
+        new IntentIntegrator(this).setOrientationLocked(false)
+                .setCaptureActivity(CustomScanActivity.class) // 设置自定义的activity是CustomActivity
+                .initiateScan(); // 初始化扫描
     }
 }

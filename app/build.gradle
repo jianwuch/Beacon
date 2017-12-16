@@ -36,6 +36,10 @@ dependencies {
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.34'
     compile 'org.greenrobot:greendao:3.2.2'
     compile 'com.clj.fastble:FastBleLib:2.1.4'
+
+    //二维码扫描
+    compile 'com.google.zxing:core:3.3.1'
+    compile 'com.journeyapps:zxing-android-embedded:3.3.0'
 }
 
 greendao {

@@ -6,7 +6,13 @@
   <!--使用扫描和设置蓝牙的权限（申明这一个权限必须申明上面一个权限）-->
   <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
   <uses-feature android:name="android.hardware.location.gps" />
-  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+  <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+  //二维码扫描需要
+  <uses-permission android:name="android.permission.INTERNET" /> <!-- 网络权限 -->
+  <uses-permission android:name="android.permission.VIBRATE" /> <!-- 震动权限 -->
+  <uses-permission android:name="android.permission.CAMERA" /> <!-- 摄像头权限 -->
+  <uses-feature android:name="android.hardware.camera.autofocus" /> <!-- 自动聚焦权限 -->
   <application
       android:name=".MyApplication"
       android:allowBackup="true"
@@ -15,7 +21,9 @@
       android:roundIcon="@mipmap/ic_launcher_round"
       android:supportsRtl="true"
       android:theme="@style/AppTheme">
-    <activity android:name=".MainActivity"
+    <activity
+        android:name=".MainActivity"
+        android:configChanges="orientation|screenSize|keyboard|keyboardHidden|smallestScreenSize"
         android:screenOrientation="portrait">
       <intent-filter>
         <action android:name="android.intent.action.MAIN" />
@@ -24,11 +32,20 @@
       </intent-filter>
     </activity>
 
-    <activity android:name=".ui.UUIDManagerActivity"
-        android:screenOrientation="portrait"/>
+    <activity
+        android:name=".ui.UUIDManagerActivity"
+        android:configChanges="orientation|screenSize|keyboard|keyboardHidden|smallestScreenSize"
+        android:screenOrientation="portrait" />
 
-    <activity android:name=".ui.FilterActivity"
-        android:screenOrientation="portrait"/>
+    <activity
+        android:name=".ui.FilterActivity"
+        android:configChanges="orientation|screenSize|keyboard|keyboardHidden|smallestScreenSize"
+        android:screenOrientation="portrait" />
+
+    <activity
+        android:name=".ui.CustomScanActivity"
+        android:configChanges="orientation|screenSize|keyboard|keyboardHidden|smallestScreenSize"
+        android:screenOrientation="portrait" />
   </application>
 
 </manifest>
