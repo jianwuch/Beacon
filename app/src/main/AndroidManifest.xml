@@ -46,6 +46,12 @@
         android:name=".ui.CustomScanActivity"
         android:configChanges="orientation|screenSize|keyboard|keyboardHidden|smallestScreenSize"
         android:screenOrientation="portrait" />
+
+    <activity
+        android:name=".ui.ConfigurationActivity"
+        android:configChanges="orientation|screenSize|keyboard|keyboardHidden|smallestScreenSize"
+        android:screenOrientation="portrait" />
+
   </application>
 
 </manifest>

@@ -5,6 +5,8 @@ package com.igrs.beacon.config;
  */
 
 public class AppConstans {
+
+    public static final String DEFAULT_PASSWORD = "010203040506";
     public interface SharedPreferencesKey {
         String ENABLE_UUID = "enableUUID";
         String ENABLE_MAJOR = "enableMajor";
@@ -22,7 +24,7 @@ public class AppConstans {
     }
 
     public interface UUID_STR {
-        String SERVER_UUID = "0000fff1-0000-1000-8000-00805f9b34fb";
+        String SERVER_UUID = "0000fff0-0000-1000-8000-00805f9b34fb";
         String CHA_WRITE_UUID = "0000fff1-0000-1000-8000-00805f9b34fb";
         String CHA_READ_UUID = "0000fff2-0000-1000-8000-00805f9b34fb";
     }

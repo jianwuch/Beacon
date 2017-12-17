@@ -34,11 +34,13 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mUnbinder.unbind();
         showLoading(false);
     }
 
     public void showLoading(boolean isShow) {
+        if (null == dialogManager) {
+            return;
+        }
         if (isShow) {
             dialogManager.showProgress();
         } else {

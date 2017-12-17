@@ -2,150 +2,157 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white"
     android:orientation="vertical">
 
-  <android.support.v7.widget.Toolbar
-      android:id="@+id/tool_bar"
-      android:layout_width="match_parent"
-      android:layout_height="?attr/actionBarSize"/>
-  <ScrollView
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:layout_weight="1">
-    <LinearLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tool_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@drawable/divider_bg"
-        android:orientation="vertical">
+        android:layout_height="?attr/actionBarSize" />
 
-      <LinearLayout
-          android:id="@+id/lay_uuid"
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/filter_item_height"
-          android:orientation="horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="UUID" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/uuid"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:drawableRight="@drawable/ic_nav_more"
-            android:gravity="center_vertical" />
-      </LinearLayout>
+            android:divider="@drawable/divider_bg"
+            android:orientation="vertical">
 
-      <RelativeLayout
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/filter_item_height"
-          android:gravity="center_vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="Major"/>
+            <LinearLayout
+                android:id="@+id/lay_uuid"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/filter_item_height"
+                android:orientation="horizontal">
 
-        <EditText
-            android:id="@+id/major"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"/>
-      </RelativeLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="UUID" />
 
-      <RelativeLayout
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/filter_item_height"
-          android:gravity="center_vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="Minor"/>
+                <TextView
+                    android:id="@+id/uuid"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:drawableRight="@drawable/ic_nav_more"
+                    android:gravity="center_vertical" />
+            </LinearLayout>
 
-        <EditText
-            android:id="@+id/minor"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"/>
-      </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/filter_item_height"
+                android:gravity="center_vertical">
 
-      <RelativeLayout
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/filter_item_height"
-          android:gravity="center_vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="测量功率"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Major" />
 
-        <EditText
-            android:id="@+id/measure_power"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"/>
-      </RelativeLayout>
+                <EditText
+                    android:id="@+id/major"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true" />
+            </RelativeLayout>
 
-      <RelativeLayout
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/filter_item_height"
-          android:gravity="center_vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="发射功率"/>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/filter_item_height"
+                android:gravity="center_vertical">
 
-        <EditText
-            android:id="@+id/tx_power"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"/>
-      </RelativeLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="Minor" />
 
-      <RelativeLayout
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/filter_item_height"
-          android:gravity="center_vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="发送间隔"/>
+                <EditText
+                    android:id="@+id/minor"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true" />
+            </RelativeLayout>
 
-        <EditText
-            android:id="@+id/tx_time"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"/>
-      </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/filter_item_height"
+                android:gravity="center_vertical">
 
-      <RelativeLayout
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/filter_item_height"
-          android:gravity="center_vertical">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="设备名称"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="测量功率" />
 
-        <EditText
-            android:id="@+id/device_name"
-            android:layout_width="50dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"/>
-      </RelativeLayout>
-    </LinearLayout>
-  </ScrollView>
-  >
+                <EditText
+                    android:id="@+id/measure_power"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/filter_item_height"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="发射功率" />
+
+                <EditText
+                    android:id="@+id/tx_power"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/filter_item_height"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="发送间隔" />
+
+                <EditText
+                    android:id="@+id/tx_time"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/filter_item_height"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="设备名称" />
+
+                <EditText
+                    android:id="@+id/device_name"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true" />
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>
