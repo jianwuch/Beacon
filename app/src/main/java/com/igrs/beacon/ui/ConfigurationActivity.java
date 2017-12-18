@@ -143,7 +143,7 @@ public class ConfigurationActivity extends BaseActivity {
     }
 
     private void readInfo() {
-         byte[] setPassword = HexUtil.hexStringToBytes("0x57" + AppConstans.RegAD.UUID + AppConstans.DEFAULT_PASSWORD);
+         byte[] setPassword = HexUtil.hexStringToBytes("57" + AppConstans.RegAD.PASSWORD + AppConstans.DEFAULT_PASSWORD);
         BleManager.getInstance()
                 .write(device, AppConstans.UUID_STR.SERVER_UUID,
                         AppConstans.UUID_STR.CHA_WRITE_UUID,setPassword
@@ -164,7 +164,7 @@ public class ConfigurationActivity extends BaseActivity {
 
     private void getDeviceName() {
         BleManager.getInstance().write(device, AppConstans.UUID_STR.SERVER_UUID, AppConstans.UUID_STR.CHA_WRITE_UUID,
-                HexUtil.hexStringToBytes("0x52" + AppConstans.RegAD.BLE_NAME), new BleWriteCallback() {
+                HexUtil.hexStringToBytes("52" + AppConstans.RegAD.BLE_NAME), new BleWriteCallback() {
                     @Override
                     public void onWriteSuccess() {
                         LogUtil.d("写读取名称成功");
