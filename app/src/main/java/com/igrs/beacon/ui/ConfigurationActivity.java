@@ -8,11 +8,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.clj.fastble.BleManager;
@@ -25,6 +27,7 @@ import com.clj.fastble.utils.HexUtil;
 import com.igrs.beacon.R;
 import com.igrs.beacon.base.BaseActivity;
 import com.igrs.beacon.config.AppConstans;
+import com.igrs.beacon.util.HexIntUtil;
 import com.igrs.beacon.util.LogUtil;
 import com.igrs.beacon.util.ToastUtil;
 
@@ -36,24 +39,17 @@ import butterknife.BindView;
  */
 
 public class ConfigurationActivity extends BaseActivity {
-    @BindView(R.id.tool_bar)
-    Toolbar toolBar;
-    @BindView(R.id.uuid)
-    TextView uuid;
-    @BindView(R.id.lay_uuid)
-    LinearLayout layUuid;
-    @BindView(R.id.major)
-    EditText major;
-    @BindView(R.id.minor)
-    EditText minor;
-    @BindView(R.id.measure_power)
-    EditText measurePower;
-    @BindView(R.id.tx_power)
-    EditText txPower;
-    @BindView(R.id.tx_time)
-    EditText txTime;
-    @BindView(R.id.device_name)
-    EditText deviceName;
+    public static final int WRITE = 87;
+    public static final int READ = 82;
+    @BindView(R.id.tool_bar) Toolbar toolBar;
+    @BindView(R.id.uuid) TextView uuid;
+    @BindView(R.id.lay_uuid) LinearLayout layUuid;
+    @BindView(R.id.major) EditText major;
+    @BindView(R.id.minor) EditText minor;
+    @BindView(R.id.measure_power) EditText measurePower;
+    @BindView(R.id.tx_power) EditText txPower;
+    @BindView(R.id.tx_time) EditText txTime;
+    @BindView(R.id.device_name) EditText deviceName;
     private BleDevice device;
 
     public static void show(Context context, BleDevice device) {
@@ -109,7 +105,7 @@ public class ConfigurationActivity extends BaseActivity {
 
             @Override
             public void onDisConnected(boolean isActiveDisConnected, BleDevice device,
-                                       BluetoothGatt gatt, int status) {
+                    BluetoothGatt gatt, int status) {
                 showLoading(false);
                 ToastUtil.ToastShort(ConfigurationActivity.this, "断开连接");
             }
@@ -143,12 +139,11 @@ public class ConfigurationActivity extends BaseActivity {
     }
 
     private void readInfo() {
-         byte[] setPassword = HexUtil.hexStringToBytes("57" + AppConstans.RegAD.PASSWORD + AppConstans.DEFAULT_PASSWORD);
+        byte[] setPassword = HexUtil.hexStringToBytes(
+                "57" + AppConstans.RegAD.PASSWORD + AppConstans.DEFAULT_PASSWORD);
         BleManager.getInstance()
                 .write(device, AppConstans.UUID_STR.SERVER_UUID,
-                        AppConstans.UUID_STR.CHA_WRITE_UUID,setPassword
-                        ,
-                        new BleWriteCallback() {
+                        AppConstans.UUID_STR.CHA_WRITE_UUID, setPassword, new BleWriteCallback() {
                             @Override
                             public void onWriteSuccess() {
                                 LogUtil.d("写密码成功");
@@ -163,44 +158,114 @@ public class ConfigurationActivity extends BaseActivity {
     }
 
     private void getDeviceName() {
-        BleManager.getInstance().write(device, AppConstans.UUID_STR.SERVER_UUID, AppConstans.UUID_STR.CHA_WRITE_UUID,
-                HexUtil.hexStringToBytes("52" + AppConstans.RegAD.BLE_NAME), new BleWriteCallback() {
-                    @Override
-                    public void onWriteSuccess() {
-                        LogUtil.d("写读取名称成功");
-                    }
+        BleManager.getInstance()
+                .write(device, AppConstans.UUID_STR.SERVER_UUID,
+                        AppConstans.UUID_STR.CHA_WRITE_UUID,
+                        HexUtil.hexStringToBytes("52" + AppConstans.RegAD.BLE_NAME),
+                        new BleWriteCallback() {
+                            @Override
+                            public void onWriteSuccess() {
+                                LogUtil.d("写读取名称成功");
+                            }
 
-                    @Override
-                    public void onWriteFailure(BleException exception) {
-                        LogUtil.d("写读取名称失败");
-                    }
-                });
+                            @Override
+                            public void onWriteFailure(BleException exception) {
+                                LogUtil.d("写读取名称失败");
+                            }
+                        });
     }
 
     private void Notify() {
-        BleManager.getInstance().notify(
-                device,
-                AppConstans.UUID_STR.SERVER_UUID,
-                AppConstans.UUID_STR.CHA_READ_UUID,
-                new BleNotifyCallback() {
-                    @Override
-                    public void onNotifySuccess() {
-                        // 打开通知操作成功（UI线程）
-                        LogUtil.d("订阅通知数据成功");
-                        readInfo();
-                    }
+        BleManager.getInstance()
+                .notify(device, AppConstans.UUID_STR.SERVER_UUID,
+                        AppConstans.UUID_STR.CHA_READ_UUID, new BleNotifyCallback() {
+                            @Override
+                            public void onNotifySuccess() {
+                                // 打开通知操作成功（UI线程）
+                                LogUtil.d("订阅通知数据成功");
+                                readInfo();
+                            }
 
-                    @Override
-                    public void onNotifyFailure(BleException exception) {
-                        // 打开通知操作失败（UI线程）
-                        LogUtil.d("订阅通知数据失败");
-                    }
+                            @Override
+                            public void onNotifyFailure(BleException exception) {
+                                // 打开通知操作失败（UI线程）
+                                LogUtil.d("订阅通知数据失败");
+                            }
 
-                    @Override
-                    public void onCharacteristicChanged(byte[] data) {
-                        // 打开通知后，设备发过来的数据将在这里出现（UI线程）
-                        LogUtil.d("Notify通知数据："+HexUtil.formatHexString(data));
-                    }
-                });
+                            @Override
+                            public void onCharacteristicChanged(byte[] data) {
+                                // 打开通知后，设备发过来的数据将在这里出现（UI线程）
+                                LogUtil.d("Notify通知数据：" + HexUtil.formatHexString(data));
+                                ToastUtil.ToastShort(ConfigurationActivity.this,
+                                        HexUtil.formatHexString(data));
+
+                                //操作类型，57：写/52读
+                                byte type = data[0];
+
+                                //操作的寄存器
+                                byte address = data[1];
+
+                                //一下是获取正在数据部分
+                                int length = data.length - 2;
+                                byte[] infoData = new byte[length];
+                                System.arraycopy(data, 2, infoData, 0, length);
+
+                                LogUtil.d("Notify数据处理："
+                                        + "type:"
+                                        + type
+                                        + "address:"
+                                        + address
+                                        + "infoData:"
+                                        + infoData);
+
+                                switch (HexIntUtil.getInt(new byte[] { type }, false)) {
+                                    case WRITE:
+                                        if (infoData.length == 0
+                                                && HexIntUtil.getInt(infoData, false) == 0) {
+                                            ToastUtil.ToastShort(ConfigurationActivity.this,
+                                                    "写入失败");
+                                            return;
+                                        }
+                                        switch (HexIntUtil.getInt(new byte[] { address }, false)) {
+                                            case 1:
+                                                break;
+                                            case 2:
+                                                break;
+                                            case 3:
+                                                break;
+                                            case 4:
+                                                break;
+                                            case 5:
+                                                break;
+                                            case 6:
+                                                break;
+                                        }
+                                        break;
+
+                                    case READ:
+                                        if (infoData.length == 0
+                                                && HexIntUtil.getInt(infoData, false) == 0) {
+                                            ToastUtil.ToastShort(ConfigurationActivity.this,
+                                                    "读取失败");
+                                            return;
+                                        }
+                                        switch (HexIntUtil.getInt(new byte[] { address }, false)) {
+                                            case 1:
+                                                break;
+                                            case 2:
+                                                break;
+                                            case 3:
+                                                break;
+                                            case 4:
+                                                break;
+                                            case 5:
+                                                break;
+                                            case 6:
+                                                break;
+                                        }
+                                        break;
+                                }
+                            }
+                        });
     }
 }
