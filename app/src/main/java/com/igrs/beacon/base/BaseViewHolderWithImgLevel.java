@@ -15,7 +15,7 @@ public class BaseViewHolderWithImgLevel extends BaseViewHolder {
         super(view);
     }
 
-    public BaseViewHolder setImageLevel(@IdRes int viewId, int value) {
+    public BaseViewHolderWithImgLevel setImageLevel(@IdRes int viewId, int value) {
         ImageView view = getView(viewId);
         view.setImageLevel(value);
         return this;

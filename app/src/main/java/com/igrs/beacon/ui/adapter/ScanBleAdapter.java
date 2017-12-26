@@ -21,22 +21,6 @@ import butterknife.BindView;
  */
 
 public class ScanBleAdapter extends BaseQuickAdapter<iBeacon, BaseViewHolderWithImgLevel> {
-    @BindView(R.id.checkbox)
-    CheckBox checkbox;
-    @BindView(R.id.device_info)
-    TextView deviceInfo;
-    @BindView(R.id.beacon_name)
-    TextView beaconName;
-    @BindView(R.id.uuid)
-    TextView uuid;
-    @BindView(R.id.mac)
-    TextView mac;
-    @BindView(R.id.major)
-    TextView major;
-    @BindView(R.id.minor)
-    TextView minor;
-    @BindView(R.id.battery)
-    ImageView battery;
     private boolean chooseMode;
 
     public void setChooseMode(boolean chooseMode) {
@@ -82,11 +66,14 @@ public class ScanBleAdapter extends BaseQuickAdapter<iBeacon, BaseViewHolderWith
         } else {
             checkBox.setVisibility(View.GONE);
         }
-        helper.setText(R.id.mac, String.format("MAC:%1$s", item.bluetoothAddress)).
-                setText(R.id.major, String.format("Major:%1$d", item.major))
+        helper.setText(R.id.mac, String.format("MAC:%1$s", item.bluetoothAddress))
+                .
+                        setText(R.id.major, String.format("Major:%1$d", item.major))
                 .setText(R.id.minor, String.format("Minor:%1$d", item.minor))
                 .setText(R.id.uuid, String.format("UUIDBean:%1$s", item.proximityUuid))
-                .setText(R.id.power, String.format("power:%1$d", item.txPower))
-                .setText(R.id.rssi, String.format("Rssi:%1$d", item.rssi));
+                .setText(R.id.power, item.txPower+"")
+                .setText(R.id.rssi, item.rssi+"");
+
+        helper.setImageLevel(R.id.img_battery, item.txPower).setImageLevel(R.id.img_rssi, item.rssi);
     }
 }
