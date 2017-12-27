@@ -18,7 +18,7 @@ public class MainPageContract {
     public static abstract class IHomePresenter  extends BasePresenter<IHomeView>{
 
         //设置过滤条件
-        public abstract void setFilter();
+        public abstract void setFilter(int type);
 
         public abstract void scanBeacon();
     }

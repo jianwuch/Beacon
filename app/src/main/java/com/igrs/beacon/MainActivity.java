@@ -203,6 +203,22 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
                 presenter.scanBeacon();
             }
         });
+
+        radio.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.by_rssi:
+                        presenter.setFilter(HomePresenterByFastBle.TYPE_RSSI);
+                        ToastUtil.ToastShort(MainActivity.this, "信号强度过滤");
+                        break;
+                    case R.id.by_name:
+                        ToastUtil.ToastShort(MainActivity.this, "名称过滤");
+                        presenter.setFilter(HomePresenterByFastBle.TYPE_NAME);
+                        break;
+                }
+            }
+        });
     }
 
     @OnClick({ R.id.type_default, R.id.type_name, R.id.type_password })

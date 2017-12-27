@@ -1,5 +1,6 @@
 package com.igrs.beacon.ui.presenter;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.clj.fastble.BleManager;
@@ -23,15 +24,18 @@ import java.util.List;
  */
 
 public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
+    public static final int TYPE_RSSI = 0;//默认过滤类型
+    public static final int TYPE_NAME = 1;
     private static final String TAG = HomePresenterByFastBle.class.getSimpleName();
     public List<iBeacon> getmDatas() {
         return mDatas;
     }
     private BleManager bleManager;
     private List<iBeacon> mDatas;
+    private int mFilterType;
     @Override
-    public void setFilter() {
-
+    public void setFilter(int type) {
+        mFilterType = type;
     }
 
     @Override
@@ -87,55 +91,6 @@ public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
         });
     }
 
-    private final SearchResponse mSearchResponse = new SearchResponse() {
-        @Override
-        public void onSearchStarted() {
-            mDatas.clear();
-            mView.showLoading(true);
-        }
-
-        @Override
-        public void onDeviceFounded(SearchResult device) {
-            //            BluetoothLog.w("MainActivity.onDeviceFounded " + device.device.getAddress());
-/*            if (!mDevices.contains(device)) {
-                mDevices.add(device);
-                mAdapter.setDataList(mDevices);
-
-                //                Beacon beacon = new Beacon(device.scanRecord);
-                //                BluetoothLog.v(String.format("beacon for %s\n%s", device.getAddress(), beacon.toString()));
-
-                //                BeaconItem beaconItem = null;
-                //                BeaconParser beaconParser = new BeaconParser(beaconItem);
-                //                int firstByte = beaconParser.readByte(); // 读取第1个字节
-                //                int secondByte = beaconParser.readByte(); // 读取第2个字节
-                //                int productId = beaconParser.readShort(); // 读取第3,4个字节
-                //                boolean bit1 = beaconParser.getBit(firstByte, 0); // 获取第1字节的第1bit
-                //                boolean bit2 = beaconParser.getBit(firstByte, 1); // 获取第1字节的第2bit
-                //                beaconParser.setPosition(0); // 将读取起点设置到第1字节处
-            }
-
-            if (mDevices.size() > 0) {
-                mRefreshLayout.showState(AppConstants.LIST);
-            }*/
-            iBeacon ibeacon = iBeacon.fromScanData(device);
-            Log.d(TAG, Thread.currentThread().getName());
-            if (ibeacon != null) {
-                addDevice(ibeacon);
-            }
-        }
-
-        @Override
-        public void onSearchStopped() {
-            BluetoothLog.w("MainActivity.onSearchStopped");
-            mView.showLoading(false);
-        }
-
-        @Override
-        public void onSearchCanceled() {
-            BluetoothLog.w("MainActivity.onSearchCanceled");
-        }
-    };
-
     private void addDevice(iBeacon device) { //更新beacon信息
         if(device==null) {
             Log.d("DeviceScanActivity ", "device==null ");
@@ -152,15 +107,23 @@ public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
             }
         }
 
-        //todo
-        //排序，过滤在此操作
-        Collections.sort(mDatas, new Comparator<iBeacon>() {
-            @Override
-            public int compare(iBeacon h1, iBeacon h2) {
-                return h2.rssi - h1.rssi;
-            }
-        });
         mDatas.add(device);
+        //排序，过滤在此操作
+        if (mFilterType == TYPE_RSSI) {
+            Collections.sort(mDatas, new Comparator<iBeacon>() {
+                @Override
+                public int compare(iBeacon h1, iBeacon h2) {
+                    return h2.rssi - h1.rssi;
+                }
+            });
+        } else {
+            Collections.sort(mDatas, new Comparator<iBeacon>() {
+                @Override
+                public int compare(iBeacon h1, iBeacon h2) {
+                    return (h2.name.compareTo(h1.name));
+                }
+            });
+        }
         mView.newBeacon();
     }
 }

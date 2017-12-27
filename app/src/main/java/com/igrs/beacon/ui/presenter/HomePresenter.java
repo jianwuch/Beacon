@@ -35,7 +35,7 @@ public class HomePresenter extends MainPageContract.IHomePresenter {
     }
 
     @Override
-    public void setFilter() {
+    public void setFilter(int type) {
 
     }
 

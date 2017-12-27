@@ -71,9 +71,38 @@ public class ScanBleAdapter extends BaseQuickAdapter<iBeacon, BaseViewHolderWith
                         setText(R.id.major, String.format("Major:%1$d", item.major))
                 .setText(R.id.minor, String.format("Minor:%1$d", item.minor))
                 .setText(R.id.uuid, String.format("UUIDBean:%1$s", item.proximityUuid))
-                .setText(R.id.power, item.txPower+"")
-                .setText(R.id.rssi, item.rssi+"");
+                .setText(R.id.power, item.txPower + "")
+                .setText(R.id.rssi, item.rssi + "");
 
-        helper.setImageLevel(R.id.img_battery, item.txPower).setImageLevel(R.id.img_rssi, item.rssi);
+        helper.setImageLevel(R.id.img_battery, getPowerLevel(item.txPower))
+                .setImageLevel(R.id.img_rssi, getRssiLevel(item.rssi));
+    }
+
+    private int getPowerLevel(int txPower) {
+        //-59,-69,-79,-89,-99
+        if (txPower >= -59) {
+            return 4;
+        } else if (txPower >= -69) {
+            return 3;
+        } else if (txPower >= -79) {
+            return 2;
+        } else if (txPower >= -89) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    private int getRssiLevel(int rssi) {
+        //-59,-69,-79,-89
+        if (rssi >= -59) {
+            return 3;
+        } else if (rssi >= -69) {
+            return 2;
+        } else if (rssi >= -79) {
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }
