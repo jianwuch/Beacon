@@ -20,6 +20,12 @@ public class MainPageContract {
         //设置过滤条件
         public abstract void setFilter(int type);
 
+        //全选
+        public abstract void chooseAll();
+
+        //批量操作类型
+        public abstract void beginBatch(int type);
+
         public abstract void scanBeacon();
     }
 }
