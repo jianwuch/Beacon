@@ -149,7 +149,7 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_choose_all:
-                ToastUtil.ToastShort(MainActivity.this, "全选");
+                presenter.chooseAll();
                 return true;
         }
         return false;
@@ -278,6 +278,13 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
     @Override
     public void refresh() {
 
+    }
+
+    @Override
+    public void notifyDataSet() {
+        if (mAdapter != null) {
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     @Override

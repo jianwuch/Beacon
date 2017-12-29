@@ -10,4 +10,7 @@ public interface IListViewView<T> extends IBaseView<T> {
 
     //刷新
     void refresh();
+
+    //notify list
+    void notifyDataSet();
 }

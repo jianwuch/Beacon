@@ -40,6 +40,16 @@ public class HomePresenter extends MainPageContract.IHomePresenter {
     }
 
     @Override
+    public void chooseAll() {
+
+    }
+
+    @Override
+    public void beginBatch(int type) {
+
+    }
+
+    @Override
     public void scanBeacon() {
         searchDevice();
     }

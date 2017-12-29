@@ -54,7 +54,7 @@ public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
         }
 
         //View刷新
-        //mView.;
+        mView.notifyDataSet();
     }
 
     @Override
