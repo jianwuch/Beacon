@@ -1,21 +1,15 @@
 package com.igrs.beacon.ui;
 
 import android.bluetooth.BluetoothGatt;
-import android.bluetooth.BluetoothGattCharacteristic;
-import android.bluetooth.BluetoothGattService;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.Switch;
-import android.widget.TextView;
 
 import com.clj.fastble.BleManager;
 import com.clj.fastble.callback.BleGattCallback;
@@ -32,6 +26,7 @@ import com.igrs.beacon.util.LogUtil;
 import com.igrs.beacon.util.ToastUtil;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by jove.chen on 2017/12/12.
@@ -41,15 +36,24 @@ import butterknife.BindView;
 public class ConfigurationActivity extends BaseActivity {
     public static final int WRITE = 87;
     public static final int READ = 82;
-    @BindView(R.id.tool_bar) Toolbar toolBar;
-    @BindView(R.id.uuid) TextView uuid;
-    @BindView(R.id.lay_uuid) LinearLayout layUuid;
-    @BindView(R.id.major) EditText major;
-    @BindView(R.id.minor) EditText minor;
-    @BindView(R.id.measure_power) EditText measurePower;
-    @BindView(R.id.tx_power) EditText txPower;
-    @BindView(R.id.tx_time) EditText txTime;
-    @BindView(R.id.device_name) EditText deviceName;
+    @BindView(R.id.tool_bar)
+    Toolbar toolBar;
+    @BindView(R.id.password)
+    EditText password;
+    @BindView(R.id.uuid)
+    EditText uuid;
+    @BindView(R.id.major)
+    EditText major;
+    @BindView(R.id.minor)
+    EditText minor;
+    @BindView(R.id.tx_power)
+    EditText txPower;
+    @BindView(R.id.ble_name)
+    EditText bleName;
+    @BindView(R.id.bat)
+    EditText bat;
+    @BindView(R.id.interval)
+    EditText interval;
     private BleDevice device;
 
     public static void show(Context context, BleDevice device) {
@@ -70,7 +74,6 @@ public class ConfigurationActivity extends BaseActivity {
                 finish();
             }
         });
-
         getDeviceFromIntent();
 
         //链接设备
@@ -105,7 +108,7 @@ public class ConfigurationActivity extends BaseActivity {
 
             @Override
             public void onDisConnected(boolean isActiveDisConnected, BleDevice device,
-                    BluetoothGatt gatt, int status) {
+                                       BluetoothGatt gatt, int status) {
                 showLoading(false);
                 ToastUtil.ToastShort(ConfigurationActivity.this, "断开连接");
             }
@@ -147,7 +150,8 @@ public class ConfigurationActivity extends BaseActivity {
                             @Override
                             public void onWriteSuccess() {
                                 LogUtil.d("写密码成功");
-                                getDeviceName();
+//                                getDeviceName();
+                                getAllInfo();
                             }
 
                             @Override
@@ -171,6 +175,57 @@ public class ConfigurationActivity extends BaseActivity {
                             @Override
                             public void onWriteFailure(BleException exception) {
                                 LogUtil.d("写读取名称失败");
+                            }
+                        });
+    }
+
+
+
+    //一次性拿全部属性
+    static int address = 2;
+    static int error_count = 0;
+    private void getAllInfo() {
+        if (address >= 9) return;
+        if (error_count >=3) {
+            ToastUtil.ToastShort(this, "重试3次读取失败");
+            return;
+        }
+        final String addressStr = String.format("0%1$d", address);
+        BleManager.getInstance()
+                .write(device, AppConstans.UUID_STR.SERVER_UUID,
+                        AppConstans.UUID_STR.CHA_WRITE_UUID,
+                        HexUtil.hexStringToBytes("52" + addressStr),
+                        new BleWriteCallback() {
+                            @Override
+                            public void onWriteSuccess() {
+                                LogUtil.d(addressStr + "写读取名称成功");
+                                address++;
+                                getAllInfo();
+                            }
+
+                            @Override
+                            public void onWriteFailure(BleException exception) {
+                                LogUtil.d(addressStr + "写读取名称失败");
+                                error_count++;
+                                getAllInfo();
+                            }
+                        });
+    }
+
+    private void getAddressInfo(final String addressStr) {
+        BleManager.getInstance()
+                .write(device, AppConstans.UUID_STR.SERVER_UUID,
+                        AppConstans.UUID_STR.CHA_WRITE_UUID,
+                        HexUtil.hexStringToBytes("52" + addressStr),
+                        new BleWriteCallback() {
+                            @Override
+                            public void onWriteSuccess() {
+                                LogUtil.d(addressStr + "写读取名称成功");
+                            }
+
+                            @Override
+                            public void onWriteFailure(BleException exception) {
+                                LogUtil.d(addressStr + "写读取名称失败");
                             }
                         });
     }
@@ -218,7 +273,7 @@ public class ConfigurationActivity extends BaseActivity {
                                         + "infoData:"
                                         + infoData);
 
-                                switch (HexIntUtil.getInt(new byte[] { type }, false)) {
+                                switch (HexIntUtil.getInt(new byte[]{type}, false)) {
                                     case WRITE:
                                         if (infoData.length == 0
                                                 && HexIntUtil.getInt(infoData, false) == 0) {
@@ -226,18 +281,30 @@ public class ConfigurationActivity extends BaseActivity {
                                                     "写入失败");
                                             return;
                                         }
-                                        switch (HexIntUtil.getInt(new byte[] { address }, false)) {
-                                            case 1:
+                                        switch (HexIntUtil.getInt(new byte[]{address}, false)) {
+                                            case 1://password
                                                 break;
-                                            case 2:
+                                            case 2://uuid
+
                                                 break;
-                                            case 3:
+                                            case 3://major
+                                                major.setText(HexIntUtil.getInt(infoData, false) + "");
                                                 break;
-                                            case 4:
+                                            case 4://minor
+                                                minor.setText(HexIntUtil.getInt(infoData, false) + "");
                                                 break;
                                             case 5:
                                                 break;
-                                            case 6:
+                                            case 6://ble_name
+                                                bleName.setText("");
+                                                break;
+
+                                            case 7://bat
+                                                bat.setText(HexIntUtil.getInt(infoData, false) + "");
+                                                break;
+
+                                            case 8://interval
+                                                interval.setText(HexIntUtil.getInt(infoData, false) + "");
                                                 break;
                                         }
                                         break;
@@ -249,18 +316,31 @@ public class ConfigurationActivity extends BaseActivity {
                                                     "读取失败");
                                             return;
                                         }
-                                        switch (HexIntUtil.getInt(new byte[] { address }, false)) {
-                                            case 1:
+                                        switch (HexIntUtil.getInt(new byte[]{address}, false)) {
+                                            case 1://password
                                                 break;
-                                            case 2:
+                                            case 2://uuid
+
                                                 break;
-                                            case 3:
+                                            case 3://major
+                                                major.setText(HexIntUtil.getInt(infoData, false) + "");
                                                 break;
-                                            case 4:
+                                            case 4://minor
+                                                minor.setText(HexIntUtil.getInt(infoData, false) + "");
                                                 break;
-                                            case 5:
+                                            case 5://tx_power
+                                                txPower.setText((int) infoData[0]);
                                                 break;
-                                            case 6:
+                                            case 6://ble_name
+                                                bleName.setText(new String(infoData));
+                                                break;
+
+                                            case 7://bat
+                                                bat.setText(HexIntUtil.getInt(infoData, false) + "");
+                                                break;
+
+                                            case 8://interval
+                                                interval.setText(HexIntUtil.getInt(infoData, false) + "");
                                                 break;
                                         }
                                         break;

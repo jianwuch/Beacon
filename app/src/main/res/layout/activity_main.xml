@@ -12,7 +12,8 @@
       android:id="@+id/tool_bar"
       android:layout_width="match_parent"
       android:layout_height="?attr/actionBarSize"
-      app:title="Beacon">
+      app:title="Beacon"
+      android:background="#99ccff">
 
     <RadioGroup
         android:id="@+id/radio"

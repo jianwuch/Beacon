@@ -1,5 +1,6 @@
 package com.igrs.beacon.ui.contract;
 
+import com.igrs.beacon.moudle.data.FilterConfig;
 import com.igrs.beacon.moudle.data.iBeacon;
 import com.igrs.beacon.ui.basemvp.BasePresenter;
 import com.igrs.beacon.ui.basemvp.IListViewView;
@@ -18,7 +19,10 @@ public class MainPageContract {
     public static abstract class IHomePresenter  extends BasePresenter<IHomeView>{
 
         //设置过滤条件
-        public abstract void setFilter(int type);
+        public abstract void setFilterConfig(FilterConfig config);
+
+        //设置排序类型
+        public abstract void setSort(int type);
 
         //全选
         public abstract void chooseAll();

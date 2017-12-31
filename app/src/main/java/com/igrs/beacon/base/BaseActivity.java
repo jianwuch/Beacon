@@ -13,6 +13,7 @@ import com.igrs.beacon.util.DialogManager;
 
 public class BaseActivity extends AppCompatActivity {
     public static final String INTENT_KEY = "key1";
+    public static final String INTENT_RESULT_KEY = "result_key1";
     private Unbinder mUnbinder;
     public DialogManager dialogManager;
     @Override

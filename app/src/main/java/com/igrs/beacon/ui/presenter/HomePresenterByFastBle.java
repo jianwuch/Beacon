@@ -41,7 +41,19 @@ public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
     private int mFilterType;
 
     @Override
-    public void setFilter(int type) {
+    public void setFilterConfig(FilterConfig config) {
+        this.config = config;
+        if (null == bleManager) {
+            return;
+        }
+
+        bleManager.cancelScan();
+        initScanConfig();
+        scanBeacon();
+    }
+
+    @Override
+    public void setSort(int type) {
         mFilterType = type;
     }
 
@@ -69,6 +81,11 @@ public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
         bleManager = BleManager.getInstance();
         bleManager.init(MyApplication.getInstance());
 
+        initScanConfig();
+        scanBeacon();
+    }
+
+    private void initScanConfig() {
         BleScanRuleConfig.Builder builder = new BleScanRuleConfig.Builder();
 
         //获取过滤配置, 这里是过滤UUID的方式，过滤Major，Minor的方式在查找到设备之后过滤
@@ -87,7 +104,6 @@ public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
 
         BleScanRuleConfig scanRuleConfig = builder.build();
         BleManager.getInstance().initScanRule(scanRuleConfig);
-        scanBeacon();
     }
 
     @Override

@@ -6,11 +6,13 @@ import android.content.SharedPreferences;
 import com.igrs.beacon.config.AppConstans;
 import com.igrs.beacon.util.SharedPreferencesUtils;
 
+import java.io.Serializable;
+
 /**
  * Created by jove.chen on 2017/12/6.
  */
 
-public class FilterConfig {
+public class FilterConfig implements Serializable{
     public boolean enableUUID;
     public boolean enableMajor;
     public boolean enableMinor;
@@ -45,5 +47,9 @@ public class FilterConfig {
     }
 
     public FilterConfig() {
+    }
+
+    public boolean isEnableFilter() {
+        return enableUUID || enableMajor || enableMinor;
     }
 }

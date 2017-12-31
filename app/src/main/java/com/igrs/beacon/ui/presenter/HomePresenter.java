@@ -3,6 +3,7 @@ package com.igrs.beacon.ui.presenter;
 import android.util.Log;
 
 import com.igrs.beacon.moudle.data.BeaconWithCheckable;
+import com.igrs.beacon.moudle.data.FilterConfig;
 import com.igrs.beacon.moudle.data.iBeacon;
 import com.igrs.beacon.ui.contract.MainPageContract;
 import com.igrs.beacon.ui.model.ble.ClientManager;
@@ -35,7 +36,12 @@ public class HomePresenter extends MainPageContract.IHomePresenter {
     }
 
     @Override
-    public void setFilter(int type) {
+    public void setFilterConfig(FilterConfig config) {
+
+    }
+
+    @Override
+    public void setSort(int type) {
 
     }
 

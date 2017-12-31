@@ -25,10 +25,11 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:26.+'
+    compile 'com.android.support:cardview-v7:26.+'
+    compile 'com.android.support:support-v4:26.+'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.roughike:bottom-bar:2.3.1'
     compile 'com.jakewharton:butterknife:8.8.1'
-    compile 'com.android.support:support-v4:26.+'
     testCompile 'junit:junit:4.12'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile 'com.android.support:design:26.0.0-alpha1'
@@ -36,7 +37,6 @@ dependencies {
     compile 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.34'
     compile 'org.greenrobot:greendao:3.2.2'
     compile 'com.clj.fastble:FastBleLib:2.1.4'
-
     //二维码扫描
     compile 'com.google.zxing:core:3.3.1'
     compile 'com.journeyapps:zxing-android-embedded:3.3.0'

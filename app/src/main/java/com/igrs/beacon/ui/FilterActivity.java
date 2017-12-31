@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -27,6 +28,7 @@ import com.igrs.beacon.util.ToastUtil;
  */
 
 public class FilterActivity extends BaseActivity implements CompoundButton.OnCheckedChangeListener {
+    public static final int REQUEST_CODE = 201;
     @BindView(R.id.tool_bar) Toolbar toolBar;
     @BindView(R.id.switch_uuid) Switch switchUuid;
     @BindView(R.id.switch_major) SwitchCompat switchMajor;
@@ -78,19 +80,48 @@ public class FilterActivity extends BaseActivity implements CompoundButton.OnChe
                 config.enableMinor = switchMinor.isChecked();
                 if (config.enableUUID) {
                     config.filterUUID = tvUuid.getText().toString().trim();
+                    if (TextUtils.isEmpty(config.filterUUID)) {
+                        ToastUtil.ToastShort(FilterActivity.this, "开启了UUID过滤需要选择一个过滤的uuid");
+                        return;
+                    }
                 }
 
                 if (config.enableMajor) {
-                    config.majorFrom = Integer.parseInt(edMajorFrom.getText().toString().trim());
-                    config.majorTo = Integer.parseInt(edMajorTo.getText().toString().trim());
+                    String majorF = edMajorFrom.getText().toString().trim();
+                    String majorT = edMajorTo.getText().toString().trim();
+
+                    if (TextUtils.isEmpty(majorF) || TextUtils.isEmpty(majorT)) {
+                        ToastUtil.ToastShort(FilterActivity.this, "开启了major过滤需要填写major");
+                        return;
+                    }
+                    config.majorFrom = Integer.parseInt(majorF);
+                    config.majorTo = Integer.parseInt(majorT);
                 }
 
                 if (config.enableMinor) {
-                    config.minorFrom = Integer.parseInt(edMinorFrom.getText().toString().trim());
-                    config.minorTo = Integer.parseInt(edMinorTo.getText().toString().trim());
+                    String mimorF = edMinorFrom.getText().toString().trim();
+                    String mimorT = edMinorTo.getText().toString().trim();
+
+                    if (TextUtils.isEmpty(mimorF) || TextUtils.isEmpty(mimorT)) {
+                        ToastUtil.ToastShort(FilterActivity.this, "开启了minor过滤需要填写minor");
+                        return;
+                    }
+                    config.minorFrom = Integer.parseInt(mimorF);
+                    config.minorTo = Integer.parseInt(mimorT);
                 }
 
                 FilterManager.saveNewConfig(config);
+
+                //通知页面过滤选择情况
+                if (config.isEnableFilter()) {
+                    Intent intent = new Intent();
+                    intent.putExtra(INTENT_RESULT_KEY, config);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                } else {
+                    setResult(RESULT_CANCELED);
+                    finish();
+                }
             }
         });
     }

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.view.ActionMode;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -22,6 +21,7 @@ import butterknife.OnClick;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.igrs.beacon.moudle.data.FilterConfig;
 import com.igrs.beacon.moudle.data.iBeacon;
 import com.igrs.beacon.ui.ConfigurationActivity;
 import com.igrs.beacon.ui.CustomScanActivity;
@@ -76,14 +76,13 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
                 String ScanResult = intentResult.getContents();
                 Toast.makeText(this, ScanResult, Toast.LENGTH_LONG).show();
             }
-        } else if (requestCode == START_CODE_UUID) {
+        } else if (requestCode == FilterActivity.REQUEST_CODE) {
             switch (resultCode) {
                 case RESULT_CANCELED:
-                    ToastUtil.ToastShort(this, "取消");
                     break;
                 case RESULT_OK:
-                    String uuid = data.getStringExtra(UUIDManagerActivity.UUID_KEY);
-                    ToastUtil.ToastShort(this, uuid);
+                    FilterConfig config = (FilterConfig) data.getSerializableExtra(FilterActivity.INTENT_RESULT_KEY);
+                    presenter.setFilterConfig(config);
                     break;
             }
         }
@@ -102,8 +101,6 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
     private void initRecycleView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recycleView.setLayoutManager(layoutManager);
-        recycleView.addItemDecoration(
-                new DividerItemDecoration(MainActivity.this, layoutManager.getOrientation()));
     }
 
     @Override
@@ -124,7 +121,7 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
             case R.id.action_setting:
                 ToastUtil.ToastShort(MainActivity.this, "设置过滤");
                 //                startActivityForResult(new Intent(MainActivity.this, UUIDManagerActivity.class), START_CODE_UUID);
-                startActivity(new Intent(this, FilterActivity.class));
+                startActivityForResult(new Intent(this, FilterActivity.class), FilterActivity.REQUEST_CODE);
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -209,12 +206,12 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 switch (checkedId) {
                     case R.id.by_rssi:
-                        presenter.setFilter(HomePresenterByFastBle.TYPE_RSSI);
+                        presenter.setSort(HomePresenterByFastBle.TYPE_RSSI);
                         ToastUtil.ToastShort(MainActivity.this, "信号强度过滤");
                         break;
                     case R.id.by_name:
                         ToastUtil.ToastShort(MainActivity.this, "名称过滤");
-                        presenter.setFilter(HomePresenterByFastBle.TYPE_NAME);
+                        presenter.setSort(HomePresenterByFastBle.TYPE_NAME);
                         break;
                 }
             }

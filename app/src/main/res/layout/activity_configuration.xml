@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:layout_margin="10dp">
+    android:layout_margin="10dp"
+    android:orientation="vertical">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/tool_bar"
@@ -21,25 +21,31 @@
             android:divider="@drawable/divider_bg"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/lay_uuid"
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/filter_item_height"
-                android:orientation="horizontal">
+                android:gravity="center_vertical"
+                android:hint="password">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="UUID" />
+                    android:text="******" />
+            </android.support.design.widget.TextInputLayout>
 
-                <TextView
+            <android.support.design.widget.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/filter_item_height"
+                android:gravity="center_vertical"
+                android:hint="UUID">
+
+                <EditText
                     android:id="@+id/uuid"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:drawableRight="@drawable/ic_nav_more"
-                    android:gravity="center_vertical" />
-            </LinearLayout>
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="0000" />
+            </android.support.design.widget.TextInputLayout>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
@@ -51,103 +57,71 @@
                     android:id="@+id/major"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="123546"/>
+                    android:text="0000" />
             </android.support.design.widget.TextInputLayout>
 
-            <RelativeLayout
+            <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/filter_item_height"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="Minor" />
+                android:layout_height="50dp"
+                android:hint="Minor">
 
                 <EditText
                     android:id="@+id/minor"
-                    android:layout_width="50dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" />
-            </RelativeLayout>
+                    android:text="0000" />
+            </android.support.design.widget.TextInputEditText>
 
-            <RelativeLayout
+
+            <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/filter_item_height"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="测量功率" />
-
-                <EditText
-                    android:id="@+id/measure_power"
-                    android:layout_width="50dp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/filter_item_height"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="发射功率" />
+                android:layout_height="50dp"
+                android:hint="TX power">
 
                 <EditText
                     android:id="@+id/tx_power"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" />
-            </RelativeLayout>
+                    android:text="-65" />
+            </android.support.design.widget.TextInputEditText>
 
-            <RelativeLayout
+
+            <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/filter_item_height"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="发送间隔" />
+                android:layout_height="50dp"
+                android:hint="BLE name">
 
                 <EditText
-                    android:id="@+id/tx_time"
+                    android:id="@+id/ble_name"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" />
-            </RelativeLayout>
+                    android:text="igrs" />
+            </android.support.design.widget.TextInputEditText>
 
-            <RelativeLayout
+            <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/filter_item_height"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:text="设备名称" />
+                android:layout_height="50dp"
+                android:hint="Bat">
 
                 <EditText
-                    android:id="@+id/device_name"
+                    android:id="@+id/bat"
                     android:layout_width="50dp"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true" />
-            </RelativeLayout>
+                    android:text="igrs" />
+            </android.support.design.widget.TextInputEditText>
+
+
+            <android.support.design.widget.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Interval">
+
+                <EditText
+                    android:id="@+id/interval"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:text="igrs" />
+            </android.support.design.widget.TextInputEditText>
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
