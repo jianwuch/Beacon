@@ -14,7 +14,6 @@ import java.io.Serializable;
 public class UUIDBean {
     public String name;
 
-    @Unique
     public String uuid;
 
     @Generated(hash = 293200863)
@@ -42,4 +41,5 @@ public class UUIDBean {
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
+
 }

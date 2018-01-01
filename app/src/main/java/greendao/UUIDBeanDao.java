@@ -42,7 +42,7 @@ public class UUIDBeanDao extends AbstractDao<UUIDBean, Void> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"UUIDBEAN\" (" + //
                 "\"NAME\" TEXT," + // 0: name
-                "\"UUID\" TEXT UNIQUE );"); // 1: uuid
+                "\"UUID\" TEXT);"); // 1: uuid
     }
 
     /** Drops the underlying database table. */

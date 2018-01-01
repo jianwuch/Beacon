@@ -34,6 +34,6 @@
         android:maxLines="1"
         android:singleLine="true"
         android:textSize="14sp"
-        android:text="0000xxxx-0000-1000-8000-00805F9B34FB"/>
+        android:text="0000xxxx-0000-1000-8000-00805f9b34fb"/>
   </android.support.design.widget.TextInputLayout>
 </LinearLayout>

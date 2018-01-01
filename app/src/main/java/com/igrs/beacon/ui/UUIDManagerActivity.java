@@ -1,8 +1,6 @@
 package com.igrs.beacon.ui;
 
 import android.app.Activity;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -26,11 +24,11 @@ import com.igrs.beacon.ui.adapter.UUIDListAdapter;
 import com.igrs.beacon.util.ToastUtil;
 
 import java.util.List;
+import java.util.regex.Pattern;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import greendao.GreenDaoHelper;
-import java.util.regex.Pattern;
 
 /**
  * Created by jianw on 17-12-3.
@@ -93,7 +91,7 @@ public class UUIDManagerActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent();
-                intent.putExtra(UUID_KEY, mDatas.get(position).uuid);
+                intent.putExtra(UUID_KEY, mAdapter.getData().get(position).uuid);
                 setResult(RESULT_OK, intent);
                 finish();
             }
@@ -161,12 +159,13 @@ public class UUIDManagerActivity extends BaseActivity {
 
         if (!isUUID(uuid)) {
             uuidLayout.setError("格式不对");
+            return false;
         }
         return true;
     }
 
     private boolean isUUID(String uuid) {
-        String reg = "[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}";
-        return Pattern.matches(reg, "0000xxxx-0000-1000-8000-00805F9B34FB");
+        String reg = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
+        return Pattern.matches(reg, uuid);
     }
 }

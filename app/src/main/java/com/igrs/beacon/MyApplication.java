@@ -1,12 +1,10 @@
 package com.igrs.beacon;
 
 import android.app.Application;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.igrs.beacon.config.FilterManager;
 import com.inuker.bluetooth.library.BluetoothContext;
 
-import greendao.DaoMaster;
 import greendao.GreenDaoHelper;
 
 /**
