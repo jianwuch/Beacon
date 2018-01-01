@@ -3,13 +3,17 @@ package com.igrs.beacon.ui;
 import android.bluetooth.BluetoothGatt;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.clj.fastble.BleManager;
 import com.clj.fastble.callback.BleGattCallback;
@@ -26,7 +30,6 @@ import com.igrs.beacon.util.LogUtil;
 import com.igrs.beacon.util.ToastUtil;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by jove.chen on 2017/12/12.
@@ -54,7 +57,16 @@ public class ConfigurationActivity extends BaseActivity {
     EditText bat;
     @BindView(R.id.interval)
     EditText interval;
+
+    @BindView(R.id.status)
+    TextView statsu;
     private BleDevice device;
+
+    private int pre_major;
+    private int pre_minor;
+    private String pre_name;
+    private int pre_interval;
+
 
     public static void show(Context context, BleDevice device) {
         Intent intent = new Intent(context, ConfigurationActivity.class);
@@ -138,7 +150,34 @@ public class ConfigurationActivity extends BaseActivity {
 
     //保存参数
     private void save() {
+        String majorStr = major.getText().toString().trim();
+        String minorStr = minor.getText().toString().trim();
+        String new_name = bleName.getText().toString().trim();
+        String intervalStr = interval.getText().toString().trim();
 
+        //major
+        if (!TextUtils.isEmpty(majorStr)) {
+            int new_major = Integer.parseInt(majorStr);
+            if (pre_major == new_major) {
+                //不需要修改
+            } else {
+                //修改major
+            }
+        }
+
+        //minor
+        if (!TextUtils.isEmpty(minorStr)) {
+            int new_minor = Integer.parseInt(minorStr);
+            if (pre_minor == new_minor) {
+                //不需要修改
+            } else {
+                //修改minor
+            }
+        }
+
+        if (!TextUtils.isEmpty(new_name) && !pre_name.equals(new_name)) {
+            //修改name
+        }
     }
 
     private void readInfo() {
@@ -159,6 +198,24 @@ public class ConfigurationActivity extends BaseActivity {
                                 LogUtil.d("写密码失败");
                             }
                         });
+    }
+
+    //写数据，修改参数
+    private void writeInfo(final String address, String data) {
+        String commStr = "57" + address + data;
+        byte[] writeData = HexUtil.hexStringToBytes(commStr);
+        BleManager.getInstance().write(device, AppConstans.UUID_STR.SERVER_UUID,
+                AppConstans.UUID_STR.CHA_WRITE_UUID, writeData, new BleWriteCallback() {
+                    @Override
+                    public void onWriteSuccess() {
+                        LogUtil.d(address+":蓝牙写成功,等待notify结果");
+                    }
+
+                    @Override
+                    public void onWriteFailure(BleException exception) {
+                        LogUtil.d(address+":蓝牙写失败");
+                    }
+                });
     }
 
     private void getDeviceName() {
@@ -273,14 +330,20 @@ public class ConfigurationActivity extends BaseActivity {
                                         + "infoData:"
                                         + infoData);
 
+                                int addressInt = HexIntUtil.getInt(new byte[type], false);
                                 switch (HexIntUtil.getInt(new byte[]{type}, false)) {
                                     case WRITE:
                                         if (infoData.length == 0
                                                 && HexIntUtil.getInt(infoData, false) == 0) {
+                                            LogUtil.d(addressInt +":notiry写入失败");
                                             ToastUtil.ToastShort(ConfigurationActivity.this,
-                                                    "写入失败");
+                                                    addressInt +":notiry写入失败");
                                             return;
                                         }
+
+                                        LogUtil.d(addressInt +":notiry写入成功");
+                                        ToastUtil.ToastShort(ConfigurationActivity.this,
+                                                addressInt +":notiry写入成功");
                                         switch (HexIntUtil.getInt(new byte[]{address}, false)) {
                                             case 1://password
                                                 break;

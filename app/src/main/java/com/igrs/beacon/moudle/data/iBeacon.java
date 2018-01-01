@@ -1,6 +1,9 @@
 package com.igrs.beacon.moudle.data;
 
 import android.bluetooth.BluetoothDevice;
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.clj.fastble.data.BleDevice;
 import com.igrs.beacon.util.iBeaconUtil;
 import com.inuker.bluetooth.library.search.SearchResult;
@@ -10,7 +13,7 @@ import java.io.Serializable;
  * Created by jianw on 17-11-30.
  */
 
-public class iBeacon extends BaseCheckable implements Serializable {
+public class iBeacon extends BaseCheckable implements Parcelable {
     public BleDevice bleDevice;
     public String name;
     public int major;
@@ -117,4 +120,48 @@ public class iBeacon extends BaseCheckable implements Serializable {
 
         return iBeacon;
     }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(this.bleDevice, flags);
+        dest.writeString(this.name);
+        dest.writeInt(this.major);
+        dest.writeInt(this.minor);
+        dest.writeString(this.proximityUuid);
+        dest.writeString(this.bluetoothAddress);
+        dest.writeInt(this.txPower);
+        dest.writeInt(this.rssi);
+    }
+
+    public iBeacon() {
+    }
+
+    protected iBeacon(Parcel in) {
+        this.bleDevice = in.readParcelable(BleDevice.class.getClassLoader());
+        this.name = in.readString();
+        this.major = in.readInt();
+        this.minor = in.readInt();
+        this.proximityUuid = in.readString();
+        this.bluetoothAddress = in.readString();
+        this.txPower = in.readInt();
+        this.rssi = in.readInt();
+    }
+
+    public static final Parcelable.Creator<iBeacon> CREATOR = new Parcelable.Creator<iBeacon>() {
+        @Override
+        public iBeacon createFromParcel(Parcel source) {
+            return new iBeacon(source);
+        }
+
+        @Override
+        public iBeacon[] newArray(int size) {
+            return new iBeacon[size];
+        }
+    };
 }

@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,6 +58,7 @@ public class UUIDManagerActivity extends BaseActivity {
         ButterKnife.bind(this);
 
         initToolBar(toolBar, true, "UUDI白名单");
+        toolBar.setSubtitle("Tip:长按可以删除单条记录");
         initRecyclerView();
         initEvent();
         loadDbData();
@@ -94,6 +96,15 @@ public class UUIDManagerActivity extends BaseActivity {
                 intent.putExtra(UUID_KEY, mAdapter.getData().get(position).uuid);
                 setResult(RESULT_OK, intent);
                 finish();
+            }
+        });
+
+        mAdapter.setOnItemLongClickListener(new BaseQuickAdapter.OnItemLongClickListener() {
+
+            @Override
+            public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
+                mAdapter.remove(position);
+                return true;
             }
         });
     }

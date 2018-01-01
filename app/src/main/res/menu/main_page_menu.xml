@@ -17,6 +17,6 @@
     <item
         android:id="@+id/action_setting"
         android:icon="@android:drawable/ic_menu_edit"
-        android:title="设置"
+        android:title="过滤设置"
         app:showAsAction="never" />
 </menu>
