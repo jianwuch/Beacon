@@ -5,7 +5,8 @@
   <string name="hello_blank_fragment">Hello blank fragment</string>
   <string name="loading">加载中</string>
     <string name="choose_all">全选</string>
-    <string-array name="spingarr">
+  <string name="status">状态：%1$s</string>
+  <string-array name="spingarr">
     <item>批量修改配置</item>
     <item>批量修改秘密</item>
     <item>批量修改名称</item>

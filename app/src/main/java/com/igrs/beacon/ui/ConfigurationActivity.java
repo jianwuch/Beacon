@@ -3,12 +3,11 @@ package com.igrs.beacon.ui;
 import android.bluetooth.BluetoothGatt;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Address;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -59,14 +58,15 @@ public class ConfigurationActivity extends BaseActivity {
     EditText interval;
 
     @BindView(R.id.status)
-    TextView statsu;
+    TextView statusTextView;
     private BleDevice device;
 
     private int pre_major;
     private int pre_minor;
     private String pre_name;
     private int pre_interval;
-
+    private boolean isConnected;
+    private Handler mHandler;
 
     public static void show(Context context, BleDevice device) {
         Intent intent = new Intent(context, ConfigurationActivity.class);
@@ -87,6 +87,7 @@ public class ConfigurationActivity extends BaseActivity {
             }
         });
         getDeviceFromIntent();
+        mHandler = new Handler();
 
         //链接设备
         BleManager.getInstance().connect(device, new BleGattCallback() {
@@ -99,14 +100,18 @@ public class ConfigurationActivity extends BaseActivity {
             public void onConnectFail(BleException exception) {
                 showLoading(false);
                 ToastUtil.ToastShort(ConfigurationActivity.this, "连接失败");
+                isConnected = false;
+
+                //todo 重连机制
             }
 
             @Override
             public void onConnectSuccess(BleDevice bleDevice, BluetoothGatt gatt, int status) {
                 showLoading(false);
                 LogUtil.d("蓝牙连接成功");
-
-                Notify();
+                isConnected = true;
+                statusTextView.setText(String.format(getString(R.string.status), "已连接"));
+                Notify();//开启通知
                 //读参数
   /*              BluetoothGatt gatt1 = BleManager.getInstance().getBluetoothGatt(bleDevice);
                 for (BluetoothGattService service : gatt.getServices()) {
@@ -122,7 +127,8 @@ public class ConfigurationActivity extends BaseActivity {
             public void onDisConnected(boolean isActiveDisConnected, BleDevice device,
                                        BluetoothGatt gatt, int status) {
                 showLoading(false);
-                ToastUtil.ToastShort(ConfigurationActivity.this, "断开连接");
+                isConnected = false;
+                statusTextView.setText(String.format(getString(R.string.status), "已断开"));
             }
         });
     }
@@ -180,7 +186,7 @@ public class ConfigurationActivity extends BaseActivity {
         }
     }
 
-    private void readInfo() {
+    private void setPassword() {
         byte[] setPassword = HexUtil.hexStringToBytes(
                 "57" + AppConstans.RegAD.PASSWORD + AppConstans.DEFAULT_PASSWORD);
         BleManager.getInstance()
@@ -189,8 +195,7 @@ public class ConfigurationActivity extends BaseActivity {
                             @Override
                             public void onWriteSuccess() {
                                 LogUtil.d("写密码成功");
-//                                getDeviceName();
-                                getAllInfo();
+                                //成功之后在notiry中去干其他操作
                             }
 
                             @Override
@@ -243,6 +248,7 @@ public class ConfigurationActivity extends BaseActivity {
     static int error_count = 0;
     private void getAllInfo() {
         if (address >= 9) return;
+        LogUtil.d("开始读取寄存器数据："+address);
         if (error_count >=3) {
             ToastUtil.ToastShort(this, "重试3次读取失败");
             return;
@@ -257,14 +263,24 @@ public class ConfigurationActivity extends BaseActivity {
                             public void onWriteSuccess() {
                                 LogUtil.d(addressStr + "写读取名称成功");
                                 address++;
-                                getAllInfo();
+                                mHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        getAllInfo();
+                                    }
+                                }, 100);//延时下一个蓝牙的操作，因为不延时已经出现串notify的情况
                             }
 
                             @Override
                             public void onWriteFailure(BleException exception) {
                                 LogUtil.d(addressStr + "写读取名称失败");
                                 error_count++;
-                                getAllInfo();
+                                mHandler.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        getAllInfo();
+                                    }
+                                }, 100);
                             }
                         });
     }
@@ -295,7 +311,7 @@ public class ConfigurationActivity extends BaseActivity {
                             public void onNotifySuccess() {
                                 // 打开通知操作成功（UI线程）
                                 LogUtil.d("订阅通知数据成功");
-                                readInfo();
+                                setPassword();
                             }
 
                             @Override
@@ -322,33 +338,29 @@ public class ConfigurationActivity extends BaseActivity {
                                 byte[] infoData = new byte[length];
                                 System.arraycopy(data, 2, infoData, 0, length);
 
-                                LogUtil.d("Notify数据处理："
-                                        + "type:"
-                                        + type
-                                        + "address:"
-                                        + address
-                                        + "infoData:"
-                                        + infoData);
-
-                                int addressInt = HexIntUtil.getInt(new byte[type], false);
-                                switch (HexIntUtil.getInt(new byte[]{type}, false)) {
+                                int addressInt = (int)(address);
+                                switch ((int)type) {
                                     case WRITE:
-                                        if (infoData.length == 0
-                                                && HexIntUtil.getInt(infoData, false) == 0) {
+                                        if (infoData.length == 1 && ((int)infoData[0]) == 0) {
                                             LogUtil.d(addressInt +":notiry写入失败");
-                                            ToastUtil.ToastShort(ConfigurationActivity.this,
-                                                    addressInt +":notiry写入失败");
+
+                                            if (addressInt == 1 && isConnected) {
+
+                                                //重新写入密码
+                                                LogUtil.d("密码重新登入");
+                                                setPassword();
+                                            }
                                             return;
                                         }
 
                                         LogUtil.d(addressInt +":notiry写入成功");
-                                        ToastUtil.ToastShort(ConfigurationActivity.this,
-                                                addressInt +":notiry写入成功");
-                                        switch (HexIntUtil.getInt(new byte[]{address}, false)) {
+                                        switch (addressInt) {
                                             case 1://password
+                                                LogUtil.d("密码验证成功");
+                                                getAllInfo();//密码输出正确之后开始获取其他数据
                                                 break;
                                             case 2://uuid
-
+                                                uuid.setText(HexUtil.encodeHexStr(infoData));
                                                 break;
                                             case 3://major
                                                 major.setText(HexIntUtil.getInt(infoData, false) + "");
@@ -357,6 +369,7 @@ public class ConfigurationActivity extends BaseActivity {
                                                 minor.setText(HexIntUtil.getInt(infoData, false) + "");
                                                 break;
                                             case 5:
+                                                txPower.setText(HexIntUtil.getInt(infoData, false)+"");
                                                 break;
                                             case 6://ble_name
                                                 bleName.setText("");
@@ -373,17 +386,17 @@ public class ConfigurationActivity extends BaseActivity {
                                         break;
 
                                     case READ:
-                                        if (infoData.length == 0
-                                                && HexIntUtil.getInt(infoData, false) == 0) {
+                                        if (infoData.length == 1 && ((int)infoData[0]) == 0) {
                                             ToastUtil.ToastShort(ConfigurationActivity.this,
                                                     "读取失败");
                                             return;
                                         }
                                         switch (HexIntUtil.getInt(new byte[]{address}, false)) {
                                             case 1://password
+                                                password.setText(HexUtil.encodeHexStr(infoData));
                                                 break;
                                             case 2://uuid
-
+                                                uuid.setText(HexUtil.encodeHexStr(infoData));
                                                 break;
                                             case 3://major
                                                 major.setText(HexIntUtil.getInt(infoData, false) + "");
@@ -392,7 +405,7 @@ public class ConfigurationActivity extends BaseActivity {
                                                 minor.setText(HexIntUtil.getInt(infoData, false) + "");
                                                 break;
                                             case 5://tx_power
-                                                txPower.setText((int) infoData[0]);
+                                                txPower.setText(HexIntUtil.getInt(infoData, false) + "");
                                                 break;
                                             case 6://ble_name
                                                 bleName.setText(new String(infoData));
@@ -410,5 +423,12 @@ public class ConfigurationActivity extends BaseActivity {
                                 }
                             }
                         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        BleManager.getInstance().disconnect(device);
+        address = 2;
     }
 }

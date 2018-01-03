@@ -1,139 +1,156 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="10dp"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/tool_bar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize" />
+  <android.support.v7.widget.Toolbar
+      android:id="@+id/tool_bar"
+      android:layout_width="match_parent"
+      android:layout_height="?attr/actionBarSize" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+  <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1">
 
-        <LinearLayout
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@drawable/divider_bg"
+        android:orientation="vertical">
+
+      <TextView
+          android:id="@+id/status"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:text="状态：" />
+
+      <android.support.design.widget.TextInputLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/filter_item_height"
+          android:gravity="center_vertical"
+          android:hint="password">
+
+        <EditText
+            android:id="@+id/password"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:divider="@drawable/divider_bg"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:lines="1"
+            android:maxLines="1"
+            android:text="******" />
+      </android.support.design.widget.TextInputLayout>
 
-            <TextView
-                android:id="@+id/status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="状态："/>
+      <android.support.design.widget.TextInputLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/filter_item_height"
+          android:gravity="center_vertical"
+          android:hint="UUID">
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/filter_item_height"
-                android:gravity="center_vertical"
-                android:hint="password">
+        <EditText
+            android:id="@+id/uuid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:maxLines="1"
+            tools:text="0000" />
+      </android.support.design.widget.TextInputLayout>
 
-                <EditText
-                    android:id="@+id/password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:text="******" />
-            </android.support.design.widget.TextInputLayout>
+      <android.support.design.widget.TextInputLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/filter_item_height"
+          android:gravity="center_vertical"
+          android:hint="Major">
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/filter_item_height"
-                android:gravity="center_vertical"
-                android:hint="UUID">
+        <EditText
+            android:id="@+id/major"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:lines="1"
+            android:maxLines="1"
+            tools:text="0000" />
+      </android.support.design.widget.TextInputLayout>
 
-                <EditText
-                    android:id="@+id/uuid"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="0000" />
-            </android.support.design.widget.TextInputLayout>
+      <android.support.design.widget.TextInputLayout
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:hint="Minor">
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/filter_item_height"
-                android:gravity="center_vertical"
-                android:hint="Major">
-
-                <EditText
-                    android:id="@+id/major"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:text="0000" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="Minor">
-
-                <EditText
-                    android:id="@+id/minor"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:text="0000" />
-            </android.support.design.widget.TextInputLayout>
+        <EditText
+            android:id="@+id/minor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:lines="1"
+            android:maxLines="1"
+            tools:text="0000" />
+      </android.support.design.widget.TextInputLayout>
 
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="TX power">
+      <android.support.design.widget.TextInputLayout
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:hint="TX power">
 
-                <EditText
-                    android:id="@+id/tx_power"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="-65" />
-            </android.support.design.widget.TextInputLayout>
-
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="BLE name">
-
-                <EditText
-                    android:id="@+id/ble_name"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="igrs" />
-            </android.support.design.widget.TextInputLayout>
-
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="Bat">
-
-                <EditText
-                    android:id="@+id/bat"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:text="-59" />
-            </android.support.design.widget.TextInputLayout>
+        <EditText
+            android:id="@+id/tx_power"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:maxLines="1"
+            tools:text="-65" />
+      </android.support.design.widget.TextInputLayout>
 
 
-            <android.support.design.widget.TextInputLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="Interval">
+      <android.support.design.widget.TextInputLayout
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:hint="BLE name">
 
-                <EditText
-                    android:id="@+id/interval"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="number"
-                    android:text="1000" />
-            </android.support.design.widget.TextInputLayout>
-        </LinearLayout>
-    </ScrollView>
+        <EditText
+            android:id="@+id/ble_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lines="1"
+            android:maxLines="1"
+            tools:text="igrs" />
+      </android.support.design.widget.TextInputLayout>
+
+      <android.support.design.widget.TextInputLayout
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:hint="Bat">
+
+        <EditText
+            android:id="@+id/bat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:lines="1"
+            android:maxLines="1"
+            tools:text="-59" />
+      </android.support.design.widget.TextInputLayout>
+
+
+      <android.support.design.widget.TextInputLayout
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:hint="Interval"
+          android:lines="1"
+          android:maxLines="1">
+
+        <EditText
+            android:id="@+id/interval"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            tools:text="1000" />
+      </android.support.design.widget.TextInputLayout>
+    </LinearLayout>
+  </ScrollView>
 </LinearLayout>
