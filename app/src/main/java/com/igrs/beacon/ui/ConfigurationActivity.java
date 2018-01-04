@@ -39,32 +39,23 @@ import java.io.UnsupportedEncodingException;
 public class ConfigurationActivity extends BaseActivity {
     public static final int WRITE = 87;
     public static final int READ = 82;
-    @BindView(R.id.tool_bar)
-    Toolbar toolBar;
-    @BindView(R.id.password)
-    EditText password;
-    @BindView(R.id.uuid)
-    EditText uuid;
-    @BindView(R.id.major)
-    EditText major;
-    @BindView(R.id.minor)
-    EditText minor;
-    @BindView(R.id.tx_power)
-    EditText txPower;
-    @BindView(R.id.ble_name)
-    EditText bleName;
-    @BindView(R.id.bat)
-    EditText bat;
-    @BindView(R.id.interval)
-    EditText interval;
+    @BindView(R.id.tool_bar) Toolbar toolBar;
+    @BindView(R.id.password) EditText password;
+    @BindView(R.id.uuid) EditText uuid;
+    @BindView(R.id.major) EditText major;
+    @BindView(R.id.minor) EditText minor;
+    @BindView(R.id.tx_power) EditText txPower;
+    @BindView(R.id.ble_name) EditText bleName;
+    @BindView(R.id.bat) EditText bat;
+    @BindView(R.id.interval) EditText interval;
 
-    @BindView(R.id.status)
-    TextView statusTextView;
+    @BindView(R.id.status) TextView statusTextView;
     private BleDevice device;
 
     private int pre_major;
     private int pre_minor;
     private String pre_name;
+    private int pre_tx_power;
     private int pre_interval;
     private boolean isConnected;
     private Handler mHandler;
@@ -126,7 +117,7 @@ public class ConfigurationActivity extends BaseActivity {
 
             @Override
             public void onDisConnected(boolean isActiveDisConnected, BleDevice device,
-                                       BluetoothGatt gatt, int status) {
+                    BluetoothGatt gatt, int status) {
                 showLoading(false);
                 isConnected = false;
                 statusTextView.setText(String.format(getString(R.string.status), "已断开"));
@@ -161,6 +152,7 @@ public class ConfigurationActivity extends BaseActivity {
         String minorStr = minor.getText().toString().trim();
         String new_name = bleName.getText().toString().trim();
         String intervalStr = interval.getText().toString().trim();
+        String tx_powerStr = txPower.getText().toString().trim();
 
         //major
         if (!TextUtils.isEmpty(majorStr)) {
@@ -169,7 +161,7 @@ public class ConfigurationActivity extends BaseActivity {
                 //不需要修改
             } else {
                 //修改major
-                setMajor(new_major+"");
+                setMajor(new_major + "");
             }
         }
 
@@ -180,7 +172,14 @@ public class ConfigurationActivity extends BaseActivity {
                 //不需要修改
             } else {
                 //修改minor
-                setMajor(new_minor+"");
+                setMajor(new_minor + "");
+            }
+        }
+
+        if (!TextUtils.isEmpty(tx_powerStr)) {
+            int new_tx_power = Integer.parseInt(tx_powerStr);
+            if (pre_tx_power != new_tx_power) {
+                setTxPower(new_tx_power + "");
             }
         }
 
@@ -209,8 +208,6 @@ public class ConfigurationActivity extends BaseActivity {
                         });
     }
 
-
-
     private void getDeviceName() {
         BleManager.getInstance()
                 .write(device, AppConstans.UUID_STR.SERVER_UUID,
@@ -229,15 +226,14 @@ public class ConfigurationActivity extends BaseActivity {
                         });
     }
 
-
-
     //一次性拿全部属性
     static int address = 2;
     static int error_count = 0;
+
     private void getAllInfo() {
         if (address >= 9) return;
-        LogUtil.d("开始读取寄存器数据："+address);
-        if (error_count >=3) {
+        LogUtil.d("开始读取寄存器数据：" + address);
+        if (error_count >= 3) {
             ToastUtil.ToastShort(this, "重试3次读取失败");
             return;
         }
@@ -245,8 +241,7 @@ public class ConfigurationActivity extends BaseActivity {
         BleManager.getInstance()
                 .write(device, AppConstans.UUID_STR.SERVER_UUID,
                         AppConstans.UUID_STR.CHA_WRITE_UUID,
-                        HexUtil.hexStringToBytes("52" + addressStr),
-                        new BleWriteCallback() {
+                        HexUtil.hexStringToBytes("52" + addressStr), new BleWriteCallback() {
                             @Override
                             public void onWriteSuccess() {
                                 LogUtil.d(addressStr + "写读取名称成功");
@@ -277,8 +272,7 @@ public class ConfigurationActivity extends BaseActivity {
         BleManager.getInstance()
                 .write(device, AppConstans.UUID_STR.SERVER_UUID,
                         AppConstans.UUID_STR.CHA_WRITE_UUID,
-                        HexUtil.hexStringToBytes("52" + addressStr),
-                        new BleWriteCallback() {
+                        HexUtil.hexStringToBytes("52" + addressStr), new BleWriteCallback() {
                             @Override
                             public void onWriteSuccess() {
                                 LogUtil.d(addressStr + "写读取名称成功");
@@ -326,11 +320,11 @@ public class ConfigurationActivity extends BaseActivity {
                                 byte[] infoData = new byte[length];
                                 System.arraycopy(data, 2, infoData, 0, length);
 
-                                int addressInt = (int)(address);
-                                switch ((int)type) {
+                                int addressInt = (int) (address);
+                                switch ((int) type) {
                                     case WRITE:
-                                        if (infoData.length == 1 && ((int)infoData[0]) == 0) {
-                                            LogUtil.d(addressInt +":notiry写入失败");
+                                        if (infoData.length == 1 && ((int) infoData[0]) == 0) {
+                                            LogUtil.d(addressInt + ":notiry写入失败");
 
                                             if (addressInt == 1 && isConnected) {
 
@@ -341,46 +335,36 @@ public class ConfigurationActivity extends BaseActivity {
                                             return;
                                         }
 
-                                        LogUtil.d(addressInt +":notiry写入成功");
+                                        LogUtil.d(addressInt + ":notiry写入成功");
                                         switch (addressInt) {
                                             case 1://password
                                                 LogUtil.d("密码验证成功");
                                                 getAllInfo();//密码输出正确之后开始获取其他数据
                                                 break;
                                             case 2://uuid
-                                                uuid.setText(HexUtil.encodeHexStr(infoData));
                                                 break;
                                             case 3://major
-                                                pre_minor = HexIntUtil.getInt(infoData, false);
-                                                major.setText(pre_minor + "");
                                                 break;
                                             case 4://minor
-                                                minor.setText(HexIntUtil.getInt(infoData, false) + "");
                                                 break;
                                             case 5:
-                                                txPower.setText(HexIntUtil.getInt(infoData, false)+"");
                                                 break;
                                             case 6://ble_name
-                                                bleName.setText("");
                                                 break;
-
                                             case 7://bat
-                                                bat.setText(HexIntUtil.getInt(infoData, false) + "");
                                                 break;
-
                                             case 8://interval
-                                                interval.setText(HexIntUtil.getInt(infoData, false) + "");
                                                 break;
                                         }
                                         break;
 
                                     case READ:
-                                        if (infoData.length == 1 && ((int)infoData[0]) == 0) {
+                                        if (infoData.length == 1 && ((int) infoData[0]) == 0) {
                                             ToastUtil.ToastShort(ConfigurationActivity.this,
                                                     "读取失败");
                                             return;
                                         }
-                                        switch (HexIntUtil.getInt(new byte[]{address}, false)) {
+                                        switch (HexIntUtil.getInt(new byte[] { address }, false)) {
                                             case 1://password
                                                 password.setText(HexUtil.encodeHexStr(infoData));
                                                 break;
@@ -393,11 +377,12 @@ public class ConfigurationActivity extends BaseActivity {
                                                 break;
                                             case 4://minor
                                                 pre_minor = HexIntUtil.getInt(infoData, false);
-                                                minor.setText(pre_minor+"");
+                                                minor.setText(pre_minor + "");
 
                                                 break;
                                             case 5://tx_power
-                                                txPower.setText((int) infoData[0] + "");
+                                                pre_tx_power = (int) infoData[0];
+                                                txPower.setText(pre_tx_power + "");
                                                 break;
                                             case 6://ble_name
                                                 pre_name = new String(infoData);
@@ -405,11 +390,13 @@ public class ConfigurationActivity extends BaseActivity {
                                                 break;
 
                                             case 7://bat
-                                                bat.setText(HexIntUtil.getInt(infoData, false) + "");
+                                                bat.setText(
+                                                        HexIntUtil.getInt(infoData, false) + "");
                                                 break;
 
                                             case 8://interval
-                                                interval.setText(HexIntUtil.getInt(infoData, false) + "");
+                                                interval.setText(
+                                                        HexIntUtil.getInt(infoData, false) + "");
                                                 break;
                                         }
                                         break;
@@ -429,18 +416,19 @@ public class ConfigurationActivity extends BaseActivity {
     private void writeInfo(final String address, String data) {
         String commStr = "57" + address + data;
         byte[] writeData = HexUtil.hexStringToBytes(commStr);
-        BleManager.getInstance().write(device, AppConstans.UUID_STR.SERVER_UUID,
-                AppConstans.UUID_STR.CHA_WRITE_UUID, writeData, new BleWriteCallback() {
-                    @Override
-                    public void onWriteSuccess() {
-                        LogUtil.d(address+":蓝牙写成功,等待notify结果");
-                    }
+        BleManager.getInstance()
+                .write(device, AppConstans.UUID_STR.SERVER_UUID,
+                        AppConstans.UUID_STR.CHA_WRITE_UUID, writeData, new BleWriteCallback() {
+                            @Override
+                            public void onWriteSuccess() {
+                                LogUtil.d(address + ":蓝牙写成功,等待notify结果");
+                            }
 
-                    @Override
-                    public void onWriteFailure(BleException exception) {
-                        LogUtil.d(address+":蓝牙写失败");
-                    }
-                });
+                            @Override
+                            public void onWriteFailure(BleException exception) {
+                                LogUtil.d(address + ":蓝牙写失败");
+                            }
+                        });
     }
 
     private String mCurrentType;//当前修改的类型寄存器
@@ -448,8 +436,8 @@ public class ConfigurationActivity extends BaseActivity {
     private static int mWriteCount = 0;//写错误的次数记录
 
     /**
+     * 改minor
      * 直接输入10进制的数子
-     * @param value
      */
     private void setMajor(String value) {
         //int转16
@@ -459,6 +447,7 @@ public class ConfigurationActivity extends BaseActivity {
         writeInfo(AppConstans.RegAD.MAJOR, value);
     }
 
+    //改minor
     public void setMinor(String value) {
         //int转16
         String hexData = HexIntUtil.decimalTo2ByteHex(Integer.parseInt(value));
@@ -467,18 +456,28 @@ public class ConfigurationActivity extends BaseActivity {
         writeInfo(AppConstans.RegAD.MINOR, value);
     }
 
+    //改名称
     public void setBleName(String name) {
         if (TextUtils.isEmpty(name)) ToastUtil.ToastShort(this, "输入的名称为空");
 
         //转字节
         try {
             byte[] nameByte = name.getBytes("UTF-8");
-            String nameHexStr = HexUtil.formatHexString(nameByte);
+            String nameHexStr = HexUtil.formatHexString(nameByte);//字节转16进制string
             mCurrentType = AppConstans.RegAD.BLE_NAME;
             mNeedSetData = nameHexStr;
             writeInfo(mCurrentType, mNeedSetData);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setTxPower(String value) {
+        //int转16
+        byte hexData = HexIntUtil.intTo1Byte(Integer.parseInt(value));
+        String valueHexStr = HexUtil.formatHexString(new byte[] { hexData });
+        mCurrentType = AppConstans.RegAD.TX_POWER;
+        mNeedSetData = valueHexStr;
+        writeInfo(mCurrentType, mNeedSetData);
     }
 }

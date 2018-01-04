@@ -81,4 +81,53 @@ public class HexIntUtil {
                 return "0000";
         }
     }
+
+    public static String decimalTo1ByteHex(int decimal) {
+        if (decimal > 128) return "00";
+        String result = decimalToHex(decimal);
+        int length = result.length();
+        switch (length) {
+            case 0:
+                return "00";
+            case 1:
+                return "0" + result;
+            default:
+                return "00";
+        }
+    }
+
+
+    /**
+     * 将int数值转换为占四个字节的byte数组，本方法适用于(低位在前，高位在后)的顺序。 和bytesToInt（）配套使用
+     * @param value
+     *            要转换的int值
+     * @return byte数组
+     */
+    public static byte[] intToBytes( int value )
+    {
+        byte[] src = new byte[4];
+        src[3] =  (byte) ((value>>24) & 0xFF);
+        src[2] =  (byte) ((value>>16) & 0xFF);
+        src[1] =  (byte) ((value>>8) & 0xFF);
+        src[0] =  (byte) (value & 0xFF);
+        return src;
+    }
+    /**
+     * 将int数值转换为占四个字节的byte数组，本方法适用于(高位在前，低位在后)的顺序。  和bytesToInt2（）配套使用
+     */
+    public static byte[] intToBytes2(int value)
+    {
+        byte[] src = new byte[4];
+        src[0] = (byte) ((value>>24) & 0xFF);
+        src[1] = (byte) ((value>>16)& 0xFF);
+        src[2] = (byte) ((value>>8)&0xFF);
+        src[3] = (byte) (value & 0xFF);
+        return src;
+    }
+
+    //int转一个字节
+    public static byte intTo1Byte(int value) {
+        byte src = (byte) ((value) & 0xFF);
+        return src;
+    }
 }
