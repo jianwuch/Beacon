@@ -42,7 +42,9 @@
             android:inputType="number"
             android:lines="1"
             android:maxLines="1"
-            android:text="******" />
+            android:text="******"
+            android:enabled="false"
+            android:focusable="false" />
       </android.support.design.widget.TextInputLayout>
 
       <android.support.design.widget.TextInputLayout
@@ -57,7 +59,9 @@
             android:layout_height="wrap_content"
             android:lines="1"
             android:maxLines="1"
-            tools:text="0000" />
+            tools:text="0000"
+            android:enabled="false"
+            android:focusable="false"/>
       </android.support.design.widget.TextInputLayout>
 
       <android.support.design.widget.TextInputLayout

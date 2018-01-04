@@ -161,6 +161,9 @@ public class ConfigurationActivity extends BaseActivity {
                 //不需要修改
             } else {
                 //修改major
+                if (new_major > 65532) {
+                    ToastUtil.ToastShort(this, "超出最大值65532");
+                }
                 setMajor(new_major + "");
             }
         }
@@ -172,6 +175,9 @@ public class ConfigurationActivity extends BaseActivity {
                 //不需要修改
             } else {
                 //修改minor
+                if (new_minor > 65532) {
+                    ToastUtil.ToastShort(this, "超出最大值65532");
+                }
                 setMajor(new_minor + "");
             }
         }
@@ -179,7 +185,11 @@ public class ConfigurationActivity extends BaseActivity {
         if (!TextUtils.isEmpty(tx_powerStr)) {
             int new_tx_power = Integer.parseInt(tx_powerStr);
             if (pre_tx_power != new_tx_power) {
-                setTxPower(new_tx_power + "");
+                if (new_tx_power < 0 && new_tx_power >-128) {
+                    setTxPower(new_tx_power + "");
+                } else {
+                    ToastUtil.ToastShort(this, "格式不对");
+                }
             }
         }
 
