@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -50,13 +51,17 @@ public class ConfigurationActivity extends BaseActivity {
     @BindView(R.id.interval) EditText interval;
 
     @BindView(R.id.status) TextView statusTextView;
+    @BindView(R.id.layout_bat) TextInputLayout batLayout;
     private BleDevice device;
 
+    //修改逻辑业务参数
     private int pre_major;
     private int pre_minor;
-    private String pre_name;
     private int pre_tx_power;
+    private String pre_name;
+    private int pre_bat;
     private int pre_interval;
+
     private boolean isConnected;
     private Handler mHandler;
 
@@ -151,8 +156,9 @@ public class ConfigurationActivity extends BaseActivity {
         String majorStr = major.getText().toString().trim();
         String minorStr = minor.getText().toString().trim();
         String new_name = bleName.getText().toString().trim();
-        String intervalStr = interval.getText().toString().trim();
         String tx_powerStr = txPower.getText().toString().trim();
+        String batStr = bat.getText().toString().trim();
+        String intervalStr = interval.getText().toString().trim();
 
         //major
         if (!TextUtils.isEmpty(majorStr)) {
@@ -182,6 +188,8 @@ public class ConfigurationActivity extends BaseActivity {
             }
         }
 
+
+        //tx_power
         if (!TextUtils.isEmpty(tx_powerStr)) {
             int new_tx_power = Integer.parseInt(tx_powerStr);
             if (pre_tx_power != new_tx_power) {
@@ -193,9 +201,27 @@ public class ConfigurationActivity extends BaseActivity {
             }
         }
 
+
+        //ble_name
         if (!TextUtils.isEmpty(new_name) && !pre_name.equals(new_name)) {
             //修改name
             setBleName(new_name);
+        }
+
+        //bat
+        if (!TextUtils.isEmpty(batStr)) {
+            int new_bat  = Integer.parseInt(batStr);
+            if (pre_bat != new_bat) {
+                setBat(new_bat+"");
+            }
+        }
+
+        //interval
+        if (!TextUtils.isEmpty(intervalStr)) {
+            int new_interval = Integer.parseInt(intervalStr);
+            if (pre_interval != new_interval) {
+                setInterva(new_interval + "");
+            }
         }
     }
 
@@ -335,7 +361,7 @@ public class ConfigurationActivity extends BaseActivity {
                                     case WRITE:
                                         if (infoData.length == 1 && ((int) infoData[0]) == 0) {
                                             LogUtil.d(addressInt + ":notiry写入失败");
-
+                                            ToastUtil.ToastShort(ConfigurationActivity.this, "notiry写入失败");
                                             if (addressInt == 1 && isConnected) {
 
                                                 //重新写入密码
@@ -344,7 +370,7 @@ public class ConfigurationActivity extends BaseActivity {
                                             }
                                             return;
                                         }
-
+                                        ToastUtil.ToastShort(ConfigurationActivity.this, "notiry写入成功");
                                         LogUtil.d(addressInt + ":notiry写入成功");
                                         switch (addressInt) {
                                             case 1://password
@@ -362,6 +388,7 @@ public class ConfigurationActivity extends BaseActivity {
                                             case 6://ble_name
                                                 break;
                                             case 7://bat
+                                                batLayout.setHint("Bat("+(3+0.3*(new_bat/255))+"V)");
                                                 break;
                                             case 8://interval
                                                 break;
@@ -382,8 +409,8 @@ public class ConfigurationActivity extends BaseActivity {
                                                 uuid.setText(HexUtil.encodeHexStr(infoData));
                                                 break;
                                             case 3://major
-                                                pre_minor = HexIntUtil.getInt(infoData, false);
-                                                major.setText(pre_minor + "");
+                                                pre_major = HexIntUtil.getInt(infoData, false);
+                                                major.setText(pre_major + "");
                                                 break;
                                             case 4://minor
                                                 pre_minor = HexIntUtil.getInt(infoData, false);
@@ -400,13 +427,14 @@ public class ConfigurationActivity extends BaseActivity {
                                                 break;
 
                                             case 7://bat
-                                                bat.setText(
-                                                        HexIntUtil.getInt(infoData, false) + "");
+                                                pre_bat = (int) infoData[0];
+                                                bat.setText(pre_bat + "");
+                                                batLayout.setHint("Bat("+(3+0.3*(pre_bat/255))+"V)");
                                                 break;
 
                                             case 8://interval
-                                                interval.setText(
-                                                        HexIntUtil.getInt(infoData, false) + "");
+                                                pre_interval = HexIntUtil.getInt(infoData, false);
+                                                interval.setText(pre_interval + "");
                                                 break;
                                         }
                                         break;
@@ -424,19 +452,19 @@ public class ConfigurationActivity extends BaseActivity {
 
     //写数据，修改参数
     private void writeInfo(final String address, String data) {
-        String commStr = "57" + address + data;
+        final String commStr = "57" + address + data;
         byte[] writeData = HexUtil.hexStringToBytes(commStr);
         BleManager.getInstance()
                 .write(device, AppConstans.UUID_STR.SERVER_UUID,
                         AppConstans.UUID_STR.CHA_WRITE_UUID, writeData, new BleWriteCallback() {
                             @Override
                             public void onWriteSuccess() {
-                                LogUtil.d(address + ":蓝牙写成功,等待notify结果");
+                                LogUtil.d(address + ":蓝牙写成功,等待notify结果:"+commStr);
                             }
 
                             @Override
                             public void onWriteFailure(BleException exception) {
-                                LogUtil.d(address + ":蓝牙写失败");
+                                LogUtil.d(address + ":蓝牙写失败:" + commStr);
                             }
                         });
     }
@@ -488,6 +516,25 @@ public class ConfigurationActivity extends BaseActivity {
         String valueHexStr = HexUtil.formatHexString(new byte[] { hexData });
         mCurrentType = AppConstans.RegAD.TX_POWER;
         mNeedSetData = valueHexStr;
+        writeInfo(mCurrentType, mNeedSetData);
+    }
+
+    private int new_bat;
+    public void setBat(String value) {
+        //int转16
+        new_bat = Integer.parseInt(value);
+        byte hexData = HexIntUtil.intTo1Byte(new_bat);
+        String valueHexStr = HexUtil.formatHexString(new byte[] { hexData });
+        mCurrentType = AppConstans.RegAD.BAT;
+        mNeedSetData = valueHexStr;
+        writeInfo(mCurrentType, mNeedSetData);
+    }
+
+    public void setInterva(String value) {
+        //int转16
+        String hexData = HexIntUtil.decimalTo2ByteHex(Integer.parseInt(value));
+        mCurrentType = AppConstans.RegAD.INTERVAL;
+        mNeedSetData = hexData;
         writeInfo(mCurrentType, mNeedSetData);
     }
 }

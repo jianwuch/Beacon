@@ -126,6 +126,7 @@
       </android.support.design.widget.TextInputLayout>
 
       <android.support.design.widget.TextInputLayout
+          android:id="@+id/layout_bat"
           android:layout_width="match_parent"
           android:layout_height="50dp"
           android:hint="Bat">
@@ -144,7 +145,7 @@
       <android.support.design.widget.TextInputLayout
           android:layout_width="match_parent"
           android:layout_height="50dp"
-          android:hint="Interval"
+          android:hint="Interval(基础间隔单位10ms)"
           android:lines="1"
           android:maxLines="1">
 
