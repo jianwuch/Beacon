@@ -184,7 +184,7 @@ public class ConfigurationActivity extends BaseActivity {
                 if (new_minor > 65532) {
                     ToastUtil.ToastShort(this, "超出最大值65532");
                 }
-                setMajor(new_minor + "");
+                setMinor(new_minor + "");
             }
         }
 
@@ -212,7 +212,11 @@ public class ConfigurationActivity extends BaseActivity {
         if (!TextUtils.isEmpty(batStr)) {
             int new_bat  = Integer.parseInt(batStr);
             if (pre_bat != new_bat) {
-                setBat(new_bat+"");
+                if (new_bat >=0 && new_bat <= 100) {
+                    setBat(new_bat+"");
+                } else {
+                    ToastUtil.ToastShort(ConfigurationActivity.this, "输入超过范围");
+                }
             }
         }
 
@@ -388,7 +392,6 @@ public class ConfigurationActivity extends BaseActivity {
                                             case 6://ble_name
                                                 break;
                                             case 7://bat
-                                                batLayout.setHint("Bat("+(3+0.3*(new_bat/255))+"V)");
                                                 break;
                                             case 8://interval
                                                 break;
@@ -429,7 +432,6 @@ public class ConfigurationActivity extends BaseActivity {
                                             case 7://bat
                                                 pre_bat = (int) infoData[0];
                                                 bat.setText(pre_bat + "");
-                                                batLayout.setHint("Bat("+(3+0.3*(pre_bat/255))+"V)");
                                                 break;
 
                                             case 8://interval
@@ -482,7 +484,7 @@ public class ConfigurationActivity extends BaseActivity {
         String hexData = HexIntUtil.decimalTo2ByteHex(Integer.parseInt(value));
         mCurrentType = AppConstans.RegAD.MAJOR;
         mNeedSetData = hexData;
-        writeInfo(AppConstans.RegAD.MAJOR, value);
+        writeInfo(mCurrentType, value);
     }
 
     //改minor
@@ -491,7 +493,7 @@ public class ConfigurationActivity extends BaseActivity {
         String hexData = HexIntUtil.decimalTo2ByteHex(Integer.parseInt(value));
         mCurrentType = AppConstans.RegAD.MINOR;
         mNeedSetData = hexData;
-        writeInfo(AppConstans.RegAD.MINOR, value);
+        writeInfo(mCurrentType, value);
     }
 
     //改名称

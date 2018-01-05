@@ -129,7 +129,7 @@
           android:id="@+id/layout_bat"
           android:layout_width="match_parent"
           android:layout_height="50dp"
-          android:hint="Bat">
+          android:hint="Bat（0-100）">
 
         <EditText
             android:id="@+id/bat"
@@ -137,8 +137,7 @@
             android:layout_height="wrap_content"
             android:inputType="number"
             android:lines="1"
-            android:maxLines="1"
-            tools:text="-59" />
+            android:maxLines="1" />
       </android.support.design.widget.TextInputLayout>
 
 
