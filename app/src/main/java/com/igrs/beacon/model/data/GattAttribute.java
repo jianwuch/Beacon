@@ -1,4 +1,4 @@
-package com.igrs.beacon.moudle.data;
+package com.igrs.beacon.model.data;
 
 import java.util.UUID;
 

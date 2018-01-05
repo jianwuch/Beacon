@@ -1,4 +1,4 @@
-package com.igrs.beacon.moudle.data;
+package com.igrs.beacon.model.data;
 
 import android.bluetooth.BluetoothDevice;
 import android.os.Parcel;
@@ -7,7 +7,6 @@ import android.os.Parcelable;
 import com.clj.fastble.data.BleDevice;
 import com.igrs.beacon.util.iBeaconUtil;
 import com.inuker.bluetooth.library.search.SearchResult;
-import java.io.Serializable;
 
 /**
  * Created by jianw on 17-11-30.

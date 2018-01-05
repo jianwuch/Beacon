@@ -17,10 +17,9 @@ import butterknife.OnClick;
 import com.igrs.beacon.R;
 import com.igrs.beacon.base.BaseActivity;
 import com.igrs.beacon.config.FilterManager;
-import com.igrs.beacon.moudle.data.FilterConfig;
+import com.igrs.beacon.model.data.FilterConfig;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import com.igrs.beacon.util.ToastUtil;
 
 /**

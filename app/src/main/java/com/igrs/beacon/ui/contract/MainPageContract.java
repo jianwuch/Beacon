@@ -1,7 +1,7 @@
 package com.igrs.beacon.ui.contract;
 
-import com.igrs.beacon.moudle.data.FilterConfig;
-import com.igrs.beacon.moudle.data.iBeacon;
+import com.igrs.beacon.model.data.FilterConfig;
+import com.igrs.beacon.model.data.iBeacon;
 import com.igrs.beacon.ui.basemvp.BasePresenter;
 import com.igrs.beacon.ui.basemvp.IListViewView;
 

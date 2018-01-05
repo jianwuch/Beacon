@@ -1,11 +1,7 @@
-package com.igrs.beacon.moudle.data;
+package com.igrs.beacon.model.data;
 
 import org.greenrobot.greendao.annotation.Entity;
-import org.greenrobot.greendao.annotation.Id;
-import org.greenrobot.greendao.annotation.Unique;
 import org.greenrobot.greendao.annotation.Generated;
-
-import java.io.Serializable;
 
 /**
  * Created by jianw on 17-12-3.

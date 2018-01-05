@@ -8,7 +8,7 @@ import org.greenrobot.greendao.database.Database;
 import org.greenrobot.greendao.identityscope.IdentityScopeType;
 import org.greenrobot.greendao.internal.DaoConfig;
 
-import com.igrs.beacon.moudle.data.UUIDBean;
+import com.igrs.beacon.model.data.UUIDBean;
 
 import greendao.UUIDBeanDao;
 

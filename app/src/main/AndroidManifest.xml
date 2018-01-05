@@ -53,6 +53,12 @@
         android:screenOrientation="portrait"
         android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
 
+    <activity
+        android:name=".ui.BatchConfigationActivty"
+        android:configChanges="orientation|screenSize|keyboard|keyboardHidden|smallestScreenSize"
+        android:screenOrientation="portrait"
+        android:windowSoftInputMode="adjustPan|stateAlwaysHidden"/>
+
   </application>
 
 </manifest>

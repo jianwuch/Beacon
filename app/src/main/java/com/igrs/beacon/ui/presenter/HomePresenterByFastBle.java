@@ -9,12 +9,10 @@ import com.clj.fastble.data.BleDevice;
 import com.clj.fastble.scan.BleScanRuleConfig;
 import com.igrs.beacon.MyApplication;
 import com.igrs.beacon.config.FilterManager;
-import com.igrs.beacon.moudle.data.FilterConfig;
-import com.igrs.beacon.moudle.data.iBeacon;
+import com.igrs.beacon.model.data.FilterConfig;
+import com.igrs.beacon.model.data.iBeacon;
 import com.igrs.beacon.ui.contract.MainPageContract;
 import com.inuker.bluetooth.library.search.SearchResult;
-import com.inuker.bluetooth.library.search.response.SearchResponse;
-import com.inuker.bluetooth.library.utils.BluetoothLog;
 
 import java.util.ArrayList;
 import java.util.Collections;

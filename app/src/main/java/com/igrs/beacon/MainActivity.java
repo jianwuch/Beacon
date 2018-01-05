@@ -21,12 +21,12 @@ import butterknife.OnClick;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
-import com.igrs.beacon.moudle.data.FilterConfig;
-import com.igrs.beacon.moudle.data.iBeacon;
+import com.igrs.beacon.model.data.FilterConfig;
+import com.igrs.beacon.model.data.iBeacon;
+import com.igrs.beacon.ui.BatchConfigationActivty;
 import com.igrs.beacon.ui.ConfigurationActivity;
 import com.igrs.beacon.ui.CustomScanActivity;
 import com.igrs.beacon.ui.FilterActivity;
-import com.igrs.beacon.ui.UUIDManagerActivity;
 import com.igrs.beacon.ui.adapter.ScanBleAdapter;
 import com.igrs.beacon.ui.basemvp.BaseMvpActivity;
 import com.igrs.beacon.ui.contract.MainPageContract;
@@ -224,7 +224,12 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
         //// TODO: 2017/11/16 判断数据是否选择
         switch (view.getId()) {
             case R.id.type_default:
-                ToastUtil.ToastShort(MainActivity.this, "默认");
+                List<iBeacon> mDatas = mAdapter.getSelectedDatas();
+                if (null != mDatas && mDatas.size() > 0) {
+                    BatchConfigationActivty.show(this, mDatas);
+                } else {
+                    ToastUtil.ToastShort(this, "未选择设备");
+                }
                 break;
             case R.id.type_name:
                 ToastUtil.ToastShort(MainActivity.this, "名称");

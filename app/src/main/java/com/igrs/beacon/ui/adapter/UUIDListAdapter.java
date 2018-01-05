@@ -3,7 +3,7 @@ package com.igrs.beacon.ui.adapter;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.igrs.beacon.R;
-import com.igrs.beacon.moudle.data.UUIDBean;
+import com.igrs.beacon.model.data.UUIDBean;
 
 import java.util.List;
 

@@ -4,17 +4,14 @@ import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.igrs.beacon.R;
 import com.igrs.beacon.base.BaseViewHolderWithImgLevel;
-import com.igrs.beacon.moudle.data.iBeacon;
+import com.igrs.beacon.model.data.iBeacon;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import butterknife.BindView;
 
 /**
  * Created by jove.chen on 2017/11/10.
@@ -104,5 +101,16 @@ public class ScanBleAdapter extends BaseQuickAdapter<iBeacon, BaseViewHolderWith
         } else {
             return 0;
         }
+    }
+
+    public List<iBeacon> getSelectedDatas() {
+        List<iBeacon> beacons = new ArrayList<>();
+        for (int i = 0; i < mData.size(); i++) {
+            if (mData.get(i).isChecked()) {
+                beacons.add(mData.get(i));
+            }
+        }
+
+        return beacons;
     }
 }

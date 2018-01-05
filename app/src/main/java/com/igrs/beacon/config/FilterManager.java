@@ -3,7 +3,7 @@ package com.igrs.beacon.config;
 import android.content.Context;
 
 import android.text.TextUtils;
-import com.igrs.beacon.moudle.data.FilterConfig;
+import com.igrs.beacon.model.data.FilterConfig;
 import com.igrs.beacon.util.SharedPreferencesUtils;
 
 /**

@@ -8,7 +8,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.igrs.beacon.R;
-import com.igrs.beacon.moudle.data.ScanLeDevice;
+import com.igrs.beacon.model.data.ScanLeDevice;
 import java.util.List;
 
 /**

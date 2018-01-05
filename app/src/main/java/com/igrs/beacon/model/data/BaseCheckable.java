@@ -1,12 +1,10 @@
-package com.igrs.beacon.moudle.data;
-
-import com.igrs.beacon.util.iBeaconUtil;
+package com.igrs.beacon.model.data;
 
 /**
  * Created by jove.chen on 2017/11/16.
  */
 
-public class BeaconWithCheckable extends iBeacon {
+public class BaseCheckable {
     private boolean isChecked;
 
     public boolean isChecked() {
@@ -15,8 +13,5 @@ public class BeaconWithCheckable extends iBeacon {
 
     public void setChecked(boolean checked) {
         isChecked = checked;
-    }
-
-    public BeaconWithCheckable() {
     }
 }

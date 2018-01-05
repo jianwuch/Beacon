@@ -1,7 +1,6 @@
-package com.igrs.beacon.moudle.data;
+package com.igrs.beacon.model.data;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import com.igrs.beacon.config.AppConstans;
 import com.igrs.beacon.util.SharedPreferencesUtils;

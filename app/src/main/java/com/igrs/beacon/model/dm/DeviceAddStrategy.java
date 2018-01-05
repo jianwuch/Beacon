@@ -1,6 +1,6 @@
-package com.igrs.beacon.moudle.dm;
+package com.igrs.beacon.model.dm;
 
-import com.igrs.beacon.moudle.data.ScanLeDevice;
+import com.igrs.beacon.model.data.ScanLeDevice;
 import java.util.List;
 
 /**

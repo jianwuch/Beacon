@@ -11,7 +11,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,7 +19,7 @@ import android.widget.EditText;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.igrs.beacon.R;
 import com.igrs.beacon.base.BaseActivity;
-import com.igrs.beacon.moudle.data.UUIDBean;
+import com.igrs.beacon.model.data.UUIDBean;
 import com.igrs.beacon.ui.adapter.UUIDListAdapter;
 import com.igrs.beacon.util.ToastUtil;
 

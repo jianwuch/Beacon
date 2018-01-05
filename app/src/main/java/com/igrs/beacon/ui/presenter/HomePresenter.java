@@ -2,9 +2,8 @@ package com.igrs.beacon.ui.presenter;
 
 import android.util.Log;
 
-import com.igrs.beacon.moudle.data.BeaconWithCheckable;
-import com.igrs.beacon.moudle.data.FilterConfig;
-import com.igrs.beacon.moudle.data.iBeacon;
+import com.igrs.beacon.model.data.FilterConfig;
+import com.igrs.beacon.model.data.iBeacon;
 import com.igrs.beacon.ui.contract.MainPageContract;
 import com.igrs.beacon.ui.model.ble.ClientManager;
 import com.inuker.bluetooth.library.search.SearchRequest;
