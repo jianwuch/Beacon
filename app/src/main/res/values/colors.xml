@@ -13,4 +13,5 @@
     <color name="text">#333333</color>
     <color name="divider">#cccccc</color>
     <color name="form_title">#cccccc</color>
+  <color name="item_bg">#dddddd</color>
 </resources>

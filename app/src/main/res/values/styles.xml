@@ -1,18 +1,15 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+    <style name="AppTheme" parent="AppTheme.Base">
 
-        <!--recycler分割线-->
-        <!--<item name="android:listDivider">@color/color_divider</item>-->
+    </style>
 
-        <!--保证actionMode覆盖在Toolbar上面-->
-        <item name="windowActionModeOverlay">true</item>
-        <item name="windowActionBarOverlay">true</item>
+    <style name="AppTheme.Base" parent="Theme.AppCompat">
+
+        <!--去除actonbar-->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="formTitleTextVeiw">
