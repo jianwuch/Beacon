@@ -17,7 +17,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_margin="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:hint="Major"
         android:orientation="horizontal">
 
@@ -53,7 +54,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="40dp"
-        android:layout_margin="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
         android:hint="Major"
         android:orientation="horizontal">
 
@@ -84,6 +86,33 @@
             android:inputType="number"
             android:textSize="12sp" />
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="UUID:" />
+
+        <EditText
+            android:id="@+id/uuid"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:enabled="false"
+            android:textSize="12sp"
+            android:hint="输入要批量修改的UUID"/>
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/siwtch_uuid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -104,7 +133,7 @@
             android:layout_height="match_parent"
             android:enabled="false"
             android:textSize="12sp"
-            android:hint="输入要批量修改的名称，可关闭"/>
+            android:hint="输入要批量修改的tx_power"/>
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/siwtch_tx_power"
@@ -132,7 +161,7 @@
             android:layout_height="match_parent"
             android:enabled="false"
             android:textSize="12sp"
-            android:hint="输入要批量修改的名称，可关闭"/>
+            android:hint="输入要批量修改的名称"/>
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/switch_name"
@@ -152,6 +181,33 @@
         <TextView
             android:layout_width="80dp"
             android:layout_height="wrap_content"
+            android:text="Bat:" />
+
+        <EditText
+            android:id="@+id/bat"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:enabled="false"
+            android:textSize="12sp"
+            android:hint="输入要批量修改的Bat"/>
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/siwtch_bat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
             android:text="interval:" />
 
         <EditText
@@ -160,7 +216,7 @@
             android:layout_height="match_parent"
             android:enabled="false"
             android:textSize="12sp"
-            android:hint="输入要批量修改的名称，可关闭"/>
+            android:hint="输入要批量修改的interval"/>
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/siwtch_interval"
@@ -182,10 +238,12 @@
         android:orientation="vertical"
         android:layout_margin="10dp">
         <TextView
+            android:id="@+id/result"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="处理结果：(0/0)"/>
         <ProgressBar
+            android:id="@+id/process"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@android:style/Widget.Material.Light.ProgressBar.Horizontal"

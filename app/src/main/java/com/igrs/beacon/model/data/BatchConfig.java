@@ -11,11 +11,13 @@ public class BatchConfig {
     public int minorFrom;
     public int minorStepLength;
 
+    public boolean uuidEnable;
     public boolean txPowerEnable;
     public boolean nameEnable;
     public boolean batEnable;
     public boolean intervalEnable;
 
+    public String uuid;
     public String bleName;
     public int bat;
     public int txPower;

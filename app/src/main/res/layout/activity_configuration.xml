@@ -51,7 +51,7 @@
           android:layout_width="match_parent"
           android:layout_height="@dimen/filter_item_height"
           android:gravity="center_vertical"
-          android:hint="UUID">
+          android:hint="UUID(修改时，请点击选择)">
 
         <EditText
             android:id="@+id/uuid"
@@ -59,9 +59,8 @@
             android:layout_height="wrap_content"
             android:lines="1"
             android:maxLines="1"
-            tools:text="0000"
-            android:enabled="false"
-            android:focusable="false"/>
+            android:textSize="12sp"
+            tools:text="0000"/>
       </android.support.design.widget.TextInputLayout>
 
       <android.support.design.widget.TextInputLayout

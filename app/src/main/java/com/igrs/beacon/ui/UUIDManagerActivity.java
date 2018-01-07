@@ -1,6 +1,7 @@
 package com.igrs.beacon.ui;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -38,8 +39,10 @@ public class UUIDManagerActivity extends BaseActivity {
 
     public static final int REQUEST_RESULT = 101;
     public static final String UUID_KEY = "uuid";
-    @BindView(R.id.recycle_view) RecyclerView recycleView;
-    @BindView(R.id.tool_bar) Toolbar toolBar;
+    @BindView(R.id.recycle_view)
+    RecyclerView recycleView;
+    @BindView(R.id.tool_bar)
+    Toolbar toolBar;
     private TextInputLayout nameLayout, uuidLayout;
     private List<UUIDBean> mDatas;
 
@@ -48,6 +51,21 @@ public class UUIDManagerActivity extends BaseActivity {
     public static void show(Activity context) {
         context.startActivityForResult(new Intent(context, UUIDManagerActivity.class),
                 REQUEST_RESULT);
+    }
+
+    public static String getResult(Context context, int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_RESULT) {
+            switch (resultCode) {
+                case RESULT_CANCELED:
+                    ToastUtil.ToastShort(context, "未选择uuid");
+                    return null;
+                case RESULT_OK:
+                    return data.getStringExtra(UUIDManagerActivity.UUID_KEY);
+                default:
+                    break;
+            }
+        }
+        return null;
     }
 
     @Override

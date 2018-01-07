@@ -7,41 +7,72 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SwitchCompat;
 import android.support.v7.widget.Toolbar;
-import android.view.View;
+import android.text.TextUtils;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.EditText;
-import android.widget.Switch;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import butterknife.BindView;
-import butterknife.OnCheckedChanged;
-import butterknife.OnClick;
+
 import com.igrs.beacon.R;
 import com.igrs.beacon.base.BaseActivity;
 import com.igrs.beacon.model.data.BatchConfig;
 import com.igrs.beacon.model.data.iBeacon;
+import com.igrs.beacon.model.dm.DeviceBatchBiz;
+import com.igrs.beacon.util.ToastUtil;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnCheckedChanged;
+import butterknife.OnClick;
 
 /**
  * Created by jianw on 18-1-1.
  * 批量配置界面
  */
 
-public class BatchConfigationActivty extends BaseActivity{
-    @BindView(R.id.tool_bar) Toolbar toolBar;
-    @BindView(R.id.major_f) TextView majorF;
-    @BindView(R.id.major_from) EditText majorFrom;
-    @BindView(R.id.major_pear) EditText majorPear;
-    @BindView(R.id.minor_from) EditText minorFrom;
-    @BindView(R.id.minor_pear) EditText minorPear;
-    @BindView(R.id.power) EditText power;
-    @BindView(R.id.siwtch_tx_power) SwitchCompat siwtchTxPower;
-    @BindView(R.id.name) EditText name;
-    @BindView(R.id.switch_name) SwitchCompat switchName;
-    @BindView(R.id.interal) EditText interal;
-    @BindView(R.id.siwtch_interval) SwitchCompat siwtchInterval;
-    @BindView(R.id.start) Button start;
+public class BatchConfigationActivty extends BaseActivity {
+
+    @BindView(R.id.tool_bar)
+    Toolbar toolBar;
+    @BindView(R.id.major_f)
+    TextView majorF;
+    @BindView(R.id.major_from)
+    EditText majorFrom;
+    @BindView(R.id.major_pear)
+    EditText majorPear;
+    @BindView(R.id.minor_from)
+    EditText minorFrom;
+    @BindView(R.id.minor_pear)
+    EditText minorPear;
+    @BindView(R.id.uuid)
+    EditText uuid;
+    @BindView(R.id.siwtch_uuid)
+    SwitchCompat siwtchUuid;
+    @BindView(R.id.power)
+    EditText power;
+    @BindView(R.id.siwtch_tx_power)
+    SwitchCompat siwtchTxPower;
+    @BindView(R.id.name)
+    EditText name;
+    @BindView(R.id.switch_name)
+    SwitchCompat switchName;
+    @BindView(R.id.bat)
+    EditText bat;
+    @BindView(R.id.siwtch_bat)
+    SwitchCompat siwtchBat;
+    @BindView(R.id.interal)
+    EditText interal;
+    @BindView(R.id.siwtch_interval)
+    SwitchCompat siwtchInterval;
+    @BindView(R.id.start)
+    Button start;
+    @BindView(R.id.result)
+    TextView result;
+    @BindView(R.id.process)
+    ProgressBar processBar;
     private Object intentData;
 
     //数据部分
@@ -49,6 +80,7 @@ public class BatchConfigationActivty extends BaseActivity{
 
     //批量配置
     private BatchConfig mBatchConfig;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,15 +111,75 @@ public class BatchConfigationActivty extends BaseActivity{
     @OnClick(R.id.start)
     public void start() {
 
-        //获取配置选项
-        //开始批量配置
-        for (int i = 0; i < mDatas.size(); i++) {
+        String majorStr = majorF.getText().toString().trim();
+        String minorStr = minorFrom.getText().toString().trim();
+        String majorStepLen = majorPear.getText().toString().trim();
+        String minorStepLen = minorPear.getText().toString().trim();
 
+        if (TextUtils.isEmpty(majorStr) || TextUtils.isEmpty(minorStr) || TextUtils.isEmpty(majorStepLen) ||
+                TextUtils.isEmpty(minorStepLen)) {
+            ToastUtil.ToastShort(this, "major,minor参数必填");
         }
+
+        if (mBatchConfig.uuidEnable) {
+            String uuidStr = uuid.getText().toString().trim();
+            if (TextUtils.isEmpty(uuidStr)) {
+                ToastUtil.ToastShort(this, "打开了UUID就需要选择UUID");
+            }
+
+            mBatchConfig.uuid = uuidStr;
+        }
+        if (mBatchConfig.intervalEnable) {
+            String intervalStr = interal.getText().toString().trim();
+            if (TextUtils.isEmpty(intervalStr)) {
+                ToastUtil.ToastShort(this, "打开了interval就需要必填");
+            }
+            mBatchConfig.interval = Integer.parseInt(intervalStr);
+        }
+        if (mBatchConfig.txPowerEnable) {
+            String txPowerStr = power.getText().toString().trim();
+            if (TextUtils.isEmpty(txPowerStr)) {
+                ToastUtil.ToastShort(this, "打开了txPower就需要必填");
+            }
+
+            mBatchConfig.txPower = Integer.parseInt(txPowerStr);
+        }
+        if (mBatchConfig.nameEnable) {
+            String nameStr = name.getText().toString().trim();
+            if (TextUtils.isEmpty(nameStr)) {
+                ToastUtil.ToastShort(this, "打开了Ble name就需要必填");
+            }
+            mBatchConfig.bleName = nameStr;
+        }
+        if (mBatchConfig.batEnable) {
+            String batStr = bat.getText().toString().trim();
+            if (TextUtils.isEmpty(batStr)) {
+                ToastUtil.ToastShort(this, "打开了Bat就需要必填");
+            }
+
+            mBatchConfig.bat = Integer.parseInt(batStr);
+        }
+
+        DeviceBatchBiz deviceBatchBiz = new DeviceBatchBiz();
+        deviceBatchBiz.setProcessChangedLinstener(new DeviceBatchBiz.ProcessChangedLinstener() {
+            @Override
+            public void onChanged(int process, String processStr) {
+                result.setText(String.format("处理结果：（%1$s）", processStr));
+                processBar.setProgress(process);
+            }
+
+            @Override
+            public void onFinished() {
+                result.setText("处理完成");
+            }
+        });
+
+        //开始配置
+        deviceBatchBiz.beginBatch(mDatas, mBatchConfig);
     }
 
     //
-    @OnCheckedChanged({R.id.siwtch_tx_power,R.id.switch_name, R.id.siwtch_interval})
+    @OnCheckedChanged({R.id.siwtch_tx_power, R.id.switch_name, R.id.siwtch_interval})
     public void onCheckedChanged(SwitchCompat view, boolean isChecked) {
         switch (view.getId()) {
             case R.id.switch_name:
@@ -101,6 +193,16 @@ public class BatchConfigationActivty extends BaseActivity{
             case R.id.siwtch_interval:
                 interal.setEnabled(isChecked);
                 mBatchConfig.intervalEnable = isChecked;
+                break;
+            case R.id.switch_uuid:
+                uuid.setEnabled(isChecked);
+                mBatchConfig.uuidEnable = isChecked;
+                break;
+            case R.id.siwtch_bat:
+                bat.setEnabled(isChecked);
+                mBatchConfig.batEnable = isChecked;
+                break;
+            default:
                 break;
         }
     }

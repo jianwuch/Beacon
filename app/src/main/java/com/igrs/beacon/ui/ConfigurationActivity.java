@@ -29,8 +29,10 @@ import com.igrs.beacon.util.HexIntUtil;
 import com.igrs.beacon.util.LogUtil;
 import com.igrs.beacon.util.ToastUtil;
 
-import butterknife.BindView;
 import java.io.UnsupportedEncodingException;
+
+import butterknife.BindView;
+import butterknife.OnClick;
 
 /**
  * Created by jove.chen on 2017/12/12.
@@ -55,6 +57,7 @@ public class ConfigurationActivity extends BaseActivity {
     private BleDevice device;
 
     //修改逻辑业务参数
+    private String pre_uuid;
     private int pre_major;
     private int pre_minor;
     private int pre_tx_power;
@@ -153,12 +156,21 @@ public class ConfigurationActivity extends BaseActivity {
 
     //保存参数
     private void save() {
+        String uuidStr = uuid.getText().toString().trim();
         String majorStr = major.getText().toString().trim();
         String minorStr = minor.getText().toString().trim();
         String new_name = bleName.getText().toString().trim();
         String tx_powerStr = txPower.getText().toString().trim();
         String batStr = bat.getText().toString().trim();
         String intervalStr = interval.getText().toString().trim();
+
+        //uuid
+        if (!TextUtils.isEmpty(uuidStr)) {
+            String newUUIDStr = uuidStr;
+            if (!newUUIDStr.equals(pre_name)) {
+                setUUID(newUUIDStr);
+            }
+        }
 
         //major
         if (!TextUtils.isEmpty(majorStr)) {
@@ -409,7 +421,8 @@ public class ConfigurationActivity extends BaseActivity {
                                                 password.setText(HexUtil.encodeHexStr(infoData));
                                                 break;
                                             case 2://uuid
-                                                uuid.setText(HexUtil.encodeHexStr(infoData));
+                                                pre_uuid = HexUtil.encodeHexStr(infoData);
+                                                uuid.setText(pre_uuid);
                                                 break;
                                             case 3://major
                                                 pre_major = HexIntUtil.getInt(infoData, false);
@@ -475,6 +488,17 @@ public class ConfigurationActivity extends BaseActivity {
     private String mNeedSetData;//需要设置的数据
     private static int mWriteCount = 0;//写错误的次数记录
 
+
+    /**
+     * 包括中间的横线显示
+     * @param uuid
+     */
+    private void setUUID(String uuid) {
+        mCurrentType = AppConstans.RegAD.UUID;
+        mNeedSetData = uuid.replace("-", "");;
+        writeInfo(mCurrentType, mNeedSetData);
+    }
+
     /**
      * 改minor
      * 直接输入10进制的数子
@@ -538,5 +562,19 @@ public class ConfigurationActivity extends BaseActivity {
         mCurrentType = AppConstans.RegAD.INTERVAL;
         mNeedSetData = hexData;
         writeInfo(mCurrentType, mNeedSetData);
+    }
+
+    @OnClick(R.id.uuid)
+    public void selectedUUID() {
+        UUIDManagerActivity.show(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String uuidStr = UUIDManagerActivity.getResult(this, requestCode, resultCode, data);
+        if (!TextUtils.isEmpty(uuidStr)) {
+            uuid.setText(uuidStr);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

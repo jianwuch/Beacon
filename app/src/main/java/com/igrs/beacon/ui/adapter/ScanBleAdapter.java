@@ -69,7 +69,8 @@ public class ScanBleAdapter extends BaseQuickAdapter<iBeacon, BaseViewHolderWith
                 .setText(R.id.minor, String.format("Minor:%1$d", item.minor))
                 .setText(R.id.uuid, String.format("UUIDBean:%1$s", item.proximityUuid))
                 .setText(R.id.power, item.txPower + "")
-                .setText(R.id.rssi, item.rssi + "");
+                .setText(R.id.rssi, item.rssi + "")
+        .setText(R.id.name, String.format("Name:%1$s", item.name));
 
         helper.setImageLevel(R.id.img_battery, getPowerLevel(item.txPower))
                 .setImageLevel(R.id.img_rssi, getRssiLevel(item.rssi));
