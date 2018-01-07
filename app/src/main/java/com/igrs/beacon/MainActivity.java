@@ -187,6 +187,7 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
             @Override
             public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
                 ToastUtil.ToastShort(MainActivity.this, "长按这一项了：" + position);
+
                 if (actionMode == null) {
                     actionMode = startSupportActionMode(MainActivity.this);
                 }

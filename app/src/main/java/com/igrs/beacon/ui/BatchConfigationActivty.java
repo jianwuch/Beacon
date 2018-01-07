@@ -20,6 +20,8 @@ import com.igrs.beacon.model.data.iBeacon;
 import com.igrs.beacon.model.dm.DeviceBatchBiz;
 import com.igrs.beacon.util.ToastUtil;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,8 +39,6 @@ public class BatchConfigationActivty extends BaseActivity {
 
     @BindView(R.id.tool_bar)
     Toolbar toolBar;
-    @BindView(R.id.major_f)
-    TextView majorF;
     @BindView(R.id.major_from)
     EditText majorFrom;
     @BindView(R.id.major_pear)
@@ -49,7 +49,7 @@ public class BatchConfigationActivty extends BaseActivity {
     EditText minorPear;
     @BindView(R.id.uuid)
     EditText uuid;
-    @BindView(R.id.siwtch_uuid)
+    @BindView(R.id.switch_uuid)
     SwitchCompat siwtchUuid;
     @BindView(R.id.power)
     EditText power;
@@ -111,7 +111,7 @@ public class BatchConfigationActivty extends BaseActivity {
     @OnClick(R.id.start)
     public void start() {
 
-        String majorStr = majorF.getText().toString().trim();
+        String majorStr = majorFrom.getText().toString().trim();
         String minorStr = minorFrom.getText().toString().trim();
         String majorStepLen = majorPear.getText().toString().trim();
         String minorStepLen = minorPear.getText().toString().trim();
@@ -119,45 +119,72 @@ public class BatchConfigationActivty extends BaseActivity {
         if (TextUtils.isEmpty(majorStr) || TextUtils.isEmpty(minorStr) || TextUtils.isEmpty(majorStepLen) ||
                 TextUtils.isEmpty(minorStepLen)) {
             ToastUtil.ToastShort(this, "major,minor参数必填");
+            return;
+        } else {
+            mBatchConfig.majorFrom = Integer.parseInt(majorStr);
+            mBatchConfig.minorFrom = Integer.parseInt(minorStr);
+            mBatchConfig.majorStepLength = Integer.parseInt(majorStepLen);
+            mBatchConfig.minorStepLength = Integer.parseInt(minorStepLen);
+
+            //校验数据
+            if(mBatchConfig.majorFrom >=65532 || mBatchConfig.minorFrom >= 65532) {
+                ToastUtil.ToastShort(this, "marjor/minor数据超过范围");
+                return;
+            }
+
+            if (mBatchConfig.minorFrom + mBatchConfig.minorStepLength*mDatas.size() >= 65532||
+                    mBatchConfig.majorFrom + mBatchConfig.majorStepLength*mDatas.size() >= 65532) {
+                ToastUtil.ToastShort(this, "步长设置错误，已超过最大限制值");
+                return;
+            }
         }
 
         if (mBatchConfig.uuidEnable) {
             String uuidStr = uuid.getText().toString().trim();
             if (TextUtils.isEmpty(uuidStr)) {
                 ToastUtil.ToastShort(this, "打开了UUID就需要选择UUID");
+                return;
+            } else {
+                mBatchConfig.uuid = uuidStr;
             }
 
-            mBatchConfig.uuid = uuidStr;
         }
         if (mBatchConfig.intervalEnable) {
             String intervalStr = interal.getText().toString().trim();
             if (TextUtils.isEmpty(intervalStr)) {
                 ToastUtil.ToastShort(this, "打开了interval就需要必填");
+                return;
+            } else {
+                mBatchConfig.interval = Integer.parseInt(intervalStr);
             }
-            mBatchConfig.interval = Integer.parseInt(intervalStr);
         }
         if (mBatchConfig.txPowerEnable) {
             String txPowerStr = power.getText().toString().trim();
             if (TextUtils.isEmpty(txPowerStr)) {
                 ToastUtil.ToastShort(this, "打开了txPower就需要必填");
+                return;
+            } else {
+                mBatchConfig.txPower = Integer.parseInt(txPowerStr);
             }
 
-            mBatchConfig.txPower = Integer.parseInt(txPowerStr);
         }
         if (mBatchConfig.nameEnable) {
             String nameStr = name.getText().toString().trim();
             if (TextUtils.isEmpty(nameStr)) {
                 ToastUtil.ToastShort(this, "打开了Ble name就需要必填");
+                return;
+            } else {
+                mBatchConfig.bleName = nameStr;
             }
-            mBatchConfig.bleName = nameStr;
         }
         if (mBatchConfig.batEnable) {
             String batStr = bat.getText().toString().trim();
             if (TextUtils.isEmpty(batStr)) {
                 ToastUtil.ToastShort(this, "打开了Bat就需要必填");
+                return;
+            } else {
+                mBatchConfig.bat = Integer.parseInt(batStr);
             }
-
-            mBatchConfig.bat = Integer.parseInt(batStr);
         }
 
         DeviceBatchBiz deviceBatchBiz = new DeviceBatchBiz();
@@ -179,7 +206,7 @@ public class BatchConfigationActivty extends BaseActivity {
     }
 
     //
-    @OnCheckedChanged({R.id.siwtch_tx_power, R.id.switch_name, R.id.siwtch_interval})
+    @OnCheckedChanged({R.id.siwtch_tx_power, R.id.switch_name, R.id.switch_uuid, R.id.siwtch_bat, R.id.siwtch_interval})
     public void onCheckedChanged(SwitchCompat view, boolean isChecked) {
         switch (view.getId()) {
             case R.id.switch_name:
@@ -205,5 +232,18 @@ public class BatchConfigationActivty extends BaseActivity {
             default:
                 break;
         }
+    }
+
+    @OnClick(R.id.uuid)
+    public void selectUUID() {
+        UUIDManagerActivity.show(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        String uuidStr = UUIDManagerActivity.getResult(this, requestCode,resultCode, data);
+        if (TextUtils.isEmpty(uuidStr)) return;
+        uuid.setText(uuidStr);
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

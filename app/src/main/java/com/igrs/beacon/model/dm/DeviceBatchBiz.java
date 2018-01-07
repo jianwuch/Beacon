@@ -179,7 +179,7 @@ public class DeviceBatchBiz {
         String hexData = HexIntUtil.decimalTo2ByteHex(Integer.parseInt(value));
         mCurrentType = AppConstans.RegAD.MAJOR;
         mNeedSetData = hexData;
-        writeInfo(device, mCurrentType, value);
+        writeInfo(device, mCurrentType, mNeedSetData);
     }
 
     //改minor
@@ -188,7 +188,7 @@ public class DeviceBatchBiz {
         String hexData = HexIntUtil.decimalTo2ByteHex(Integer.parseInt(value));
         mCurrentType = AppConstans.RegAD.MINOR;
         mNeedSetData = hexData;
-        writeInfo(device, mCurrentType, value);
+        writeInfo(device, mCurrentType, mNeedSetData);
     }
 
     //改名称
@@ -381,10 +381,11 @@ public class DeviceBatchBiz {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case HANDLER_WHAT_NEXT:
-                    if (mCurrentIndex == mDevices.size()) {
+                    if (mCurrentIndex == (mDevices.size() -1)) {
                         //结束批量设置
                         if (processChangedLinstener != null) {
                             processChangedLinstener.onFinished();
+                            processChangedLinstener.onChanged(100, "完成批量操作");
                         }
                         return;
                     }
