@@ -46,6 +46,8 @@ public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
         }
 
         bleManager.cancelScan();
+        mDatas.clear();
+        mView.notifyDataSet();
         initScanConfig();
         scanBeacon();
     }

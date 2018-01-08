@@ -29,6 +29,7 @@
         android:layout_marginLeft="4dp"
         android:background="@drawable/choose_btn_bg"
         android:text="修改密码"
+        android:visibility="gone"
         style="@style/chooseModeBatchType"/>
     <TextView
         android:id="@+id/type_name"
@@ -36,6 +37,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="4dp"
         android:text="修改名称"
+        android:visibility="gone"
         style="@style/chooseModeBatchType"/>
   </LinearLayout>
 </RelativeLayout>

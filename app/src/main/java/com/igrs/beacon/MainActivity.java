@@ -81,7 +81,8 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
                 case RESULT_CANCELED:
                     break;
                 case RESULT_OK:
-                    FilterConfig config = (FilterConfig) data.getSerializableExtra(FilterActivity.INTENT_RESULT_KEY);
+                    FilterConfig config = (FilterConfig) data.getSerializableExtra(
+                            FilterActivity.INTENT_RESULT_KEY);
                     presenter.setFilterConfig(config);
                     break;
             }
@@ -113,15 +114,16 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_batch:
-                ToastUtil.ToastShort(MainActivity.this, "batch");
+                if (actionMode == null) {
+                    actionMode = startSupportActionMode(MainActivity.this);
+                }
                 break;
             case R.id.action_search:
                 customScan();
                 break;
             case R.id.action_setting:
-                ToastUtil.ToastShort(MainActivity.this, "设置过滤");
-                //                startActivityForResult(new Intent(MainActivity.this, UUIDManagerActivity.class), START_CODE_UUID);
-                startActivityForResult(new Intent(this, FilterActivity.class), FilterActivity.REQUEST_CODE);
+                startActivityForResult(new Intent(this, FilterActivity.class),
+                        FilterActivity.REQUEST_CODE);
                 break;
         }
         return super.onOptionsItemSelected(item);

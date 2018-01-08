@@ -39,10 +39,8 @@ public class UUIDManagerActivity extends BaseActivity {
 
     public static final int REQUEST_RESULT = 101;
     public static final String UUID_KEY = "uuid";
-    @BindView(R.id.recycle_view)
-    RecyclerView recycleView;
-    @BindView(R.id.tool_bar)
-    Toolbar toolBar;
+    @BindView(R.id.recycle_view) RecyclerView recycleView;
+    @BindView(R.id.tool_bar) Toolbar toolBar;
     private TextInputLayout nameLayout, uuidLayout;
     private List<UUIDBean> mDatas;
 
@@ -74,7 +72,7 @@ public class UUIDManagerActivity extends BaseActivity {
         setContentView(R.layout.activiy_uuid_manager);
         ButterKnife.bind(this);
 
-        initToolBar(toolBar, true, "UUDI白名单");
+        initToolBar(toolBar, true, "UUID管理");
         toolBar.setSubtitle("Tip:长按可以删除单条记录");
         initRecyclerView();
         initEvent();
@@ -89,7 +87,7 @@ public class UUIDManagerActivity extends BaseActivity {
     private void initRecyclerView() {
         LinearLayoutManager layoutManager =
                 new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        mAdapter = new UUIDListAdapter(R.layout.item_uuid_manager, mDatas);
+        mAdapter = new UUIDListAdapter(R.layout.item_uuid_manager);
         recycleView.setLayoutManager(layoutManager);
         recycleView.setHasFixedSize(true);
         recycleView.addItemDecoration(
@@ -120,6 +118,11 @@ public class UUIDManagerActivity extends BaseActivity {
 
             @Override
             public boolean onItemLongClick(BaseQuickAdapter adapter, View view, int position) {
+
+                //数据库中删除
+                GreenDaoHelper.getDaoSession()
+                        .getUUIDBeanDao()
+                        .delete(mAdapter.getData().get(position));
                 mAdapter.remove(position);
                 return true;
             }
@@ -155,7 +158,7 @@ public class UUIDManagerActivity extends BaseActivity {
                                 String nameStr = name.getText().toString().trim();
                                 String uuidStr = uuid.getText().toString().trim();
                                 if (checkUUID(nameStr, uuidStr)) {
-                                    UUIDBean uuid1 = new UUIDBean(nameStr, uuidStr);
+                                    UUIDBean uuid1 = new UUIDBean(null, nameStr, uuidStr);
                                     GreenDaoHelper.getDaoSession().getUUIDBeanDao().insert(uuid1);
                                     mAdapter.addData(uuid1);
                                     alertDialog.dismiss();

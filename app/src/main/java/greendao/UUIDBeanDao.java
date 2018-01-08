@@ -15,7 +15,7 @@ import com.igrs.beacon.model.data.UUIDBean;
 /** 
  * DAO for table "UUIDBEAN".
 */
-public class UUIDBeanDao extends AbstractDao<UUIDBean, Void> {
+public class UUIDBeanDao extends AbstractDao<UUIDBean, Long> {
 
     public static final String TABLENAME = "UUIDBEAN";
 
@@ -24,8 +24,9 @@ public class UUIDBeanDao extends AbstractDao<UUIDBean, Void> {
      * Can be used for QueryBuilder and for referencing column names.
      */
     public static class Properties {
-        public final static Property Name = new Property(0, String.class, "name", false, "NAME");
-        public final static Property Uuid = new Property(1, String.class, "uuid", false, "UUID");
+        public final static Property Id = new Property(0, Long.class, "id", true, "_id");
+        public final static Property Name = new Property(1, String.class, "name", false, "NAME");
+        public final static Property Uuid = new Property(2, String.class, "uuid", false, "UUID");
     }
 
 
@@ -41,8 +42,9 @@ public class UUIDBeanDao extends AbstractDao<UUIDBean, Void> {
     public static void createTable(Database db, boolean ifNotExists) {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"UUIDBEAN\" (" + //
-                "\"NAME\" TEXT," + // 0: name
-                "\"UUID\" TEXT);"); // 1: uuid
+                "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
+                "\"NAME\" TEXT," + // 1: name
+                "\"UUID\" TEXT);"); // 2: uuid
     }
 
     /** Drops the underlying database table. */
@@ -55,14 +57,19 @@ public class UUIDBeanDao extends AbstractDao<UUIDBean, Void> {
     protected final void bindValues(DatabaseStatement stmt, UUIDBean entity) {
         stmt.clearBindings();
  
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+ 
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(1, name);
+            stmt.bindString(2, name);
         }
  
         String uuid = entity.getUuid();
         if (uuid != null) {
-            stmt.bindString(2, uuid);
+            stmt.bindString(3, uuid);
         }
     }
 
@@ -70,52 +77,62 @@ public class UUIDBeanDao extends AbstractDao<UUIDBean, Void> {
     protected final void bindValues(SQLiteStatement stmt, UUIDBean entity) {
         stmt.clearBindings();
  
+        Long id = entity.getId();
+        if (id != null) {
+            stmt.bindLong(1, id);
+        }
+ 
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(1, name);
+            stmt.bindString(2, name);
         }
  
         String uuid = entity.getUuid();
         if (uuid != null) {
-            stmt.bindString(2, uuid);
+            stmt.bindString(3, uuid);
         }
     }
 
     @Override
-    public Void readKey(Cursor cursor, int offset) {
-        return null;
+    public Long readKey(Cursor cursor, int offset) {
+        return cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0);
     }    
 
     @Override
     public UUIDBean readEntity(Cursor cursor, int offset) {
         UUIDBean entity = new UUIDBean( //
-            cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0), // name
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1) // uuid
+            cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
+            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2) // uuid
         );
         return entity;
     }
      
     @Override
     public void readEntity(Cursor cursor, UUIDBean entity, int offset) {
-        entity.setName(cursor.isNull(offset + 0) ? null : cursor.getString(offset + 0));
-        entity.setUuid(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
+        entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
+        entity.setUuid(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
      }
     
     @Override
-    protected final Void updateKeyAfterInsert(UUIDBean entity, long rowId) {
-        // Unsupported or missing PK type
-        return null;
+    protected final Long updateKeyAfterInsert(UUIDBean entity, long rowId) {
+        entity.setId(rowId);
+        return rowId;
     }
     
     @Override
-    public Void getKey(UUIDBean entity) {
-        return null;
+    public Long getKey(UUIDBean entity) {
+        if(entity != null) {
+            return entity.getId();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public boolean hasKey(UUIDBean entity) {
-        // TODO
-        return false;
+        return entity.getId() != null;
     }
 
     @Override

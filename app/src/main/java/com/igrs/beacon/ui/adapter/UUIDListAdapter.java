@@ -16,6 +16,10 @@ public class UUIDListAdapter extends BaseQuickAdapter<UUIDBean, BaseViewHolder> 
         super(layoutResId, mDatas);
     }
 
+    public UUIDListAdapter(int layoutResId) {
+        super(layoutResId);
+    }
+
     @Override
     protected void convert(BaseViewHolder helper, UUIDBean item) {
         helper.setText(R.id.name, item.name).setText(R.id.uuid, item.uuid);

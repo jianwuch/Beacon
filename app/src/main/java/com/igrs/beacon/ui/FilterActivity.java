@@ -47,6 +47,28 @@ public class FilterActivity extends BaseActivity implements CompoundButton.OnChe
         setContentView(R.layout.activity_filter);
         initToolBar(toolBar, true, "过滤条件设置");
         initEvent();
+        showFilterConfig();
+    }
+
+    private void showFilterConfig() {
+        FilterConfig config = FilterManager.getFilterConfig();
+        switchUuid.setChecked(config.enableUUID);
+        switchMajor.setChecked(config.enableMajor);
+        switchMajor.setChecked(config.enableMinor);
+
+        if (config.enableUUID) {
+            tvUuid.setText(config.filterUUID);
+        }
+
+        if (config.enableMajor) {
+            edMajorFrom.setText(config.majorFrom);
+            edMajorTo.setText(config.majorTo);
+        }
+
+        if (config.enableMinor) {
+            edMinorFrom.setText(config.majorFrom);
+            edMinorTo.setText(config.majorTo);
+        }
     }
 
     @Override
@@ -112,15 +134,10 @@ public class FilterActivity extends BaseActivity implements CompoundButton.OnChe
                 FilterManager.saveNewConfig(config);
 
                 //通知页面过滤选择情况
-                if (config.isEnableFilter()) {
-                    Intent intent = new Intent();
-                    intent.putExtra(INTENT_RESULT_KEY, config);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                } else {
-                    setResult(RESULT_CANCELED);
-                    finish();
-                }
+                Intent intent = new Intent();
+                intent.putExtra(INTENT_RESULT_KEY, config);
+                setResult(RESULT_OK, intent);
+                finish();
             }
         });
     }

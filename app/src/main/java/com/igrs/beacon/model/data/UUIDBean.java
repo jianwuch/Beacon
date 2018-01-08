@@ -2,18 +2,23 @@ package com.igrs.beacon.model.data;
 
 import org.greenrobot.greendao.annotation.Entity;
 import org.greenrobot.greendao.annotation.Generated;
+import org.greenrobot.greendao.annotation.Id;
 
 /**
  * Created by jianw on 17-12-3.
  */
 @Entity
 public class UUIDBean {
+    @Id
+    public Long id;
+
     public String name;
 
     public String uuid;
 
-    @Generated(hash = 293200863)
-    public UUIDBean(String name, String uuid) {
+    @Generated(hash = 1445717030)
+    public UUIDBean(Long id, String name, String uuid) {
+        this.id = id;
         this.name = name;
         this.uuid = uuid;
     }
@@ -36,6 +41,14 @@ public class UUIDBean {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public Long getId() {
+        return this.id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
 }
