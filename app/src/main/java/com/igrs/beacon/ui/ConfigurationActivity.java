@@ -1,7 +1,9 @@
 package com.igrs.beacon.ui;
 
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothGatt;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,6 +11,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -200,19 +203,17 @@ public class ConfigurationActivity extends BaseActivity {
             }
         }
 
-
         //tx_power
         if (!TextUtils.isEmpty(tx_powerStr)) {
             int new_tx_power = Integer.parseInt(tx_powerStr);
             if (pre_tx_power != new_tx_power) {
-                if (new_tx_power < 0 && new_tx_power >-128) {
+                if (new_tx_power < 0 && new_tx_power > -128) {
                     setTxPower(new_tx_power + "");
                 } else {
                     ToastUtil.ToastShort(this, "格式不对");
                 }
             }
         }
-
 
         //ble_name
         if (!TextUtils.isEmpty(new_name) && !pre_name.equals(new_name)) {
@@ -222,10 +223,10 @@ public class ConfigurationActivity extends BaseActivity {
 
         //bat
         if (!TextUtils.isEmpty(batStr)) {
-            int new_bat  = Integer.parseInt(batStr);
+            int new_bat = Integer.parseInt(batStr);
             if (pre_bat != new_bat) {
-                if (new_bat >=0 && new_bat <= 100) {
-                    setBat(new_bat+"");
+                if (new_bat >= 0 && new_bat <= 100) {
+                    setBat(new_bat + "");
                 } else {
                     ToastUtil.ToastShort(ConfigurationActivity.this, "输入超过范围");
                 }
@@ -244,6 +245,25 @@ public class ConfigurationActivity extends BaseActivity {
     private void setPassword() {
         byte[] setPassword = HexUtil.hexStringToBytes(
                 "57" + AppConstans.RegAD.PASSWORD + AppConstans.DEFAULT_PASSWORD);
+        BleManager.getInstance()
+                .write(device, AppConstans.UUID_STR.SERVER_UUID,
+                        AppConstans.UUID_STR.CHA_WRITE_UUID, setPassword, new BleWriteCallback() {
+                            @Override
+                            public void onWriteSuccess() {
+                                LogUtil.d("写密码成功");
+                                //成功之后在notiry中去干其他操作
+                            }
+
+                            @Override
+                            public void onWriteFailure(BleException exception) {
+                                LogUtil.d("写密码失败");
+                            }
+                        });
+    }
+
+    private void setPassword(String password) {
+        byte[] setPassword = HexUtil.hexStringToBytes(
+                "57" + AppConstans.RegAD.PASSWORD + password);
         BleManager.getInstance()
                 .write(device, AppConstans.UUID_STR.SERVER_UUID,
                         AppConstans.UUID_STR.CHA_WRITE_UUID, setPassword, new BleWriteCallback() {
@@ -377,16 +397,15 @@ public class ConfigurationActivity extends BaseActivity {
                                     case WRITE:
                                         if (infoData.length == 1 && ((int) infoData[0]) == 0) {
                                             LogUtil.d(addressInt + ":notiry写入失败");
-                                            ToastUtil.ToastShort(ConfigurationActivity.this, "notiry写入失败");
+                                            ToastUtil.ToastShort(ConfigurationActivity.this,
+                                                    "notiry写入失败");
                                             if (addressInt == 1 && isConnected) {
-
-                                                //重新写入密码
-                                                LogUtil.d("密码重新登入");
-                                                setPassword();
+                                                showInputPasswordDialog();
                                             }
                                             return;
                                         }
-                                        ToastUtil.ToastShort(ConfigurationActivity.this, "notiry写入成功");
+                                        ToastUtil.ToastShort(ConfigurationActivity.this,
+                                                "notiry写入成功");
                                         LogUtil.d(addressInt + ":notiry写入成功");
                                         switch (addressInt) {
                                             case 1://password
@@ -474,7 +493,7 @@ public class ConfigurationActivity extends BaseActivity {
                         AppConstans.UUID_STR.CHA_WRITE_UUID, writeData, new BleWriteCallback() {
                             @Override
                             public void onWriteSuccess() {
-                                LogUtil.d(address + ":蓝牙写成功,等待notify结果:"+commStr);
+                                LogUtil.d(address + ":蓝牙写成功,等待notify结果:" + commStr);
                             }
 
                             @Override
@@ -488,14 +507,13 @@ public class ConfigurationActivity extends BaseActivity {
     private String mNeedSetData;//需要设置的数据
     private static int mWriteCount = 0;//写错误的次数记录
 
-
     /**
      * 包括中间的横线显示
-     * @param uuid
      */
     private void setUUID(String uuid) {
         mCurrentType = AppConstans.RegAD.UUID;
-        mNeedSetData = uuid.replace("-", "");;
+        mNeedSetData = uuid.replace("-", "");
+        ;
         writeInfo(mCurrentType, mNeedSetData);
     }
 
@@ -546,6 +564,7 @@ public class ConfigurationActivity extends BaseActivity {
     }
 
     private int new_bat;
+
     public void setBat(String value) {
         //int转16
         new_bat = Integer.parseInt(value);
@@ -576,5 +595,32 @@ public class ConfigurationActivity extends BaseActivity {
             uuid.setText(uuidStr);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void showInputPasswordDialog() {
+        View view = LayoutInflater.from(this).inflate(R.layout.dialog_set_password, null);
+        final EditText editText = view.findViewById(R.id.intput);
+        AlertDialog dialog = new AlertDialog.Builder(this).setTitle("请输入密码")
+                .setView(view)
+                .setCancelable(false)
+                .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        String password = editText.getText().toString().trim();
+                        if (TextUtils.isEmpty(password) || password.length() != 6) {
+                            ToastUtil.ToastShort(ConfigurationActivity.this, "密码长度不够");
+                            return;
+                        }
+
+                        char[] chars = password.toCharArray();
+                        StringBuilder stringBuilder = new StringBuilder();
+                        for (int i = 0; i < chars.length; i++) {
+                            stringBuilder.append("0").append(chars[i]);
+                        }
+
+                        setPassword(stringBuilder.toString());
+                    }
+                })
+                .show();
     }
 }
