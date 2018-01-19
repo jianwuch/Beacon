@@ -6,7 +6,7 @@ package com.igrs.beacon.config;
 
 public class AppConstans {
 
-    public static final String DEFAULT_PASSWORD = "010203040506";
+    public static final String DEFAULT_PASSWORD = "123456";
     public interface SharedPreferencesKey {
         String ENABLE_UUID = "enableUUID";
         String ENABLE_MAJOR = "enableMajor";
@@ -38,5 +38,7 @@ public class AppConstans {
         String BLE_NAME = "06";
         String BAT = "07";
         String INTERVAL = "08";//间隔
+        String BLE_TX_POWER = "09";
+        String CHANGE_PASS_WORD = "0A";
     }
 }

@@ -238,6 +238,13 @@ public class DeviceBatchBiz {
         writeInfo(device, mCurrentType, mNeedSetData);
     }
 
+    public void setBleTXName(iBeacon device, String value) {
+        String hexData = HexIntUtil.decimalTo1ByteHex(Integer.parseInt(value));
+        mCurrentType = AppConstans.RegAD.BLE_TX_POWER;
+        mNeedSetData = hexData;
+        writeInfo(device, mCurrentType, mNeedSetData);
+    }
+
     //写数据，修改参数
     private void writeInfo(iBeacon device, final String address, String data) {
         if (!mCurrentIsConnect) {
@@ -365,7 +372,14 @@ public class DeviceBatchBiz {
                                             break;
                                         }
                                     case 8://interval
-                                        //结束，开始下一个
+                                        if (config.bleTxPowerEnable) {
+                                            setBleTXName(mDevices.get(mCurrentIndex),
+                                                    config.bleTxPower + "");
+                                            break;
+                                        }
+                                    case 9://ble_tx_power
+
+                                        //结束并开始下一个
                                         BleManager.getInstance().disconnect(mDevices.get(mCurrentIndex).bleDevice);
                                         mHandler.sendEmptyMessage(HANDLER_WHAT_NEXT);
                                         break;

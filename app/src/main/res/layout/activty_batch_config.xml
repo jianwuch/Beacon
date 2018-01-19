@@ -233,6 +233,35 @@
             android:layout_weight="1" />
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="80dp"
+            android:layout_height="wrap_content"
+            android:text="BLE TX Power:" />
+
+        <EditText
+            android:id="@+id/ble_tx_power"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:maxLines="1"
+            android:enabled="false"
+            android:hint="输入0~5范围"
+            android:textSize="12sp" />
+
+        <android.support.v7.widget.SwitchCompat
+            android:id="@+id/switch_ble_tx_power"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+    </LinearLayout>
+
     <Button
         android:id="@+id/start"
         android:layout_width="wrap_content"

@@ -54,6 +54,7 @@ public class ConfigurationActivity extends BaseActivity {
     @BindView(R.id.ble_name) EditText bleName;
     @BindView(R.id.bat) EditText bat;
     @BindView(R.id.interval) EditText interval;
+    @BindView(R.id.ble_tx_name) EditText bleTxName;
 
     @BindView(R.id.status) TextView statusTextView;
     @BindView(R.id.layout_bat) TextInputLayout batLayout;
@@ -64,12 +65,17 @@ public class ConfigurationActivity extends BaseActivity {
     private int pre_major;
     private int pre_minor;
     private int pre_tx_power;
-    private String pre_name;
+    private String pre_name, pre_password = AppConstans.DEFAULT_PASSWORD;
     private int pre_bat;
     private int pre_interval;
+    private int pre_ble_tx_power;
+
+    //新的要修改的数据
+    private String new_password;
 
     private boolean isConnected;
     private Handler mHandler;
+    private AlertDialog disconnectDialog;
 
     public static void show(Context context, BleDevice device) {
         Intent intent = new Intent(context, ConfigurationActivity.class);
@@ -83,6 +89,7 @@ public class ConfigurationActivity extends BaseActivity {
         setContentView(R.layout.activity_configuration);
 
         initToolBar(toolBar, true, "修改参数");
+        initDisconnectDialog();
         toolBar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,6 +143,18 @@ public class ConfigurationActivity extends BaseActivity {
         });
     }
 
+    private void initDisconnectDialog() {
+        disconnectDialog =
+                new AlertDialog.Builder(ConfigurationActivity.this).setMessage("蓝牙断开")
+                        .setCancelable(false)
+                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        }).create();
+    }
+
     private void getDeviceFromIntent() {
         Intent intent = getIntent();
         device = intent.getParcelableExtra(INTENT_KEY);
@@ -166,6 +185,8 @@ public class ConfigurationActivity extends BaseActivity {
         String tx_powerStr = txPower.getText().toString().trim();
         String batStr = bat.getText().toString().trim();
         String intervalStr = interval.getText().toString().trim();
+        String bleTxNameStr = bleTxName.getText().toString().trim();
+        String passwrodStr = password.getText().toString().trim();
 
         //uuid
         if (!TextUtils.isEmpty(uuidStr)) {
@@ -240,6 +261,21 @@ public class ConfigurationActivity extends BaseActivity {
                 setInterva(new_interval + "");
             }
         }
+
+        //ble_tx_name
+        if (!TextUtils.isEmpty(bleTxNameStr)) {
+            int new_ble_tx_name = Integer.parseInt(bleTxNameStr);
+            if (pre_ble_tx_power != new_ble_tx_name) {
+                setBleTXName(new_ble_tx_name + "");
+            }
+        }
+
+        //password
+        if (!TextUtils.isEmpty(passwrodStr)) {
+            if (pre_password.equals(passwrodStr)) {
+                setPassword(passwrodStr);
+            }
+        }
     }
 
     private void setPassword() {
@@ -262,8 +298,8 @@ public class ConfigurationActivity extends BaseActivity {
     }
 
     private void setPassword(String password) {
-        byte[] setPassword = HexUtil.hexStringToBytes(
-                "57" + AppConstans.RegAD.PASSWORD + password);
+        new_password = password;
+        byte[] setPassword = HexUtil.hexStringToBytes("57" + AppConstans.RegAD.PASSWORD + password);
         BleManager.getInstance()
                 .write(device, AppConstans.UUID_STR.SERVER_UUID,
                         AppConstans.UUID_STR.CHA_WRITE_UUID, setPassword, new BleWriteCallback() {
@@ -401,15 +437,16 @@ public class ConfigurationActivity extends BaseActivity {
                                                     "notiry写入失败");
                                             if (addressInt == 1 && isConnected) {
                                                 showInputPasswordDialog();
+                                                return;
                                             }
-                                            return;
                                         }
                                         ToastUtil.ToastShort(ConfigurationActivity.this,
-                                                "notiry写入成功");
-                                        LogUtil.d(addressInt + ":notiry写入成功");
+                                                "notify写入成功");
+                                        LogUtil.d(addressInt + ":notify写入成功");
                                         switch (addressInt) {
                                             case 1://password
                                                 LogUtil.d("密码验证成功");
+                                                password.setText(pre_password);
                                                 getAllInfo();//密码输出正确之后开始获取其他数据
                                                 break;
                                             case 2://uuid
@@ -425,6 +462,14 @@ public class ConfigurationActivity extends BaseActivity {
                                             case 7://bat
                                                 break;
                                             case 8://interval
+                                                break;
+                                            case 9://ble_tx_power
+                                                pre_ble_tx_power = new_ble_tx_name;
+                                                ToastUtil.ToastShort(ConfigurationActivity.this, "ble_tx_power修改成功");
+                                                break;
+                                            case 10://改密码
+                                                pre_password = new_password;
+                                                ToastUtil.ToastShort(ConfigurationActivity.this, "密码修改成功");
                                                 break;
                                         }
                                         break;
@@ -470,6 +515,10 @@ public class ConfigurationActivity extends BaseActivity {
                                                 pre_interval = HexIntUtil.getInt(infoData, false);
                                                 interval.setText(pre_interval + "");
                                                 break;
+
+                                            case 9://ble_tx_power
+                                                pre_ble_tx_power = (int) infoData[0];
+                                                bleTxName.setText(pre_ble_tx_power+"");
                                         }
                                         break;
                                 }
@@ -583,6 +632,15 @@ public class ConfigurationActivity extends BaseActivity {
         writeInfo(mCurrentType, mNeedSetData);
     }
 
+    private int new_ble_tx_name;
+    public void setBleTXName(String value) {
+        new_ble_tx_name = Integer.parseInt(value);
+        String hexData = HexIntUtil.decimalTo1ByteHex(Integer.parseInt(value));
+        mCurrentType = AppConstans.RegAD.BLE_TX_POWER;
+        mNeedSetData = hexData;
+        writeInfo(mCurrentType, mNeedSetData);
+    }
+
     @OnClick(R.id.uuid)
     public void selectedUUID() {
         UUIDManagerActivity.show(this);
@@ -611,14 +669,7 @@ public class ConfigurationActivity extends BaseActivity {
                             ToastUtil.ToastShort(ConfigurationActivity.this, "密码长度不够");
                             return;
                         }
-
-                        char[] chars = password.toCharArray();
-                        StringBuilder stringBuilder = new StringBuilder();
-                        for (int i = 0; i < chars.length; i++) {
-                            stringBuilder.append("0").append(chars[i]);
-                        }
-
-                        setPassword(stringBuilder.toString());
+                        setPassword(password);
                     }
                 })
                 .show();

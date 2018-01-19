@@ -16,10 +16,12 @@ public class BatchConfig {
     public boolean nameEnable;
     public boolean batEnable;
     public boolean intervalEnable;
+    public boolean bleTxPowerEnable;
 
     public String uuid;
     public String bleName;
     public int bat;
     public int txPower;
     public int interval;
+    public int bleTxPower;//0~5
 }

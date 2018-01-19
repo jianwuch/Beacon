@@ -65,6 +65,8 @@ public class BatchConfigationActivty extends BaseActivity {
     SwitchCompat siwtchBat;
     @BindView(R.id.interal)
     EditText interal;
+    @BindView(R.id.ble_tx_power)
+    EditText bleTXPower;
     @BindView(R.id.siwtch_interval)
     SwitchCompat siwtchInterval;
     @BindView(R.id.start)
@@ -187,6 +189,22 @@ public class BatchConfigationActivty extends BaseActivity {
             }
         }
 
+        if (mBatchConfig.bleTxPowerEnable) {
+            String bleTxPowerStr = bleTXPower.getText().toString().trim();
+            if (TextUtils.isEmpty(bleTxPowerStr)) {
+                ToastUtil.ToastShort(this, "打开了Bat就需要必填");
+                return;
+            } else {
+                int bleTxPower = Integer.parseInt(bleTxPowerStr);
+                if (bleTxPower >= 0 && bleTxPower <=5) {
+                    mBatchConfig.bleTxPower = bleTxPower;
+                } else {
+                    ToastUtil.ToastShort(this, "输入的BLE TX Power在0~5");
+                    return;
+                }
+            }
+        }
+
         DeviceBatchBiz deviceBatchBiz = new DeviceBatchBiz();
         deviceBatchBiz.setProcessChangedLinstener(new DeviceBatchBiz.ProcessChangedLinstener() {
             @Override
@@ -228,6 +246,10 @@ public class BatchConfigationActivty extends BaseActivity {
             case R.id.siwtch_bat:
                 bat.setEnabled(isChecked);
                 mBatchConfig.batEnable = isChecked;
+                break;
+            case R.id.switch_ble_tx_power:
+                bleTXPower.setEnabled(isChecked);
+                mBatchConfig.bleTxPowerEnable = isChecked;
                 break;
             default:
                 break;
