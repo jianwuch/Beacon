@@ -36,6 +36,7 @@ import java.io.UnsupportedEncodingException;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import java.util.Arrays;
 
 /**
  * Created by jove.chen on 2017/12/12.
@@ -54,7 +55,7 @@ public class ConfigurationActivity extends BaseActivity {
     @BindView(R.id.ble_name) EditText bleName;
     @BindView(R.id.bat) EditText bat;
     @BindView(R.id.interval) EditText interval;
-    @BindView(R.id.ble_tx_name) EditText bleTxName;
+    @BindView(R.id.ble_tx_name) TextView bleTxPower;
 
     @BindView(R.id.status) TextView statusTextView;
     @BindView(R.id.layout_bat) TextInputLayout batLayout;
@@ -144,15 +145,15 @@ public class ConfigurationActivity extends BaseActivity {
     }
 
     private void initDisconnectDialog() {
-        disconnectDialog =
-                new AlertDialog.Builder(ConfigurationActivity.this).setMessage("蓝牙断开")
-                        .setCancelable(false)
-                        .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                finish();
-                            }
-                        }).create();
+        disconnectDialog = new AlertDialog.Builder(ConfigurationActivity.this).setMessage("蓝牙断开")
+                .setCancelable(false)
+                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        finish();
+                    }
+                })
+                .create();
     }
 
     private void getDeviceFromIntent() {
@@ -185,7 +186,7 @@ public class ConfigurationActivity extends BaseActivity {
         String tx_powerStr = txPower.getText().toString().trim();
         String batStr = bat.getText().toString().trim();
         String intervalStr = interval.getText().toString().trim();
-        String bleTxNameStr = bleTxName.getText().toString().trim();
+        String bleTxNameStr = bleTxPower.getText().toString().trim();
         String passwrodStr = password.getText().toString().trim();
 
         //uuid
@@ -465,11 +466,13 @@ public class ConfigurationActivity extends BaseActivity {
                                                 break;
                                             case 9://ble_tx_power
                                                 pre_ble_tx_power = new_ble_tx_name;
-                                                ToastUtil.ToastShort(ConfigurationActivity.this, "ble_tx_power修改成功");
+                                                ToastUtil.ToastShort(ConfigurationActivity.this,
+                                                        "ble_tx_power修改成功");
                                                 break;
                                             case 10://改密码
                                                 pre_password = new_password;
-                                                ToastUtil.ToastShort(ConfigurationActivity.this, "密码修改成功");
+                                                ToastUtil.ToastShort(ConfigurationActivity.this,
+                                                        "密码修改成功");
                                                 break;
                                         }
                                         break;
@@ -518,7 +521,19 @@ public class ConfigurationActivity extends BaseActivity {
 
                                             case 9://ble_tx_power
                                                 pre_ble_tx_power = (int) infoData[0];
-                                                bleTxName.setText(pre_ble_tx_power+"");
+                                                int positon = Arrays.binarySearch(
+                                                        AppConstans.BLE_TX_POWER_int,
+                                                        pre_ble_tx_power);
+
+                                                if (positon >= 0
+                                                        && positon
+                                                        <= AppConstans.BLE_TX_POWER_int.length
+                                                        - 1) {
+                                                    bleTxPower.setText(AppConstans.BLE_TX_POWER_LIST[positon]);
+                                                } else {
+                                                    ToastUtil.ToastShort(ConfigurationActivity.this,
+                                                            "Ble_tx_power获取的范围不对");
+                                                }
                                         }
                                         break;
                                 }
@@ -633,6 +648,7 @@ public class ConfigurationActivity extends BaseActivity {
     }
 
     private int new_ble_tx_name;
+
     public void setBleTXName(String value) {
         new_ble_tx_name = Integer.parseInt(value);
         String hexData = HexIntUtil.decimalTo1ByteHex(Integer.parseInt(value));
@@ -644,6 +660,22 @@ public class ConfigurationActivity extends BaseActivity {
     @OnClick(R.id.uuid)
     public void selectedUUID() {
         UUIDManagerActivity.show(this);
+    }
+
+    @OnClick(R.id.ble_tx_power)
+    public void selectBleTxPower() {
+        showSelectBleTXPower();
+    }
+
+    private void showSelectBleTXPower() {
+        AlertDialog dialog =
+                new AlertDialog.Builder(this).setSingleChoiceItems(AppConstans.BLE_TX_POWER_LIST,
+                        -1, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+
+                            }
+                        }).show();
     }
 
     @Override
