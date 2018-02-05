@@ -186,13 +186,13 @@ public class ConfigurationActivity extends BaseActivity {
         String tx_powerStr = txPower.getText().toString().trim();
         String batStr = bat.getText().toString().trim();
         String intervalStr = interval.getText().toString().trim();
-        String bleTxNameStr = bleTxPower.getText().toString().trim();
+        String bleTxPowerStr = bleTxPower.getText().toString().trim();
         String passwrodStr = password.getText().toString().trim();
 
         //uuid
         if (!TextUtils.isEmpty(uuidStr)) {
             String newUUIDStr = uuidStr;
-            if (!newUUIDStr.equals(pre_name)) {
+            if (!newUUIDStr.equals(pre_uuid)) {
                 setUUID(newUUIDStr);
             }
         }
@@ -263,23 +263,27 @@ public class ConfigurationActivity extends BaseActivity {
             }
         }
 
-        //ble_tx_name
-        if (!TextUtils.isEmpty(bleTxNameStr)) {
-            int new_ble_tx_name = Integer.parseInt(bleTxNameStr);
-            if (pre_ble_tx_power != new_ble_tx_name) {
-                setBleTXName(new_ble_tx_name + "");
+        //ble_tx_power
+        int new_ble_tx_power;
+        if (!TextUtils.isEmpty(bleTxPowerStr)) {
+            int postionPower = Arrays.binarySearch(AppConstans.BLE_TX_POWER_LIST, bleTxPowerStr);
+            new_ble_tx_power = AppConstans.BLE_TX_POWER_int[postionPower];
+
+            if (new_ble_tx_power != pre_ble_tx_power) {
+                setBleTXPower(new_ble_tx_name + "");
             }
         }
 
         //password
         if (!TextUtils.isEmpty(passwrodStr)) {
-            if (pre_password.equals(passwrodStr)) {
-                setPassword(passwrodStr);
+            new_password = passwrodStr;
+            if (!pre_password.equals(passwrodStr)) {
+                changePassword(passwrodStr);
             }
         }
     }
 
-    private void setPassword() {
+    private void setDefaultPassword() {
         byte[] setPassword = HexUtil.hexStringToBytes(
                 "57" + AppConstans.RegAD.PASSWORD + AppConstans.DEFAULT_PASSWORD);
         BleManager.getInstance()
@@ -340,7 +344,7 @@ public class ConfigurationActivity extends BaseActivity {
     static int error_count = 0;
 
     private void getAllInfo() {
-        if (address >= 9) return;
+        if (address >= 10) return;
         LogUtil.d("开始读取寄存器数据：" + address);
         if (error_count >= 3) {
             ToastUtil.ToastShort(this, "重试3次读取失败");
@@ -402,7 +406,7 @@ public class ConfigurationActivity extends BaseActivity {
                             public void onNotifySuccess() {
                                 // 打开通知操作成功（UI线程）
                                 LogUtil.d("订阅通知数据成功");
-                                setPassword();
+                                setDefaultPassword();
                             }
 
                             @Override
@@ -433,10 +437,11 @@ public class ConfigurationActivity extends BaseActivity {
                                 switch ((int) type) {
                                     case WRITE:
                                         if (infoData.length == 1 && ((int) infoData[0]) == 0) {
-                                            LogUtil.d(addressInt + ":notiry写入失败");
+                                            LogUtil.d(addressInt + ":notify通知写入失败");
                                             ToastUtil.ToastShort(ConfigurationActivity.this,
                                                     "notiry写入失败");
                                             if (addressInt == 1 && isConnected) {
+                                                LogUtil.d("密码错误，通知用户输入新密码");
                                                 showInputPasswordDialog();
                                                 return;
                                             }
@@ -447,6 +452,9 @@ public class ConfigurationActivity extends BaseActivity {
                                         switch (addressInt) {
                                             case 1://password
                                                 LogUtil.d("密码验证成功");
+                                                if (!TextUtils.isEmpty(new_password)) {
+                                                    pre_password = new_password;
+                                                }
                                                 password.setText(pre_password);
                                                 getAllInfo();//密码输出正确之后开始获取其他数据
                                                 break;
@@ -577,7 +585,6 @@ public class ConfigurationActivity extends BaseActivity {
     private void setUUID(String uuid) {
         mCurrentType = AppConstans.RegAD.UUID;
         mNeedSetData = uuid.replace("-", "");
-        ;
         writeInfo(mCurrentType, mNeedSetData);
     }
 
@@ -649,11 +656,19 @@ public class ConfigurationActivity extends BaseActivity {
 
     private int new_ble_tx_name;
 
-    public void setBleTXName(String value) {
-        new_ble_tx_name = Integer.parseInt(value);
-        String hexData = HexIntUtil.decimalTo1ByteHex(Integer.parseInt(value));
+    public void setBleTXPower(String value) {
+        byte hexData = HexIntUtil.intTo1Byte(Integer.parseInt(value));
+        String valueHexStr = HexUtil.formatHexString(new byte[] { hexData });
         mCurrentType = AppConstans.RegAD.BLE_TX_POWER;
-        mNeedSetData = hexData;
+        mNeedSetData = valueHexStr;
+        writeInfo(mCurrentType, mNeedSetData);
+    }
+
+    //改密码
+    private void changePassword(String newPasswrod) {
+        String valueHexStr = newPasswrod;
+        mCurrentType = AppConstans.RegAD.CHANGE_PASS_WORD;
+        mNeedSetData = valueHexStr;
         writeInfo(mCurrentType, mNeedSetData);
     }
 
@@ -673,7 +688,8 @@ public class ConfigurationActivity extends BaseActivity {
                         -1, new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
+                                bleTxPower.setText(AppConstans.BLE_TX_POWER_LIST[which]);
+                                dialog.dismiss();
                             }
                         }).show();
     }
