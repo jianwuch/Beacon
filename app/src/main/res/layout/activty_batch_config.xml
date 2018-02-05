@@ -223,7 +223,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:enabled="false"
-            android:hint="输入要批量修改的interval"
+            android:hint="输入要批量修改的interval(20-10000)"
             android:textSize="12sp" />
 
         <android.support.v7.widget.SwitchCompat

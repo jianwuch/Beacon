@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.clj.fastble.BleManager;
@@ -36,6 +37,7 @@ import java.io.UnsupportedEncodingException;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+
 import java.util.Arrays;
 
 /**
@@ -46,19 +48,31 @@ import java.util.Arrays;
 public class ConfigurationActivity extends BaseActivity {
     public static final int WRITE = 87;
     public static final int READ = 82;
-    @BindView(R.id.tool_bar) Toolbar toolBar;
-    @BindView(R.id.password) EditText password;
-    @BindView(R.id.uuid) EditText uuid;
-    @BindView(R.id.major) EditText major;
-    @BindView(R.id.minor) EditText minor;
-    @BindView(R.id.tx_power) EditText txPower;
-    @BindView(R.id.ble_name) EditText bleName;
-    @BindView(R.id.bat) EditText bat;
-    @BindView(R.id.interval) EditText interval;
-    @BindView(R.id.ble_tx_name) TextView bleTxPower;
+    @BindView(R.id.tool_bar)
+    Toolbar toolBar;
+    @BindView(R.id.password)
+    EditText password;
+    @BindView(R.id.uuid)
+    TextView uuid;
+    @BindView(R.id.major)
+    EditText major;
+    @BindView(R.id.minor)
+    EditText minor;
+    @BindView(R.id.tx_power)
+    EditText txPower;
+    @BindView(R.id.ble_name)
+    EditText bleName;
+    @BindView(R.id.bat)
+    EditText bat;
+    @BindView(R.id.interval)
+    EditText interval;
+    @BindView(R.id.ble_tx_name)
+    TextView bleTxPower;
 
-    @BindView(R.id.status) TextView statusTextView;
-    @BindView(R.id.layout_bat) TextInputLayout batLayout;
+    @BindView(R.id.status)
+    TextView statusTextView;
+    @BindView(R.id.layout_bat)
+    LinearLayout batLayout;
     private BleDevice device;
 
     //修改逻辑业务参数
@@ -136,7 +150,7 @@ public class ConfigurationActivity extends BaseActivity {
 
             @Override
             public void onDisConnected(boolean isActiveDisConnected, BleDevice device,
-                    BluetoothGatt gatt, int status) {
+                                       BluetoothGatt gatt, int status) {
                 showLoading(false);
                 isConnected = false;
                 statusTextView.setText(String.format(getString(R.string.status), "已断开"));
@@ -491,7 +505,7 @@ public class ConfigurationActivity extends BaseActivity {
                                                     "读取失败");
                                             return;
                                         }
-                                        switch (HexIntUtil.getInt(new byte[] { address }, false)) {
+                                        switch (HexIntUtil.getInt(new byte[]{address}, false)) {
                                             case 1://password
                                                 password.setText(HexUtil.encodeHexStr(infoData));
                                                 break;
@@ -628,7 +642,7 @@ public class ConfigurationActivity extends BaseActivity {
     public void setTxPower(String value) {
         //int转16
         byte hexData = HexIntUtil.intTo1Byte(Integer.parseInt(value));
-        String valueHexStr = HexUtil.formatHexString(new byte[] { hexData });
+        String valueHexStr = HexUtil.formatHexString(new byte[]{hexData});
         mCurrentType = AppConstans.RegAD.TX_POWER;
         mNeedSetData = valueHexStr;
         writeInfo(mCurrentType, mNeedSetData);
@@ -640,15 +654,25 @@ public class ConfigurationActivity extends BaseActivity {
         //int转16
         new_bat = Integer.parseInt(value);
         byte hexData = HexIntUtil.intTo1Byte(new_bat);
-        String valueHexStr = HexUtil.formatHexString(new byte[] { hexData });
+        String valueHexStr = HexUtil.formatHexString(new byte[]{hexData});
         mCurrentType = AppConstans.RegAD.BAT;
         mNeedSetData = valueHexStr;
         writeInfo(mCurrentType, mNeedSetData);
     }
 
+    /**
+     * 界面已10进制显示，发送修改的是需要value/0.625-->16进制发送
+     * @param value
+     */
     public void setInterva(String value) {
         //int转16
-        String hexData = HexIntUtil.decimalTo2ByteHex(Integer.parseInt(value));
+        int valueInt = Integer.parseInt(value);
+        if (valueInt/10 != 0) {
+
+            ToastUtil.ToastShort(this, "interval需要时10的倍数");
+            return;
+        }
+        String hexData = HexIntUtil.decimalTo2ByteHex((int) (valueInt/0.625F));
         mCurrentType = AppConstans.RegAD.INTERVAL;
         mNeedSetData = hexData;
         writeInfo(mCurrentType, mNeedSetData);
@@ -658,7 +682,7 @@ public class ConfigurationActivity extends BaseActivity {
 
     public void setBleTXPower(String value) {
         byte hexData = HexIntUtil.intTo1Byte(Integer.parseInt(value));
-        String valueHexStr = HexUtil.formatHexString(new byte[] { hexData });
+        String valueHexStr = HexUtil.formatHexString(new byte[]{hexData});
         mCurrentType = AppConstans.RegAD.BLE_TX_POWER;
         mNeedSetData = valueHexStr;
         writeInfo(mCurrentType, mNeedSetData);
@@ -713,7 +737,7 @@ public class ConfigurationActivity extends BaseActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String password = editText.getText().toString().trim();
-                        if (TextUtils.isEmpty(password) || password.length() != 6) {
+                        if (TextUtils.isEmpty(password) || password.length() != 12) {
                             ToastUtil.ToastShort(ConfigurationActivity.this, "密码长度不够");
                             return;
                         }

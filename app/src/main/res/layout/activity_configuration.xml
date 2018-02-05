@@ -1,179 +1,229 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_margin="10dp"
     android:orientation="vertical">
 
-  <android.support.v7.widget.Toolbar
-      android:id="@+id/tool_bar"
-      android:layout_width="match_parent"
-      android:layout_height="?attr/actionBarSize" />
-
-  <ScrollView
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:layout_weight="1">
-
-    <LinearLayout
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/tool_bar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@drawable/divider_bg"
-        android:orientation="vertical">
+        android:layout_height="?attr/actionBarSize" />
 
-      <TextView
-          android:id="@+id/status"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_gravity="center_horizontal"
-          android:text="状态：" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
-      <android.support.design.widget.TextInputLayout
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/filter_item_height"
-          android:gravity="center_vertical"
-          app:counterMaxLength="12"
-          android:hint="修改新password(12位)">
-
-        <EditText
-            android:id="@+id/password"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:maxLength="12"
-            android:lines="1"
-            android:maxLines="1" />
-      </android.support.design.widget.TextInputLayout>
+            android:layout_height="match_parent"
+            android:divider="@drawable/divider_bg"
+            android:orientation="vertical">
 
-      <android.support.design.widget.TextInputLayout
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/filter_item_height"
-          android:gravity="center_vertical"
-          android:hint="UUID(修改时，请点击选择)">
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="状态：" />
 
-        <EditText
-            android:id="@+id/uuid"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:lines="1"
-            android:maxLines="1"
-            android:textSize="12sp"
-            tools:text="0000" />
-      </android.support.design.widget.TextInputLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/filter_item_height"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-      <android.support.design.widget.TextInputLayout
-          android:layout_width="match_parent"
-          android:layout_height="@dimen/filter_item_height"
-          android:gravity="center_vertical"
-          android:hint="Major">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="密码(12位)：" />
 
-        <EditText
-            android:id="@+id/major"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:lines="1"
-            android:maxLines="1"
-            tools:text="0000" />
-      </android.support.design.widget.TextInputLayout>
+                <EditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:lines="1"
+                    android:maxLength="12"
+                    tools:text="000000000000" />
+            </LinearLayout>
 
-      <android.support.design.widget.TextInputLayout
-          android:layout_width="match_parent"
-          android:layout_height="50dp"
-          android:hint="Minor">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/filter_item_height"
+                android:gravity="center_vertical">
 
-        <EditText
-            android:id="@+id/minor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:lines="1"
-            android:maxLines="1"
-            tools:text="0000" />
-      </android.support.design.widget.TextInputLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="UUID:" />
 
+                <TextView
+                    android:id="@+id/uuid"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:hint="UUID(修改时，请点击选择)"
+                    android:lines="1"
+                    android:maxLines="1"
+                    android:textSize="12sp" />
+            </LinearLayout>
 
-      <android.support.design.widget.TextInputLayout
-          android:layout_width="match_parent"
-          android:layout_height="50dp"
-          android:hint="TX power">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/filter_item_height"
+                android:gravity="center_vertical">
 
-        <EditText
-            android:id="@+id/tx_power"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:lines="1"
-            android:maxLines="1"
-            tools:text="-65" />
-      </android.support.design.widget.TextInputLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Major:" />
 
+                <EditText
+                    android:id="@+id/major"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:lines="1"
+                    android:maxLines="1"
+                    tools:text="0000" />
+            </LinearLayout>
 
-      <android.support.design.widget.TextInputLayout
-          android:layout_width="match_parent"
-          android:layout_height="50dp"
-          android:hint="BLE name">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical">
 
-        <EditText
-            android:id="@+id/ble_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:lines="1"
-            android:maxLines="1"
-            tools:text="igrs" />
-      </android.support.design.widget.TextInputLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Minor:" />
 
-      <android.support.design.widget.TextInputLayout
-          android:id="@+id/layout_bat"
-          android:layout_width="match_parent"
-          android:layout_height="50dp"
-          android:hint="Bat（0-100）">
-
-        <EditText
-            android:id="@+id/bat"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            android:lines="1"
-            android:maxLines="1" />
-      </android.support.design.widget.TextInputLayout>
+                <EditText
+                    android:id="@+id/minor"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:lines="1"
+                    android:maxLines="1"
+                    tools:text="0000" />
+            </LinearLayout>
 
 
-      <android.support.design.widget.TextInputLayout
-          android:layout_width="match_parent"
-          android:layout_height="50dp"
-          android:hint="Interval(基础间隔单位10ms)"
-          android:lines="1"
-          android:maxLines="1">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="TX power">
 
-        <EditText
-            android:id="@+id/interval"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="number"
-            tools:text="1000" />
-      </android.support.design.widget.TextInputLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tx power:" />
 
-      <LinearLayout
-          android:id="@+id/ble_tx_power"
-          android:layout_width="match_parent"
-          android:layout_height="wrap_content"
-          android:orientation="vertical">
+                <EditText
+                    android:id="@+id/tx_power"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:maxLines="1"
+                    tools:text="-65" />
+            </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="BLE_TX_Power"/>
-        <TextView
-            android:id="@+id/ble_tx_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:focusable="false"
-            android:lines="1"
-            android:maxLines="1"
-            android:hint="点击选择" />
-      </LinearLayout>
-    </LinearLayout>
-  </ScrollView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:hint="BLE name">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="BLE name:" />
+
+                <EditText
+                    android:id="@+id/ble_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:lines="1"
+                    android:maxLines="1"
+                    tools:text="igrs" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_bat"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Bat（0-100）">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Bat(0-100):" />
+
+                <EditText
+                    android:id="@+id/bat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:inputType="number"
+                    android:lines="1"
+                    android:maxLines="1"
+                    tools:text="100" />
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:hint="Interval(基础间隔单位10ms)"
+                android:lines="1"
+                android:maxLines="1">
+
+                <TextView
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Interval(间隔单位10ms\n范围20-10000):" />
+
+                <EditText
+                    android:id="@+id/interval"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:inputType="number"
+                    tools:text="1000" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ble_tx_power"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="BLE_TX_Power:" />
+
+                <TextView
+                    android:id="@+id/ble_tx_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:focusable="false"
+                    android:hint="点击选择"
+                    android:lines="1"
+                    android:maxLines="1" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

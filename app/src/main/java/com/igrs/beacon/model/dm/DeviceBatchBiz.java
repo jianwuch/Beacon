@@ -230,9 +230,14 @@ public class DeviceBatchBiz {
         writeInfo(device, mCurrentType, mNeedSetData);
     }
 
+    /**
+     * 界面已10进制显示，发送修改的是需要value/0.625-->16进制发送
+     * @param value
+     */
     public void setInterva(iBeacon device, String value) {
         //int转16
-        String hexData = HexIntUtil.decimalTo2ByteHex(Integer.parseInt(value));
+        int valueInt = Integer.parseInt(value);
+        String hexData = HexIntUtil.decimalTo2ByteHex((int) (valueInt/0.625F));
         mCurrentType = AppConstans.RegAD.INTERVAL;
         mNeedSetData = hexData;
         writeInfo(device, mCurrentType, mNeedSetData);
