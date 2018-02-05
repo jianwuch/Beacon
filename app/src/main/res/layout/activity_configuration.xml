@@ -34,13 +34,15 @@
           android:layout_width="match_parent"
           android:layout_height="@dimen/filter_item_height"
           android:gravity="center_vertical"
-          android:hint="修改新password">
+          app:counterMaxLength="12"
+          android:hint="修改新password(12位)">
 
         <EditText
             android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="number"
+            android:maxLength="12"
             android:lines="1"
             android:maxLines="1" />
       </android.support.design.widget.TextInputLayout>
