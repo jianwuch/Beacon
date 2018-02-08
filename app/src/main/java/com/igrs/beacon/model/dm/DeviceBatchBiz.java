@@ -426,14 +426,25 @@ public class DeviceBatchBiz {
                     break;
 
                 case HANDLER_WHAT_CONNECT_ERROR:
+                    if (processChangedLinstener != null) {
+                        processChangedLinstener.onFailed();
+                    }
                     //设备连接4次依然无法连接的情况
                     break;
                 case HANDLER_WHAT_NOTIFY_ERROR:
+
                     //设备注册通知失败的情况
+                    if (processChangedLinstener != null) {
+                        processChangedLinstener.onFailed();
+                    }
                     break;
 
                 case HANDLER_WHAT_WRITE_ERROR:
+
                     //设备写多次依然无法成功的情况
+                    if (processChangedLinstener != null) {
+                        processChangedLinstener.onFailed();
+                    }
                     break;
                 default:
                     break;
@@ -445,5 +456,7 @@ public class DeviceBatchBiz {
         void onChanged(int process, String processStr);
 
         void onFinished();
+
+        void onFailed();
     }
 }

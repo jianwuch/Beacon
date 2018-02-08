@@ -222,6 +222,11 @@ public class BatchConfigationActivty extends BaseActivity {
             public void onFinished() {
                 result.setText("处理完成");
             }
+
+            @Override
+            public void onFailed() {
+                result.setText("异常失败，查看日志");
+            }
         });
 
         //开始配置

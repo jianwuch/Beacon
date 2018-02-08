@@ -8,10 +8,14 @@ import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.FrameLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -21,8 +25,11 @@ import butterknife.OnClick;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
+import com.igrs.beacon.model.QRScanMgr;
+import com.igrs.beacon.model.data.BatchConfig;
 import com.igrs.beacon.model.data.FilterConfig;
 import com.igrs.beacon.model.data.iBeacon;
+import com.igrs.beacon.model.dm.DeviceBatchBiz;
 import com.igrs.beacon.ui.BatchConfigationActivty;
 import com.igrs.beacon.ui.ConfigurationActivity;
 import com.igrs.beacon.ui.CustomScanActivity;
@@ -31,7 +38,10 @@ import com.igrs.beacon.ui.adapter.ScanBleAdapter;
 import com.igrs.beacon.ui.basemvp.BaseMvpActivity;
 import com.igrs.beacon.ui.contract.MainPageContract;
 import com.igrs.beacon.ui.presenter.HomePresenterByFastBle;
+import com.igrs.beacon.util.LogUtil;
 import com.igrs.beacon.util.ToastUtil;
+import com.igrs.beacon.widget.NeedWriteInfo;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterByFastBle>
@@ -49,7 +59,10 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
 
     private ScanBleAdapter mAdapter;
     private ActionMode actionMode;
+    private DeviceBatchBiz mDeviceBatchBiz;
     private static final int START_CODE_UUID = 0;
+    private BatchConfig mConfig;
+    private NeedWriteInfo infoView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,8 +86,15 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
             } else {
                 Toast.makeText(this, "扫描成功", Toast.LENGTH_LONG).show();
                 // ScanResult 为 获取到的字符串
-                String ScanResult = intentResult.getContents();
-                Toast.makeText(this, ScanResult, Toast.LENGTH_LONG).show();
+                String scanResult = intentResult.getContents();
+                LogUtil.d(scanResult);
+
+                mConfig = QRScanMgr.parseQRResult(scanResult);
+                if (null != mConfig) {
+                    showQRResult(scanResult);
+                } else {
+                    ToastUtil.ToastShort(this, "扫描的数据有误");
+                }
             }
         } else if (requestCode == FilterActivity.REQUEST_CODE) {
             switch (resultCode) {
@@ -173,15 +193,45 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                if (mAdapter.getChooseMode()) {
+                if (mConfig != null) {
 
-                    //多选模式
-                    mAdapter.setChecked(position);
+                    //二维码扫描设置参数
+                    List<iBeacon> list = new ArrayList<>();
+                    list.add(mAdapter.getData().get(position));
+                    if (mDeviceBatchBiz == null) {
+                        mDeviceBatchBiz = new DeviceBatchBiz();
+                    }
+                    mDeviceBatchBiz.beginBatch(list, mConfig);
+                    mDeviceBatchBiz.setProcessChangedLinstener(
+                            new DeviceBatchBiz.ProcessChangedLinstener() {
+                                @Override
+                                public void onChanged(int process, String processStr) {
+
+                                }
+
+                                @Override
+                                public void onFinished() {
+                                    ToastUtil.ToastShort(MainActivity.this, "二维码修改成功");
+                                    infoView.removeSelf();
+                                }
+
+                                @Override
+                                public void onFailed() {
+                                    ToastUtil.ToastShort(MainActivity.this, "二维码修改失败");
+                                    infoView.removeSelf();
+                                }
+                            });
                 } else {
+                    if (mAdapter.getChooseMode()) {
 
-                    //跳转模式
-                    ConfigurationActivity.show(MainActivity.this,
-                            mAdapter.getItem(position).bleDevice);
+                        //多选模式
+                        mAdapter.setChecked(position);
+                    } else {
+
+                        //跳转模式
+                        ConfigurationActivity.show(MainActivity.this,
+                                mAdapter.getItem(position).bleDevice);
+                    }
                 }
             }
         });
@@ -306,5 +356,27 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
         new IntentIntegrator(this).setOrientationLocked(false)
                 .setCaptureActivity(CustomScanActivity.class) // 设置自定义的activity是CustomActivity
                 .initiateScan(); // 初始化扫描
+    }
+
+    private void showQRResult(String result) {
+        ViewGroup vp = findViewById(Window.ID_ANDROID_CONTENT);
+        if (null != infoView) {
+            vp.removeView(infoView);
+        }
+        FrameLayout.LayoutParams lp =
+                new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.gravity = Gravity.BOTTOM;
+        infoView = new NeedWriteInfo(this);
+        infoView.setReult(result);
+        infoView.setId(R.id.main_qr_layout_id);
+        vp.addView(infoView, lp);
+
+        infoView.setCancelListener(new NeedWriteInfo.CancelListener() {
+            @Override
+            public void onCancel() {
+                mConfig = null;
+            }
+        });
     }
 }
