@@ -402,11 +402,11 @@ public class ConfigurationActivity extends BaseActivity {
                                                 uuid.setText(pre_uuid);
                                                 break;
                                             case 3://major
-                                                pre_major = HexIntUtil.getInt(infoData, false);
+                                                pre_major = HexIntUtil.lowByte2int(infoData);
                                                 major.setText(pre_major + "");
                                                 break;
                                             case 4://minor
-                                                pre_minor = HexIntUtil.getInt(infoData, false);
+                                                pre_minor = HexIntUtil.lowByte2int(infoData);
                                                 minor.setText(pre_minor + "");
 
                                                 break;
@@ -425,7 +425,7 @@ public class ConfigurationActivity extends BaseActivity {
                                                 break;
 
                                             case 8://interval
-                                                pre_interval = HexIntUtil.getInt(infoData, false);
+                                                pre_interval = HexIntUtil.lowByte2int(infoData);
                                                 interval.setText(pre_interval + "");
                                                 break;
 
@@ -499,7 +499,7 @@ public class ConfigurationActivity extends BaseActivity {
         String hexData = HexIntUtil.decToHex(Integer.parseInt(value));
         mCurrentType = AppConstans.RegAD.MAJOR;
         mNeedSetData = hexData;
-        writeInfo(mCurrentType, value);
+        writeInfo(mCurrentType, mNeedSetData);
     }
 
     //改minor
@@ -508,7 +508,7 @@ public class ConfigurationActivity extends BaseActivity {
         String hexData = HexIntUtil.decToHex(Integer.parseInt(value));
         mCurrentType = AppConstans.RegAD.MINOR;
         mNeedSetData = hexData;
-        writeInfo(mCurrentType, value);
+        writeInfo(mCurrentType, mNeedSetData);
     }
 
     //改名称
@@ -561,8 +561,8 @@ public class ConfigurationActivity extends BaseActivity {
             ToastUtil.ToastShort(this, "interval需要时10的倍数");
             return;
         }
-        String hexData = HexIntUtil.decToHex((int) (valueInt / 0.625F));
         mCurrentType = AppConstans.RegAD.INTERVAL;
+        String hexData = HexIntUtil.decToHex((int) (valueInt / 0.625F));
         mNeedSetData = hexData;
         writeInfo(mCurrentType, mNeedSetData);
     }

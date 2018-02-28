@@ -143,4 +143,16 @@ public class HexIntUtil {
         }
         return hex;
     }
+
+
+    //低位在前，高位在后转int,2位
+    public static int lowByte2int(byte[] bytes){
+        int result = 0;
+        if(bytes.length == 2){
+            int a = (bytes[0] & 0xff) << 8;//说明二
+            int b = (bytes[1] & 0xff);
+            result = a | b;
+        }
+        return result;
+    }
 }
