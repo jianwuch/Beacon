@@ -177,126 +177,14 @@ public class ConfigurationActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.configuration_menu, menu);
+//        getMenuInflater().inflate(R.menu.configuration_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_save:
-                save();
-                break;
-        }
         return super.onOptionsItemSelected(item);
     }
-
-    //保存参数
-    private void save() {
-        String uuidStr = uuid.getText().toString().trim();
-        String majorStr = major.getText().toString().trim();
-        String minorStr = minor.getText().toString().trim();
-        String new_name = bleName.getText().toString().trim();
-        String tx_powerStr = txPower.getText().toString().trim();
-        String batStr = bat.getText().toString().trim();
-        String intervalStr = interval.getText().toString().trim();
-        String bleTxPowerStr = bleTxPower.getText().toString().trim();
-        String passwrodStr = password.getText().toString().trim();
-
-        //uuid
-        if (!TextUtils.isEmpty(uuidStr)) {
-            String newUUIDStr = uuidStr;
-            if (!newUUIDStr.equals(pre_uuid)) {
-                setUUID(newUUIDStr);
-            }
-        }
-
-        //major
-        if (!TextUtils.isEmpty(majorStr)) {
-            int new_major = Integer.parseInt(majorStr);
-            if (pre_major == new_major) {
-                //不需要修改
-            } else {
-                //修改major
-                if (new_major > 65532) {
-                    ToastUtil.ToastShort(this, "超出最大值65532");
-                }
-                setMajor(new_major + "");
-            }
-        }
-
-        //minor
-        if (!TextUtils.isEmpty(minorStr)) {
-            int new_minor = Integer.parseInt(minorStr);
-            if (pre_minor == new_minor) {
-                //不需要修改
-            } else {
-                //修改minor
-                if (new_minor > 65532) {
-                    ToastUtil.ToastShort(this, "超出最大值65532");
-                }
-                setMinor(new_minor + "");
-            }
-        }
-
-        //tx_power
-        if (!TextUtils.isEmpty(tx_powerStr)) {
-            int new_tx_power = Integer.parseInt(tx_powerStr);
-            if (pre_tx_power != new_tx_power) {
-                if (new_tx_power < 0 && new_tx_power > -128) {
-                    setTxPower(new_tx_power + "");
-                } else {
-                    ToastUtil.ToastShort(this, "格式不对");
-                }
-            }
-        }
-
-        //ble_name
-        if (!TextUtils.isEmpty(new_name) && !pre_name.equals(new_name)) {
-            //修改name
-            setBleName(new_name);
-        }
-
-        //bat
-        if (!TextUtils.isEmpty(batStr)) {
-            int new_bat = Integer.parseInt(batStr);
-            if (pre_bat != new_bat) {
-                if (new_bat >= 0 && new_bat <= 100) {
-                    setBat(new_bat + "");
-                } else {
-                    ToastUtil.ToastShort(ConfigurationActivity.this, "输入超过范围");
-                }
-            }
-        }
-
-        //interval
-        if (!TextUtils.isEmpty(intervalStr)) {
-            int new_interval = Integer.parseInt(intervalStr);
-            if (pre_interval != new_interval) {
-                setInterva(new_interval + "");
-            }
-        }
-
-        //ble_tx_power
-        int new_ble_tx_power;
-        if (!TextUtils.isEmpty(bleTxPowerStr)) {
-            int postionPower = Arrays.binarySearch(AppConstans.BLE_TX_POWER_LIST, bleTxPowerStr);
-            new_ble_tx_power = AppConstans.BLE_TX_POWER_int[postionPower];
-
-            if (new_ble_tx_power != pre_ble_tx_power) {
-                setBleTXPower(new_ble_tx_name + "");
-            }
-        }
-
-        //password
-        if (!TextUtils.isEmpty(passwrodStr)) {
-            new_password = passwrodStr;
-            if (!pre_password.equals(passwrodStr)) {
-                changePassword(passwrodStr);
-            }
-        }
-    }
-
     private void setDefaultPassword() {
         byte[] setPassword = HexUtil.hexStringToBytes(
                 "57" + AppConstans.RegAD.PASSWORD + AppConstans.DEFAULT_PASSWORD);
@@ -608,7 +496,7 @@ public class ConfigurationActivity extends BaseActivity {
      */
     private void setMajor(String value) {
         //int转16
-        String hexData = HexIntUtil.decimalTo2ByteHex(Integer.parseInt(value));
+        String hexData = HexIntUtil.decToHex(Integer.parseInt(value));
         mCurrentType = AppConstans.RegAD.MAJOR;
         mNeedSetData = hexData;
         writeInfo(mCurrentType, value);
@@ -617,7 +505,7 @@ public class ConfigurationActivity extends BaseActivity {
     //改minor
     public void setMinor(String value) {
         //int转16
-        String hexData = HexIntUtil.decimalTo2ByteHex(Integer.parseInt(value));
+        String hexData = HexIntUtil.decToHex(Integer.parseInt(value));
         mCurrentType = AppConstans.RegAD.MINOR;
         mNeedSetData = hexData;
         writeInfo(mCurrentType, value);
@@ -662,17 +550,18 @@ public class ConfigurationActivity extends BaseActivity {
 
     /**
      * 界面已10进制显示，发送修改的是需要value/0.625-->16进制发送
+     *
      * @param value
      */
     public void setInterva(String value) {
         //int转16
         int valueInt = Integer.parseInt(value);
-        if (valueInt/10 != 0) {
+        if (valueInt / 10 != 0) {
 
             ToastUtil.ToastShort(this, "interval需要时10的倍数");
             return;
         }
-        String hexData = HexIntUtil.decimalTo2ByteHex((int) (valueInt/0.625F));
+        String hexData = HexIntUtil.decToHex((int) (valueInt / 0.625F));
         mCurrentType = AppConstans.RegAD.INTERVAL;
         mNeedSetData = hexData;
         writeInfo(mCurrentType, mNeedSetData);
@@ -737,13 +626,112 @@ public class ConfigurationActivity extends BaseActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String password = editText.getText().toString().trim();
-                        if (TextUtils.isEmpty(password) || password.length() != 12) {
-                            ToastUtil.ToastShort(ConfigurationActivity.this, "密码长度不够");
+                        if (TextUtils.isEmpty(password)) {
+                            ToastUtil.ToastShort(ConfigurationActivity.this, "密码必须输入");
                             return;
                         }
                         setPassword(password);
                     }
                 })
                 .show();
+    }
+
+    @OnClick({R.id.change_psw, R.id.change_uuid, R.id.change_major, R.id.change_minor, R.id.change_tx_power, R.id.change_name, R.id.change_bat, R.id.change_interval, R.id.change_ble_tx_power})
+    public void onClickBtn(View view) {
+        switch (view.getId()) {
+            case R.id.change_psw:
+                String passwrodStr = password.getText().toString().trim();
+                //password
+                if (!TextUtils.isEmpty(passwrodStr)) {
+                    new_password = passwrodStr;
+                    if (!pre_password.equals(passwrodStr)) {
+                        changePassword(passwrodStr);
+                    }
+                }
+                break;
+            case R.id.change_uuid:
+                String uuidStr = uuid.getText().toString().trim();
+                //uuid
+                if (!TextUtils.isEmpty(uuidStr)) {
+                    String newUUIDStr = uuidStr;
+                    setUUID(newUUIDStr);
+                }
+                break;
+            case R.id.change_major:
+                String majorStr = major.getText().toString().trim();
+                //major
+                if (!TextUtils.isEmpty(majorStr)) {
+                    int new_major = Integer.parseInt(majorStr);
+                    //修改major
+                    if (new_major > 65532) {
+                        ToastUtil.ToastShort(this, "超出最大值65532");
+                    }
+                    setMajor(new_major + "");
+                }
+                break;
+            case R.id.change_minor:
+                String minorStr = minor.getText().toString().trim();
+                //minor
+                if (!TextUtils.isEmpty(minorStr)) {
+                    int new_minor = Integer.parseInt(minorStr);
+                    //修改minor
+                    if (new_minor > 65532) {
+                        ToastUtil.ToastShort(this, "超出最大值65532");
+                    }
+                    setMinor(new_minor + "");
+                }
+                break;
+            case R.id.change_tx_power:
+                String tx_powerStr = txPower.getText().toString().trim();
+                //tx_power
+                if (!TextUtils.isEmpty(tx_powerStr)) {
+                    int new_tx_power = Integer.parseInt(tx_powerStr);
+                    if (new_tx_power < 0 && new_tx_power > -128) {
+                        setTxPower(new_tx_power + "");
+                    } else {
+                        ToastUtil.ToastShort(this, "格式不对");
+                    }
+                }
+                break;
+            case R.id.change_name:
+                String new_name = bleName.getText().toString().trim();
+                //ble_name
+                if (!TextUtils.isEmpty(new_name)) {
+                    //修改name
+                    setBleName(new_name);
+                }
+                break;
+            case R.id.change_bat:
+                String batStr = bat.getText().toString().trim();
+                //bat
+                if (!TextUtils.isEmpty(batStr)) {
+                    int new_bat = Integer.parseInt(batStr);
+                    if (new_bat >= 0 && new_bat <= 100) {
+                        setBat(new_bat + "");
+                    } else {
+                        ToastUtil.ToastShort(ConfigurationActivity.this, "输入超过范围");
+                    }
+                }
+                break;
+            case R.id.change_interval:
+                String intervalStr = interval.getText().toString().trim();
+                //interval
+                if (!TextUtils.isEmpty(intervalStr)) {
+                    int new_interval = Integer.parseInt(intervalStr);
+                    setInterva(new_interval + "");
+                }
+                break;
+            case R.id.change_ble_tx_power:
+                String bleTxPowerStr = bleTxPower.getText().toString().trim();
+                //ble_tx_power
+                int new_ble_tx_power;
+                if (!TextUtils.isEmpty(bleTxPowerStr)) {
+                    int postionPower = Arrays.binarySearch(AppConstans.BLE_TX_POWER_LIST, bleTxPowerStr);
+                    new_ble_tx_power = AppConstans.BLE_TX_POWER_int[postionPower];
+
+                    setBleTXPower(new_ble_tx_name + "");
+                }
+                break;
+        }
     }
 }
