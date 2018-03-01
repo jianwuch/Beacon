@@ -356,6 +356,9 @@ public class ConfigurationActivity extends BaseActivity {
                                                 LogUtil.d("密码验证成功");
                                                 if (!TextUtils.isEmpty(new_password)) {
                                                     pre_password = new_password;
+
+                                                    //当前修改默认密码，杀进程该修改无效
+                                                    AppConstans.DEFAULT_PASSWORD = pre_password;
                                                 }
                                                 password.setText(pre_password);
                                                 getAllInfo();//密码输出正确之后开始获取其他数据
@@ -381,6 +384,9 @@ public class ConfigurationActivity extends BaseActivity {
                                                 break;
                                             case 10://改密码
                                                 pre_password = new_password;
+
+                                                //当前修改默认密码，杀进程该修改无效
+                                                AppConstans.DEFAULT_PASSWORD = pre_password;
                                                 ToastUtil.ToastShort(ConfigurationActivity.this,
                                                         "密码修改成功");
                                                 break;
@@ -582,6 +588,7 @@ public class ConfigurationActivity extends BaseActivity {
         String valueHexStr = newPasswrod;
         mCurrentType = AppConstans.RegAD.CHANGE_PASS_WORD;
         mNeedSetData = valueHexStr;
+        this.new_password = mNeedSetData;
         writeInfo(mCurrentType, mNeedSetData);
     }
 

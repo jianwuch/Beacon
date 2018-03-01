@@ -6,7 +6,7 @@ package com.igrs.beacon.config;
 
 public class AppConstans {
 
-    public static final String DEFAULT_PASSWORD = "147852369000";
+    public static String DEFAULT_PASSWORD = "147852369000";
     public static final String[] BLE_TX_POWER_LIST = {
             "-21db", "18db", "-16db", "-12db", "-9db", "-6db", "-3db", "0db", "1db", "2db", "3db",
             "4db", "5db"
