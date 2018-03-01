@@ -149,8 +149,8 @@ public class HexIntUtil {
     public static int lowByte2int(byte[] bytes){
         int result = 0;
         if(bytes.length == 2){
-            int a = (bytes[0] & 0xff) << 8;//说明二
-            int b = (bytes[1] & 0xff);
+            int a = (bytes[0] & 0xff);//说明二
+            int b = (bytes[1] & 0xff) << 8;
             result = a | b;
         }
         return result;

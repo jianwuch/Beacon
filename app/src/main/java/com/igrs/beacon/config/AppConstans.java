@@ -8,9 +8,8 @@ public class AppConstans {
 
     public static final String DEFAULT_PASSWORD = "147852369000";
     public static final String[] BLE_TX_POWER_LIST = {
-            "0x570900:-21db", "0x570901:18db", "0x570902:-16db", "0x570903:-12db", "0x570904:-9db",
-            "0x570905:-6db", "0x570906:-3db", "0x570907:0db", "0x570908:1db", "0x570909:2db",
-            "0x57090a:3db", "0x57090b:4db", "0x57090c:5db"
+            "-21db", "18db", "-16db", "-12db", "-9db", "-6db", "-3db", "0db", "1db", "2db", "3db",
+            "4db", "5db"
     };
 
     public static final int[] BLE_TX_POWER_int = {
