@@ -731,10 +731,9 @@ public class ConfigurationActivity extends BaseActivity {
             case R.id.change_ble_tx_power:
                 String bleTxPowerStr = bleTxPower.getText().toString().trim();
                 //ble_tx_power
-                int new_ble_tx_power;
                 if (!TextUtils.isEmpty(bleTxPowerStr)) {
                     int postionPower = Arrays.binarySearch(AppConstans.BLE_TX_POWER_LIST, bleTxPowerStr);
-                    new_ble_tx_power = AppConstans.BLE_TX_POWER_int[postionPower];
+                    new_ble_tx_name = AppConstans.BLE_TX_POWER_int[postionPower];
 
                     setBleTXPower(new_ble_tx_name + "");
                 }
