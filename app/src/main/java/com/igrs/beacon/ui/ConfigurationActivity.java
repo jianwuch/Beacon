@@ -426,7 +426,7 @@ public class ConfigurationActivity extends BaseActivity {
 
                                             case 8://interval
                                                 pre_interval = HexIntUtil.lowByte2int(infoData);
-                                                interval.setText(pre_interval + "");
+                                                interval.setText(pre_interval * 0.625 + "");
                                                 break;
 
                                             case 9://ble_tx_power
@@ -556,7 +556,7 @@ public class ConfigurationActivity extends BaseActivity {
     public void setInterva(String value) {
         //int转16
         int valueInt = Integer.parseInt(value);
-        if (valueInt / 10 != 0) {
+        if (valueInt % 10 != 0) {
 
             ToastUtil.ToastShort(this, "interval需要时10的倍数");
             return;
