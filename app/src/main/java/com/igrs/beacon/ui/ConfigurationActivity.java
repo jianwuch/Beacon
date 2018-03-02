@@ -259,14 +259,6 @@ public class ConfigurationActivity extends BaseActivity {
                         HexUtil.hexStringToBytes("52" + addressStr), new BleWriteCallback() {
                             @Override
                             public void onWriteSuccess() {
-                                LogUtil.d(addressStr + "写读取名称成功");
-                                address++;
-                                mHandler.postDelayed(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        getAllInfo();
-                                    }
-                                }, 100);//延时下一个蓝牙的操作，因为不延时已经出现串notify的情况
                             }
 
                             @Override
@@ -391,8 +383,27 @@ public class ConfigurationActivity extends BaseActivity {
                                         if (infoData.length == 1 && ((int) infoData[0]) == 0) {
                                             ToastUtil.ToastShort(ConfigurationActivity.this,
                                                     "读取失败");
+                                            LogUtil.d(ConfigurationActivity.address + "写读取名称失败");
+                                            error_count++;
+                                            mHandler.postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    getAllInfo();
+                                                }
+                                            }, 100);
                                             return;
                                         }
+
+
+                                        String addressStr = String.format("0%1$d", ConfigurationActivity.address);
+                                        LogUtil.d(addressStr + "写读取名称成功");
+                                        ConfigurationActivity.address++;
+                                        mHandler.postDelayed(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                getAllInfo();
+                                            }
+                                        }, 100);//延时下一个蓝牙的操作，因为不延时已经出现串notify的情况
                                         switch (HexIntUtil.getInt(new byte[]{address}, false)) {
                                             case 1://password
                                                 password.setText(HexUtil.encodeHexStr(infoData));
