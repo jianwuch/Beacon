@@ -20,8 +20,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import butterknife.BindView;
 import butterknife.OnClick;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
@@ -41,21 +43,32 @@ import com.igrs.beacon.ui.presenter.HomePresenterByFastBle;
 import com.igrs.beacon.util.LogUtil;
 import com.igrs.beacon.util.ToastUtil;
 import com.igrs.beacon.widget.NeedWriteInfo;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterByFastBle>
         implements ActionMode.Callback, MainPageContract.IHomeView {
-    @BindView(R.id.recycle_view) RecyclerView recycleView;
-    @BindView(R.id.swipe_refresh_layout) SwipeRefreshLayout swipeRefreshLayout;
-    @BindView(R.id.tool_bar) Toolbar toolBar;
-    @BindView(R.id.by_rssi) RadioButton byRssi;
-    @BindView(R.id.by_name) RadioButton byName;
-    @BindView(R.id.radio) RadioGroup radio;
-    @BindView(R.id.batch_type) View batchType;
-    @BindView(R.id.type_default) TextView typeDefault;
-    @BindView(R.id.type_password) TextView typePassword;
-    @BindView(R.id.type_name) TextView typeName;
+    @BindView(R.id.recycle_view)
+    RecyclerView recycleView;
+    @BindView(R.id.swipe_refresh_layout)
+    SwipeRefreshLayout swipeRefreshLayout;
+    @BindView(R.id.tool_bar)
+    Toolbar toolBar;
+    @BindView(R.id.by_rssi)
+    RadioButton byRssi;
+    @BindView(R.id.by_name)
+    RadioButton byName;
+    @BindView(R.id.radio)
+    RadioGroup radio;
+    @BindView(R.id.batch_type)
+    View batchType;
+    @BindView(R.id.type_default)
+    TextView typeDefault;
+    @BindView(R.id.type_password)
+    TextView typePassword;
+    @BindView(R.id.type_name)
+    TextView typeName;
 
     private ScanBleAdapter mAdapter;
     private ActionMode actionMode;
@@ -216,8 +229,8 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
                                 }
 
                                 @Override
-                                public void onFailed() {
-                                    ToastUtil.ToastShort(MainActivity.this, "二维码修改失败");
+                                public void onFailed(String errorStr) {
+                                    ToastUtil.ToastShort(MainActivity.this, "二维码修改失败:" + errorStr);
                                     infoView.removeSelf();
                                 }
                             });
@@ -271,7 +284,7 @@ public class MainActivity extends BaseMvpActivity<List<iBeacon>, HomePresenterBy
         });
     }
 
-    @OnClick({ R.id.type_default, R.id.type_name, R.id.type_password })
+    @OnClick({R.id.type_default, R.id.type_name, R.id.type_password})
     public void gotoEdit(View view) {
 
         //// TODO: 2017/11/16 判断数据是否选择

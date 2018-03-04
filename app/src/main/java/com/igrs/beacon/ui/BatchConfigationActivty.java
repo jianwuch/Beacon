@@ -82,7 +82,7 @@ public class BatchConfigationActivty extends BaseActivity {
 
     //批量配置
     private BatchConfig mBatchConfig;
-    private String currentBleTxPower="";
+    private String currentBleTxPower = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -218,8 +218,8 @@ public class BatchConfigationActivty extends BaseActivity {
             }
 
             @Override
-            public void onFailed() {
-                result.setText("异常失败，查看日志");
+            public void onFailed(String errorStr) {
+                result.setText("异常失败-->原因:" + errorStr);
             }
         });
 
@@ -228,7 +228,7 @@ public class BatchConfigationActivty extends BaseActivity {
     }
 
     //
-    @OnCheckedChanged({R.id.siwtch_tx_power, R.id.switch_name, R.id.switch_uuid, R.id.siwtch_bat, R.id.siwtch_interval})
+    @OnCheckedChanged({R.id.siwtch_tx_power, R.id.switch_name, R.id.switch_uuid, R.id.siwtch_bat, R.id.siwtch_interval, R.id.switch_ble_tx_power})
     public void onCheckedChanged(SwitchCompat view, boolean isChecked) {
         switch (view.getId()) {
             case R.id.switch_name:

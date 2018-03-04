@@ -339,6 +339,17 @@ public class DeviceBatchBiz {
                                     LogUtil.d("错误类型通知，当前只需要通知57--写");
                                     return;
                                 }
+
+                                if (infoData.length == 1 && ((int) infoData[0]) == 0) {
+                                    LogUtil.d(addressInt + ":notify通知写入失败");
+                                    if (addressInt == 1) {
+                                        LogUtil.d("密码错误");
+                                        if (processChangedLinstener != null) {
+                                            processChangedLinstener.onFailed("蓝牙密码错误");
+                                        }
+                                    }
+                                    return;
+                                }
                                 LogUtil.d(addressInt + ":notiry写入成功");
                                 switch (addressInt) {
                                     case 1://password
@@ -433,7 +444,7 @@ public class DeviceBatchBiz {
 
                 case HANDLER_WHAT_CONNECT_ERROR:
                     if (processChangedLinstener != null) {
-                        processChangedLinstener.onFailed();
+                        processChangedLinstener.onFailed("蓝牙连接失败");
                     }
                     //设备连接4次依然无法连接的情况
                     break;
@@ -441,7 +452,7 @@ public class DeviceBatchBiz {
 
                     //设备注册通知失败的情况
                     if (processChangedLinstener != null) {
-                        processChangedLinstener.onFailed();
+                        processChangedLinstener.onFailed("订阅通知失败");
                     }
                     break;
 
@@ -449,7 +460,7 @@ public class DeviceBatchBiz {
 
                     //设备写多次依然无法成功的情况
                     if (processChangedLinstener != null) {
-                        processChangedLinstener.onFailed();
+                        processChangedLinstener.onFailed("多次（重试3次）写入失败");
                     }
                     break;
                 default:
@@ -463,6 +474,6 @@ public class DeviceBatchBiz {
 
         void onFinished();
 
-        void onFailed();
+        void onFailed(String errorStr);
     }
 }
