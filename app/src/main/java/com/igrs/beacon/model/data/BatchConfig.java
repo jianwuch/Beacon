@@ -23,5 +23,5 @@ public class BatchConfig {
     public int bat;
     public int txPower;
     public int interval;
-    public int bleTxPower;//0~5
+    public String bleTxPower;//AppConstans.BLE_TX_POWER_STRING
 }

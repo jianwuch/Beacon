@@ -176,7 +176,7 @@ public class DeviceBatchBiz {
      */
     private void setMajor(iBeacon device, String value) {
         //int转16
-        String hexData = HexIntUtil.decimalTo2ByteHex(Integer.parseInt(value));
+        String hexData = HexIntUtil.decToHex(Integer.parseInt(value));
         mCurrentType = AppConstans.RegAD.MAJOR;
         mNeedSetData = hexData;
         writeInfo(device, mCurrentType, mNeedSetData);
@@ -185,7 +185,7 @@ public class DeviceBatchBiz {
     //改minor
     public void setMinor(iBeacon device, String value) {
         //int转16
-        String hexData = HexIntUtil.decimalTo2ByteHex(Integer.parseInt(value));
+        String hexData = HexIntUtil.decToHex(Integer.parseInt(value));
         mCurrentType = AppConstans.RegAD.MINOR;
         mNeedSetData = hexData;
         writeInfo(device, mCurrentType, mNeedSetData);
@@ -237,9 +237,15 @@ public class DeviceBatchBiz {
     public void setInterva(iBeacon device, String value) {
         //int转16
         int valueInt = Integer.parseInt(value);
-        String hexData = HexIntUtil.decimalTo2ByteHex((int) (valueInt/0.625F));
+        String hexData = HexIntUtil.decToHex((int) (valueInt/0.625F));
         mCurrentType = AppConstans.RegAD.INTERVAL;
         mNeedSetData = hexData;
+        writeInfo(device, mCurrentType, mNeedSetData);
+    }
+
+    public void setBleTXPower(iBeacon device, String value) {
+        mCurrentType = AppConstans.RegAD.BLE_TX_POWER;
+        mNeedSetData = value;
         writeInfo(device, mCurrentType, mNeedSetData);
     }
 
@@ -362,7 +368,7 @@ public class DeviceBatchBiz {
                                         }
                                     case 5://tx_power
                                         if (config.nameEnable) {
-                                            setTxPower(mDevices.get(mCurrentIndex), config.bleName);
+                                            setBleName(mDevices.get(mCurrentIndex), config.bleName);
                                             break;
                                         }
                                     case 6://ble_name
@@ -378,8 +384,8 @@ public class DeviceBatchBiz {
                                         }
                                     case 8://interval
                                         if (config.bleTxPowerEnable) {
-                                            setBleTXName(mDevices.get(mCurrentIndex),
-                                                    config.bleTxPower + "");
+                                            setBleTXPower(mDevices.get(mCurrentIndex),
+                                                    config.bleTxPower);
                                             break;
                                         }
                                     case 9://ble_tx_power

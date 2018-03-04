@@ -12,7 +12,7 @@ public class AppConstans {
             "4db", "5db"
     };
 
-    public static final String[] BLE_TX_POWER_int = {
+    public static final String[] BLE_TX_POWER_STRING = {
             "00", "01", "02", "03", "04", "05", "06", "07", "08", "09", "0a", "0b", "0c"
     };
 

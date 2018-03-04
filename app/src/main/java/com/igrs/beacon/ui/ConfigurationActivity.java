@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -185,6 +184,7 @@ public class ConfigurationActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
+
     private void setDefaultPassword() {
         byte[] setPassword = HexUtil.hexStringToBytes(
                 "57" + AppConstans.RegAD.PASSWORD + AppConstans.DEFAULT_PASSWORD);
@@ -370,7 +370,6 @@ public class ConfigurationActivity extends BaseActivity {
                                             case 8://interval
                                                 break;
                                             case 9://ble_tx_power
-                                                pre_ble_tx_power = new_ble_tx_name;
                                                 ToastUtil.ToastShort(ConfigurationActivity.this,
                                                         "ble_tx_power修改成功");
                                                 break;
@@ -447,20 +446,9 @@ public class ConfigurationActivity extends BaseActivity {
                                                 break;
 
                                             case 9://ble_tx_power
-                                                pre_ble_tx_power = (int) infoData[0];
-                                                int positon = Arrays.binarySearch(
-                                                        AppConstans.BLE_TX_POWER_int,
-                                                        pre_ble_tx_power);
-
-                                                if (positon >= 0
-                                                        && positon
-                                                        <= AppConstans.BLE_TX_POWER_int.length
-                                                        - 1) {
-                                                    bleTxPower.setText(AppConstans.BLE_TX_POWER_LIST[positon]);
-                                                } else {
-                                                    ToastUtil.ToastShort(ConfigurationActivity.this,
-                                                            "Ble_tx_power获取的范围不对");
-                                                }
+                                                int index = (int) infoData[0];
+                                                bleTxPower.setText(AppConstans.BLE_TX_POWER_LIST[index]);
+                                                break;
                                         }
                                         break;
                                 }
@@ -584,13 +572,11 @@ public class ConfigurationActivity extends BaseActivity {
         writeInfo(mCurrentType, mNeedSetData);
     }
 
-    private int new_ble_tx_name;
+    private String new_ble_tx_name;
 
     public void setBleTXPower(String value) {
-        byte hexData = HexIntUtil.intTo1Byte(Integer.parseInt(value));
-        String valueHexStr = HexUtil.formatHexString(new byte[]{hexData});
         mCurrentType = AppConstans.RegAD.BLE_TX_POWER;
-        mNeedSetData = valueHexStr;
+        mNeedSetData = value;
         writeInfo(mCurrentType, mNeedSetData);
     }
 
@@ -744,9 +730,8 @@ public class ConfigurationActivity extends BaseActivity {
                 //ble_tx_power
                 if (!TextUtils.isEmpty(bleTxPowerStr)) {
                     int postionPower = Arrays.binarySearch(AppConstans.BLE_TX_POWER_LIST, bleTxPowerStr);
-                    new_ble_tx_name = AppConstans.BLE_TX_POWER_int[postionPower];
-
-                    setBleTXPower(new_ble_tx_name + "");
+                    new_ble_tx_name = AppConstans.BLE_TX_POWER_STRING[postionPower];
+                    setBleTXPower(new_ble_tx_name);
                 }
                 break;
         }

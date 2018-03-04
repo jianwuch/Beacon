@@ -1,6 +1,8 @@
 package com.igrs.beacon.ui;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
@@ -15,18 +17,16 @@ import android.widget.TextView;
 
 import com.igrs.beacon.R;
 import com.igrs.beacon.base.BaseActivity;
+import com.igrs.beacon.config.AppConstans;
 import com.igrs.beacon.model.data.BatchConfig;
 import com.igrs.beacon.model.data.iBeacon;
 import com.igrs.beacon.model.dm.DeviceBatchBiz;
 import com.igrs.beacon.util.ToastUtil;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
@@ -66,7 +66,7 @@ public class BatchConfigationActivty extends BaseActivity {
     @BindView(R.id.interal)
     EditText interal;
     @BindView(R.id.ble_tx_power)
-    EditText bleTXPower;
+    TextView bleTXPower;
     @BindView(R.id.siwtch_interval)
     SwitchCompat siwtchInterval;
     @BindView(R.id.start)
@@ -82,6 +82,7 @@ public class BatchConfigationActivty extends BaseActivity {
 
     //批量配置
     private BatchConfig mBatchConfig;
+    private String currentBleTxPower="";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -129,13 +130,13 @@ public class BatchConfigationActivty extends BaseActivity {
             mBatchConfig.minorStepLength = Integer.parseInt(minorStepLen);
 
             //校验数据
-            if(mBatchConfig.majorFrom >=65532 || mBatchConfig.minorFrom >= 65532) {
+            if (mBatchConfig.majorFrom >= 65532 || mBatchConfig.minorFrom >= 65532) {
                 ToastUtil.ToastShort(this, "marjor/minor数据超过范围");
                 return;
             }
 
-            if (mBatchConfig.minorFrom + mBatchConfig.minorStepLength*mDatas.size() >= 65532||
-                    mBatchConfig.majorFrom + mBatchConfig.majorStepLength*mDatas.size() >= 65532) {
+            if (mBatchConfig.minorFrom + mBatchConfig.minorStepLength * mDatas.size() >= 65532 ||
+                    mBatchConfig.majorFrom + mBatchConfig.majorStepLength * mDatas.size() >= 65532) {
                 ToastUtil.ToastShort(this, "步长设置错误，已超过最大限制值");
                 return;
             }
@@ -158,7 +159,7 @@ public class BatchConfigationActivty extends BaseActivity {
                 return;
             } else {
                 mBatchConfig.interval = Integer.parseInt(intervalStr);
-                if (mBatchConfig.interval/10 != 0) {
+                if (mBatchConfig.interval / 10 != 0) {
 
                     ToastUtil.ToastShort(this, "interval需要10的倍数");
                     return;
@@ -195,18 +196,11 @@ public class BatchConfigationActivty extends BaseActivity {
         }
 
         if (mBatchConfig.bleTxPowerEnable) {
-            String bleTxPowerStr = bleTXPower.getText().toString().trim();
-            if (TextUtils.isEmpty(bleTxPowerStr)) {
-                ToastUtil.ToastShort(this, "打开了Bat就需要必填");
+            if (TextUtils.isEmpty(currentBleTxPower)) {
+                ToastUtil.ToastShort(this, "打开了ble_tx_power就需要选择一项");
                 return;
             } else {
-                int bleTxPower = Integer.parseInt(bleTxPowerStr);
-                if (bleTxPower >= 0 && bleTxPower <=5) {
-                    mBatchConfig.bleTxPower = bleTxPower;
-                } else {
-                    ToastUtil.ToastShort(this, "输入的BLE TX Power在0~5");
-                    return;
-                }
+                mBatchConfig.bleTxPower = currentBleTxPower;
             }
         }
 
@@ -271,9 +265,23 @@ public class BatchConfigationActivty extends BaseActivity {
         UUIDManagerActivity.show(this);
     }
 
+    @OnClick(R.id.ble_tx_power)
+    public void selectbleTXpower() {
+        AlertDialog dialog =
+                new AlertDialog.Builder(this).setSingleChoiceItems(AppConstans.BLE_TX_POWER_LIST,
+                        -1, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                bleTXPower.setText(AppConstans.BLE_TX_POWER_LIST[which]);
+                                currentBleTxPower = AppConstans.BLE_TX_POWER_STRING[which];
+                                dialog.dismiss();
+                            }
+                        }).show();
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        String uuidStr = UUIDManagerActivity.getResult(this, requestCode,resultCode, data);
+        String uuidStr = UUIDManagerActivity.getResult(this, requestCode, resultCode, data);
         if (TextUtils.isEmpty(uuidStr)) return;
         uuid.setText(uuidStr);
         super.onActivityResult(requestCode, resultCode, data);

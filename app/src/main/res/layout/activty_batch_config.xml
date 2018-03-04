@@ -246,13 +246,15 @@
             android:layout_height="wrap_content"
             android:text="BLE TX Power:" />
 
-        <EditText
+        <TextView
             android:id="@+id/ble_tx_power"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
+            android:gravity="center_vertical"
             android:maxLines="1"
             android:enabled="false"
-            android:hint="输入0~5范围"
+            android:text="点击选择"
             android:textSize="12sp" />
 
         <android.support.v7.widget.SwitchCompat
