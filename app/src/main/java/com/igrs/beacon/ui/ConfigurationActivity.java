@@ -47,31 +47,19 @@ import java.util.Arrays;
 public class ConfigurationActivity extends BaseActivity {
     public static final int WRITE = 87;
     public static final int READ = 82;
-    @BindView(R.id.tool_bar)
-    Toolbar toolBar;
-    @BindView(R.id.password)
-    EditText password;
-    @BindView(R.id.uuid)
-    TextView uuid;
-    @BindView(R.id.major)
-    EditText major;
-    @BindView(R.id.minor)
-    EditText minor;
-    @BindView(R.id.tx_power)
-    EditText txPower;
-    @BindView(R.id.ble_name)
-    EditText bleName;
-    @BindView(R.id.bat)
-    EditText bat;
-    @BindView(R.id.interval)
-    EditText interval;
-    @BindView(R.id.ble_tx_name)
-    TextView bleTxPower;
+    @BindView(R.id.tool_bar) Toolbar toolBar;
+    @BindView(R.id.password) EditText password;
+    @BindView(R.id.uuid) TextView uuid;
+    @BindView(R.id.major) EditText major;
+    @BindView(R.id.minor) EditText minor;
+    @BindView(R.id.tx_power) EditText txPower;
+    @BindView(R.id.ble_name) EditText bleName;
+    @BindView(R.id.bat) EditText bat;
+    @BindView(R.id.interval) EditText interval;
+    @BindView(R.id.ble_tx_name) TextView bleTxPower;
 
-    @BindView(R.id.status)
-    TextView statusTextView;
-    @BindView(R.id.layout_bat)
-    LinearLayout batLayout;
+    @BindView(R.id.status) TextView statusTextView;
+    @BindView(R.id.layout_bat) LinearLayout batLayout;
     private BleDevice device;
 
     //修改逻辑业务参数
@@ -90,6 +78,7 @@ public class ConfigurationActivity extends BaseActivity {
     private boolean isConnected;
     private Handler mHandler;
     private AlertDialog disconnectDialog;
+    private String currentBleTxPower = "";
 
     public static void show(Context context, BleDevice device) {
         Intent intent = new Intent(context, ConfigurationActivity.class);
@@ -149,7 +138,7 @@ public class ConfigurationActivity extends BaseActivity {
 
             @Override
             public void onDisConnected(boolean isActiveDisConnected, BleDevice device,
-                                       BluetoothGatt gatt, int status) {
+                    BluetoothGatt gatt, int status) {
                 showLoading(false);
                 isConnected = false;
                 statusTextView.setText(String.format(getString(R.string.status), "已断开"));
@@ -176,7 +165,7 @@ public class ConfigurationActivity extends BaseActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.configuration_menu, menu);
+        //        getMenuInflater().inflate(R.menu.configuration_menu, menu);
         return true;
     }
 
@@ -399,8 +388,8 @@ public class ConfigurationActivity extends BaseActivity {
                                             return;
                                         }
 
-
-                                        String addressStr = String.format("0%1$d", ConfigurationActivity.address);
+                                        String addressStr = String.format("0%1$d",
+                                                ConfigurationActivity.address);
                                         LogUtil.d(addressStr + "写读取名称成功");
                                         ConfigurationActivity.address++;
                                         mHandler.postDelayed(new Runnable() {
@@ -409,7 +398,7 @@ public class ConfigurationActivity extends BaseActivity {
                                                 getAllInfo();
                                             }
                                         }, 100);//延时下一个蓝牙的操作，因为不延时已经出现串notify的情况
-                                        switch (HexIntUtil.getInt(new byte[]{address}, false)) {
+                                        switch (HexIntUtil.getInt(new byte[] { address }, false)) {
                                             case 1://password
                                                 password.setText(HexUtil.encodeHexStr(infoData));
                                                 break;
@@ -447,7 +436,8 @@ public class ConfigurationActivity extends BaseActivity {
 
                                             case 9://ble_tx_power
                                                 int index = (int) infoData[0];
-                                                bleTxPower.setText(AppConstans.BLE_TX_POWER_LIST[index]);
+                                                bleTxPower.setText(
+                                                        AppConstans.BLE_TX_POWER_LIST[index]);
                                                 break;
                                         }
                                         break;
@@ -535,7 +525,7 @@ public class ConfigurationActivity extends BaseActivity {
     public void setTxPower(String value) {
         //int转16
         byte hexData = HexIntUtil.intTo1Byte(Integer.parseInt(value));
-        String valueHexStr = HexUtil.formatHexString(new byte[]{hexData});
+        String valueHexStr = HexUtil.formatHexString(new byte[] { hexData });
         mCurrentType = AppConstans.RegAD.TX_POWER;
         mNeedSetData = valueHexStr;
         writeInfo(mCurrentType, mNeedSetData);
@@ -547,7 +537,7 @@ public class ConfigurationActivity extends BaseActivity {
         //int转16
         new_bat = Integer.parseInt(value);
         byte hexData = HexIntUtil.intTo1Byte(new_bat);
-        String valueHexStr = HexUtil.formatHexString(new byte[]{hexData});
+        String valueHexStr = HexUtil.formatHexString(new byte[] { hexData });
         mCurrentType = AppConstans.RegAD.BAT;
         mNeedSetData = valueHexStr;
         writeInfo(mCurrentType, mNeedSetData);
@@ -555,8 +545,6 @@ public class ConfigurationActivity extends BaseActivity {
 
     /**
      * 界面已10进制显示，发送修改的是需要value/0.625-->16进制发送
-     *
-     * @param value
      */
     public void setInterva(String value) {
         //int转16
@@ -606,6 +594,7 @@ public class ConfigurationActivity extends BaseActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 bleTxPower.setText(AppConstans.BLE_TX_POWER_LIST[which]);
+                                currentBleTxPower = AppConstans.BLE_TX_POWER_STRING[which];
                                 dialog.dismiss();
                             }
                         }).show();
@@ -640,7 +629,19 @@ public class ConfigurationActivity extends BaseActivity {
                 .show();
     }
 
-    @OnClick({R.id.change_psw, R.id.change_uuid, R.id.change_major, R.id.change_minor, R.id.change_tx_power, R.id.change_name, R.id.change_bat, R.id.change_interval, R.id.change_ble_tx_power})
+    @OnClick(R.id.get_all_data)
+    public void reGetAllData() {
+        //一次性拿全部属性
+        address = 2;
+        error_count = 0;
+        getAllInfo();
+    }
+
+    @OnClick({
+                     R.id.change_psw, R.id.change_uuid, R.id.change_major, R.id.change_minor,
+                     R.id.change_tx_power, R.id.change_name, R.id.change_bat, R.id.change_interval,
+                     R.id.change_ble_tx_power
+             })
     public void onClickBtn(View view) {
         switch (view.getId()) {
             case R.id.change_psw:
@@ -726,12 +727,9 @@ public class ConfigurationActivity extends BaseActivity {
                 }
                 break;
             case R.id.change_ble_tx_power:
-                String bleTxPowerStr = bleTxPower.getText().toString().trim();
                 //ble_tx_power
-                if (!TextUtils.isEmpty(bleTxPowerStr)) {
-                    int postionPower = Arrays.binarySearch(AppConstans.BLE_TX_POWER_LIST, bleTxPowerStr);
-                    new_ble_tx_name = AppConstans.BLE_TX_POWER_STRING[postionPower];
-                    setBleTXPower(new_ble_tx_name);
+                if (!TextUtils.isEmpty(currentBleTxPower)) {
+                    setBleTXPower(currentBleTxPower);
                 }
                 break;
         }

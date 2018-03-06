@@ -6,296 +6,303 @@
     android:layout_margin="10dp"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/tool_bar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize" />
+  <android.support.v7.widget.Toolbar
+      android:id="@+id/tool_bar"
+      android:layout_width="match_parent"
+      android:layout_height="?attr/actionBarSize" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+  <ScrollView
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@drawable/divider_bg"
+        android:orientation="vertical">
+
+      <TextView
+          android:id="@+id/status"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:text="状态：" />
+
+      <TextView
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:text="tips:修改时先输入新的值，然后点击该项目后面的“修改”按钮"
+          android:textSize="10sp" />
+
+      <Button
+          android:id="@+id/get_all_data"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_gravity="center_horizontal"
+          android:text="重新获取所有参数值" />
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/filter_item_height"
+          android:gravity="center_vertical"
+          android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="密码(12位)：" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:divider="@drawable/divider_bg"
-            android:orientation="vertical">
+            android:layout_weight="1"
+            android:gravity="center"
+            android:inputType="number"
+            android:lines="1"
+            android:maxLength="12"
+            tools:text="000000000000" />
 
-            <TextView
-                android:id="@+id/status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="状态：" />
+        <Button
+            android:id="@+id/change_psw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="修改" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:text="tips:修改时先输入新的值，然后点击该项目后面的“修改”按钮"
-                android:textSize="10sp" />
+      </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/filter_item_height"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/filter_item_height"
+          android:gravity="center_vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="密码(12位)：" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="UUID:" />
 
-                <EditText
-                    android:id="@+id/password"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:inputType="number"
-                    android:lines="1"
-                    android:maxLength="12"
-                    tools:text="000000000000" />
+        <TextView
+            android:id="@+id/uuid"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:hint="UUID(修改时，请点击选择)"
+            android:lines="1"
+            android:maxLines="1"
+            android:textSize="12sp" />
 
-                <Button
-                    android:id="@+id/change_psw"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="修改" />
+        <Button
+            android:id="@+id/change_uuid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="修改" />
+      </LinearLayout>
 
-            </LinearLayout>
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="@dimen/filter_item_height"
+          android:gravity="center_vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/filter_item_height"
-                android:gravity="center_vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Major:" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="UUID:" />
+        <EditText
+            android:id="@+id/major"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:inputType="number"
+            android:lines="1"
+            android:maxLines="1"
+            tools:text="0000" />
 
-                <TextView
-                    android:id="@+id/uuid"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:hint="UUID(修改时，请点击选择)"
-                    android:lines="1"
-                    android:maxLines="1"
-                    android:textSize="12sp" />
+        <Button
+            android:id="@+id/change_major"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="修改" />
+      </LinearLayout>
 
-                <Button
-                    android:id="@+id/change_uuid"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="修改" />
-            </LinearLayout>
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:gravity="center_vertical">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/filter_item_height"
-                android:gravity="center_vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Minor:" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Major:" />
+        <EditText
+            android:id="@+id/minor"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:inputType="number"
+            android:lines="1"
+            android:maxLines="1"
+            tools:text="0000" />
 
-                <EditText
-                    android:id="@+id/major"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:inputType="number"
-                    android:lines="1"
-                    android:maxLines="1"
-                    tools:text="0000" />
-
-                <Button
-                    android:id="@+id/change_major"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="修改" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Minor:" />
-
-                <EditText
-                    android:id="@+id/minor"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:inputType="number"
-                    android:lines="1"
-                    android:maxLines="1"
-                    tools:text="0000" />
-
-                <Button
-                    android:id="@+id/change_minor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="修改" />
-            </LinearLayout>
+        <Button
+            android:id="@+id/change_minor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="修改" />
+      </LinearLayout>
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="TX power">
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:hint="TX power">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Tx power:" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tx power:" />
 
-                <EditText
-                    android:id="@+id/tx_power"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:lines="1"
-                    android:maxLines="1"
-                    tools:text="-65" />
+        <EditText
+            android:id="@+id/tx_power"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:lines="1"
+            android:maxLines="1"
+            tools:text="-65" />
 
-                <Button
-                    android:id="@+id/change_tx_power"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="修改" />
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:gravity="center_vertical"
-                android:hint="BLE name">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="BLE name:" />
-
-                <EditText
-                    android:id="@+id/ble_name"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:lines="1"
-                    android:maxLines="1"
-                    tools:text="igrs" />
-
-                <Button
-                    android:id="@+id/change_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="修改" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/layout_bat"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:hint="Bat（0-100）">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Bat(0-100):" />
-
-                <EditText
-                    android:id="@+id/bat"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:inputType="number"
-                    android:lines="1"
-                    android:maxLines="1"
-                    tools:text="100" />
-
-                <Button
-                    android:id="@+id/change_bat"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="修改" />
-            </LinearLayout>
+        <Button
+            android:id="@+id/change_tx_power"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="修改" />
+      </LinearLayout>
 
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="Interval(基础间隔单位10ms)"
-                android:lines="1"
-                android:maxLines="1">
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:gravity="center_vertical"
+          android:hint="BLE name">
 
-                <TextView
-                    android:layout_width="100dp"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:textSize="8sp"
-                    android:text="Interval(间隔单位10ms\n范围20-10000):" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BLE name:" />
 
-                <EditText
-                    android:id="@+id/interval"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:inputType="number"
-                    tools:text="1000" />
+        <EditText
+            android:id="@+id/ble_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:lines="1"
+            android:maxLines="1"
+            tools:text="igrs" />
 
-                <Button
-                    android:id="@+id/change_interval"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="修改" />
-            </LinearLayout>
+        <Button
+            android:id="@+id/change_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="修改" />
+      </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/ble_tx_power"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+      <LinearLayout
+          android:id="@+id/layout_bat"
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:hint="Bat（0-100）">
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="BLE_TX_Power:" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bat(0-100):" />
 
-                <TextView
-                    android:id="@+id/ble_tx_name"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
-                    android:layout_height="wrap_content"
-                    android:focusable="false"
-                    android:gravity="center"
-                    android:hint="点击选择"
-                    android:lines="1"
-                    android:maxLines="1" />
+        <EditText
+            android:id="@+id/bat"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:inputType="number"
+            android:lines="1"
+            android:maxLines="1"
+            tools:text="100" />
 
-                <Button
-                    android:id="@+id/change_ble_tx_power"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="修改" />
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+        <Button
+            android:id="@+id/change_bat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="修改" />
+      </LinearLayout>
+
+
+      <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:hint="Interval(基础间隔单位10ms)"
+          android:lines="1"
+          android:maxLines="1">
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Interval(间隔单位10ms\n范围20-10000):"
+            android:textSize="8sp" />
+
+        <EditText
+            android:id="@+id/interval"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:inputType="number"
+            tools:text="1000" />
+
+        <Button
+            android:id="@+id/change_interval"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="修改" />
+      </LinearLayout>
+
+      <LinearLayout
+          android:id="@+id/ble_tx_power"
+          android:layout_width="match_parent"
+          android:layout_height="50dp"
+          android:gravity="center_vertical"
+          android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="BLE_TX_Power:" />
+
+        <TextView
+            android:id="@+id/ble_tx_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:focusable="false"
+            android:gravity="center"
+            android:hint="点击选择"
+            android:lines="1"
+            android:maxLines="1" />
+
+        <Button
+            android:id="@+id/change_ble_tx_power"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="修改" />
+      </LinearLayout>
+    </LinearLayout>
+  </ScrollView>
 </LinearLayout>
