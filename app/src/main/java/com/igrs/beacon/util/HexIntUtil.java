@@ -96,31 +96,29 @@ public class HexIntUtil {
         }
     }
 
-
     /**
      * 将int数值转换为占四个字节的byte数组，本方法适用于(低位在前，高位在后)的顺序。 和bytesToInt（）配套使用
-     * @param value
-     *            要转换的int值
+     *
+     * @param value 要转换的int值
      * @return byte数组
      */
-    public static byte[] intToBytes( int value )
-    {
+    public static byte[] intToBytes(int value) {
         byte[] src = new byte[4];
-        src[3] =  (byte) ((value>>24) & 0xFF);
-        src[2] =  (byte) ((value>>16) & 0xFF);
-        src[1] =  (byte) ((value>>8) & 0xFF);
-        src[0] =  (byte) (value & 0xFF);
+        src[3] = (byte) ((value >> 24) & 0xFF);
+        src[2] = (byte) ((value >> 16) & 0xFF);
+        src[1] = (byte) ((value >> 8) & 0xFF);
+        src[0] = (byte) (value & 0xFF);
         return src;
     }
+
     /**
      * 将int数值转换为占四个字节的byte数组，本方法适用于(高位在前，低位在后)的顺序。  和bytesToInt2（）配套使用
      */
-    public static byte[] intToBytes2(int value)
-    {
+    public static byte[] intToBytes2(int value) {
         byte[] src = new byte[4];
-        src[0] = (byte) ((value>>24) & 0xFF);
-        src[1] = (byte) ((value>>16)& 0xFF);
-        src[2] = (byte) ((value>>8)&0xFF);
+        src[0] = (byte) ((value >> 24) & 0xFF);
+        src[1] = (byte) ((value >> 16) & 0xFF);
+        src[2] = (byte) ((value >> 8) & 0xFF);
         src[3] = (byte) (value & 0xFF);
         return src;
     }
@@ -131,24 +129,26 @@ public class HexIntUtil {
         return src;
     }
 
-    //切換低位在前
+    //切換低位在前,两位
     public static String decToHex(int dec) {
         String hex = "";
-        while(dec != 0) {
+        while (dec != 0) {
             String h = Integer.toString(dec & 0xff, 16);
-            if((h.length() & 0x01) == 1)
-                h = '0' + h;
+            if ((h.length() & 0x01) == 1) h = '0' + h;
             hex = hex + h;
             dec = dec >> 8;
+        }
+
+        if (hex.length() == 2) {
+            hex = "00" + hex;
         }
         return hex;
     }
 
-
     //低位在前，高位在后转int,2位
-    public static int lowByte2int(byte[] bytes){
+    public static int lowByte2int(byte[] bytes) {
         int result = 0;
-        if(bytes.length == 2){
+        if (bytes.length == 2) {
             int a = (bytes[0] & 0xff);//说明二
             int b = (bytes[1] & 0xff) << 8;
             result = a | b;
