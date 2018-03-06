@@ -632,9 +632,23 @@ public class ConfigurationActivity extends BaseActivity {
     @OnClick(R.id.get_all_data)
     public void reGetAllData() {
         //一次性拿全部属性
-        address = 2;
-        error_count = 0;
-        getAllInfo();
+        if (error_count == 3) {
+
+            //上次错误导致的结束
+            address = 2;
+            error_count = 0;
+            getAllInfo();
+        }
+
+        if (address >= 10) {
+
+            //上次正常结束
+            address = 2;
+            error_count = 0;
+            getAllInfo();
+        }
+        LogUtil.d("等待上次获取结束");
+        return;
     }
 
     @OnClick({
