@@ -140,7 +140,7 @@ public class HexIntUtil {
         }
 
         if (hex.length() == 2) {
-            hex = "00" + hex;
+            hex = hex + "00";
         }
         return hex;
     }
