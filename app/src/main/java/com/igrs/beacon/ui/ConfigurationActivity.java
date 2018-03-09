@@ -736,8 +736,12 @@ public class ConfigurationActivity extends BaseActivity {
                 String intervalStr = interval.getText().toString().trim();
                 //interval
                 if (!TextUtils.isEmpty(intervalStr)) {
-                    int new_interval = Integer.parseInt(intervalStr);
-                    setInterva(new_interval + "");
+                    try {
+                        int new_interval = Integer.parseInt(intervalStr);
+                        setInterva(new_interval + "");
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
+                    }
                 }
                 break;
             case R.id.change_ble_tx_power:

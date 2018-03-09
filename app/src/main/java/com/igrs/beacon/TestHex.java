@@ -13,6 +13,6 @@ public class TestHex {
         int a = 4391;
         byte[] aList = HexIntUtil.decimalToHexBytes(a);
 
-        System.out.print(HexIntUtil.decToHex(1000));
+        System.out.print(HexIntUtil.decToHex((int) (100/0.625F)));
     }
 }
