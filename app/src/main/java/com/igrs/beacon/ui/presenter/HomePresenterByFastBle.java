@@ -108,6 +108,7 @@ public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
 
     @Override
     public void scanBeacon() {
+        mDatas.clear();
         searchDevice();
     }
 

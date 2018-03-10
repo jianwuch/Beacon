@@ -1,5 +1,6 @@
 package com.igrs.beacon.ui;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothGatt;
 import android.content.Context;
@@ -45,6 +46,7 @@ import java.util.Arrays;
  */
 
 public class ConfigurationActivity extends BaseActivity {
+    public static final int START_THIS_REQUEST_CODE = 90;
     public static final int WRITE = 87;
     public static final int READ = 82;
     @BindView(R.id.tool_bar) Toolbar toolBar;
@@ -80,10 +82,10 @@ public class ConfigurationActivity extends BaseActivity {
     private AlertDialog disconnectDialog;
     private String currentBleTxPower = "";
 
-    public static void show(Context context, BleDevice device) {
+    public static void show(Activity context, BleDevice device) {
         Intent intent = new Intent(context, ConfigurationActivity.class);
         intent.putExtra(INTENT_KEY, device);
-        context.startActivity(intent);
+        context.startActivityForResult(intent, START_THIS_REQUEST_CODE);
     }
 
     @Override
