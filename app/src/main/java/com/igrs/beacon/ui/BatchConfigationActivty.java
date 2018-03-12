@@ -159,7 +159,7 @@ public class BatchConfigationActivty extends BaseActivity {
                 return;
             } else {
                 mBatchConfig.interval = Integer.parseInt(intervalStr);
-                if (mBatchConfig.interval / 10 != 0) {
+                if (mBatchConfig.interval % 10 != 0) {
 
                     ToastUtil.ToastShort(this, "interval需要10的倍数");
                     return;
