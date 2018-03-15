@@ -350,6 +350,7 @@ public class ConfigurationActivity extends BaseActivity {
                                                     //当前修改默认密码，杀进程该修改无效
                                                     AppConstans.DEFAULT_PASSWORD = pre_password;
                                                 }
+                                                readRssiBtn.setEnabled(true);
                                                 password.setText(pre_password);
                                                 getAllInfo();//密码输出正确之后开始获取其他数据
                                                 break;
@@ -410,7 +411,6 @@ public class ConfigurationActivity extends BaseActivity {
                                         switch (HexIntUtil.getInt(new byte[] { address }, false)) {
                                             case 1://password
                                                 password.setText(HexUtil.encodeHexStr(infoData));
-                                                readRssiBtn.setEnabled(true);
                                                 break;
                                             case 2://uuid
                                                 pre_uuid = HexUtil.encodeHexStr(infoData);
