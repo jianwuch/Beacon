@@ -674,23 +674,29 @@ public class ConfigurationActivity extends BaseActivity {
         final TimerTask timerTask = new TimerTask() {
             @Override
             public void run() {
-                BleManager.getInstance().readRssi(device, new BleRssiCallback() {
+                runOnUiThread(new Runnable() {
                     @Override
-                    public void onRssiFailure(BleException exception) {
-                        runOnUiThread(new Runnable() {
+                    public void run() {
+                        BleManager.getInstance().readRssi(device, new BleRssiCallback() {
                             @Override
-                            public void run() {
-                                ToastUtil.ToastShort(ConfigurationActivity.this, "读取rssi失败");
+                            public void onRssiFailure(BleException exception) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ToastUtil.ToastShort(ConfigurationActivity.this,
+                                                "读取rssi失败");
+                                    }
+                                });
                             }
-                        });
-                    }
 
-                    @Override
-                    public void onRssiSuccess(final int rssi) {
-                        runOnUiThread(new Runnable() {
                             @Override
-                            public void run() {
-                                showRssi(rssi + "");
+                            public void onRssiSuccess(final int rssi) {
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        showRssi(rssi + "");
+                                    }
+                                });
                             }
                         });
                     }
@@ -714,7 +720,7 @@ public class ConfigurationActivity extends BaseActivity {
 
         mRssiShowDialog.show();
         timer = new Timer();
-        timer.schedule(timerTask, 0, READ_RSSI_TIME);//延时1s，每隔500毫秒执行一次run方法
+        timer.schedule(timerTask, 0, READ_RSSI_TIME);//延时1s，每隔1000毫秒执行一次run方法
     }
 
     private void showRssi(String rssi) {
