@@ -3,11 +3,11 @@ package com.igrs.beacon.ui;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.bluetooth.BluetoothGatt;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
@@ -18,10 +18,12 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
+import butterknife.BindView;
+import butterknife.OnClick;
 import com.clj.fastble.BleManager;
 import com.clj.fastble.callback.BleGattCallback;
 import com.clj.fastble.callback.BleNotifyCallback;
+import com.clj.fastble.callback.BleRssiCallback;
 import com.clj.fastble.callback.BleWriteCallback;
 import com.clj.fastble.data.BleDevice;
 import com.clj.fastble.exception.BleException;
@@ -32,13 +34,10 @@ import com.igrs.beacon.config.AppConstans;
 import com.igrs.beacon.util.HexIntUtil;
 import com.igrs.beacon.util.LogUtil;
 import com.igrs.beacon.util.ToastUtil;
-
 import java.io.UnsupportedEncodingException;
-
-import butterknife.BindView;
-import butterknife.OnClick;
-
-import java.util.Arrays;
+import java.lang.ref.WeakReference;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * Created by jove.chen on 2017/12/12.
@@ -62,6 +61,7 @@ public class ConfigurationActivity extends BaseActivity {
 
     @BindView(R.id.status) TextView statusTextView;
     @BindView(R.id.layout_bat) LinearLayout batLayout;
+    @BindView(R.id.get_rssi_real_time) View readRssiBtn;
     private BleDevice device;
 
     //修改逻辑业务参数
@@ -81,6 +81,12 @@ public class ConfigurationActivity extends BaseActivity {
     private Handler mHandler;
     private AlertDialog disconnectDialog;
     private String currentBleTxPower = "";
+
+    //循环显示
+    private AlertDialog mRssiShowDialog;
+    //private ShowRssiHandler mShowRssiHandler;
+    private static final int READ_RSSI_TIME = 1000;
+    private Timer timer = new Timer();
 
     public static void show(Activity context, BleDevice device) {
         Intent intent = new Intent(context, ConfigurationActivity.class);
@@ -103,6 +109,7 @@ public class ConfigurationActivity extends BaseActivity {
         });
         getDeviceFromIntent();
         mHandler = new Handler();
+        //mShowRssiHandler = new ShowRssiHandler(this);
 
         //链接设备
         BleManager.getInstance().connect(device, new BleGattCallback() {
@@ -403,6 +410,7 @@ public class ConfigurationActivity extends BaseActivity {
                                         switch (HexIntUtil.getInt(new byte[] { address }, false)) {
                                             case 1://password
                                                 password.setText(HexUtil.encodeHexStr(infoData));
+                                                readRssiBtn.setEnabled(true);
                                                 break;
                                             case 2://uuid
                                                 pre_uuid = HexUtil.encodeHexStr(infoData);
@@ -452,6 +460,12 @@ public class ConfigurationActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         BleManager.getInstance().disconnect(device);
+        if (null != mRssiShowDialog) {
+            mRssiShowDialog.dismiss();
+        }
+
+        //停止定时器
+        timer.cancel();
         address = 2;
     }
 
@@ -651,6 +665,79 @@ public class ConfigurationActivity extends BaseActivity {
         }
         LogUtil.d("等待上次获取结束");
         return;
+    }
+
+    @OnClick(R.id.get_rssi_real_time)
+    public void showRssi() {
+        if (mRssiShowDialog == null) {
+            mRssiShowDialog = new AlertDialog.Builder(this).setTitle("实时显示Rssi")
+                    .setMessage("当前值：" + 0 + "db")
+                    .setCancelable(false)
+                    .setNegativeButton("取消显示", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            timer.cancel();
+                            mRssiShowDialog.dismiss();
+                        }
+                    })
+                    .show();
+        }
+
+        mRssiShowDialog.show();
+
+/*        mShowRssiHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }, READ_RSSI_TIME);*/
+        timer.schedule(timerTask, 0, READ_RSSI_TIME);//延时1s，每隔500毫秒执行一次run方法
+    }
+
+    //定时器
+    TimerTask timerTask = new TimerTask() {
+        @Override
+        public void run() {
+            BleManager.getInstance().readRssi(device, new BleRssiCallback() {
+                @Override
+                public void onRssiFailure(BleException exception) {
+                    ToastUtil.ToastShort(ConfigurationActivity.this, "读取rssi失败");
+                }
+
+                @Override
+                public void onRssiSuccess(final int rssi) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            showRssi(rssi + "");
+                        }
+                    });
+                }
+            });
+        }
+    };
+
+    //public static class ShowRssiHandler extends Handler {
+    //
+    //    WeakReference<ConfigurationActivity> mActivityReference;
+    //
+    //    ShowRssiHandler(ConfigurationActivity activity) {
+    //        mActivityReference = new WeakReference<ConfigurationActivity>(activity);
+    //    }
+    //
+    //    @Override
+    //    public void handleMessage(Message msg) {
+    //        ConfigurationActivity activity = mActivityReference.get();
+    //        if (activity != null) {
+    //            activity.showRssi("" + msg.arg1);
+    //        }
+    //    }
+    //}
+
+    private void showRssi(String rssi) {
+        if (null != mRssiShowDialog) {
+            mRssiShowDialog.setMessage("当前值：" + rssi + "db");
+        }
     }
 
     @OnClick({
