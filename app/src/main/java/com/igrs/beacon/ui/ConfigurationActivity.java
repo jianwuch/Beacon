@@ -86,7 +86,7 @@ public class ConfigurationActivity extends BaseActivity {
     private AlertDialog mRssiShowDialog;
     //private ShowRssiHandler mShowRssiHandler;
     private static final int READ_RSSI_TIME = 1000;
-    private Timer timer = new Timer();
+    private Timer timer;
 
     public static void show(Activity context, BleDevice device) {
         Intent intent = new Intent(context, ConfigurationActivity.class);
@@ -135,14 +135,14 @@ public class ConfigurationActivity extends BaseActivity {
                 statusTextView.setText(String.format(getString(R.string.status), "已连接"));
                 Notify();//开启通知
                 //读参数
-  /*              BluetoothGatt gatt1 = BleManager.getInstance().getBluetoothGatt(bleDevice);
-                for (BluetoothGattService service : gatt.getServices()) {
-                    LogUtil.d("Server:" + String.valueOf(service.getUuid()));//server
+        /*              BluetoothGatt gatt1 = BleManager.getInstance().getBluetoothGatt(bleDevice);
+                      for (BluetoothGattService service : gatt.getServices()) {
+                          LogUtil.d("Server:" + String.valueOf(service.getUuid()));//server
 
-                    for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
-                        LogUtil.d("Characteristic:" + characteristic.getUuid() + "\nPermission:" + characteristic.getProperties());
-                    }
-                }*/
+                          for (BluetoothGattCharacteristic characteristic : service.getCharacteristics()) {
+                              LogUtil.d("Characteristic:" + characteristic.getUuid() + "\nPermission:" + characteristic.getProperties());
+                          }
+                      }*/
             }
 
             @Override
@@ -669,6 +669,34 @@ public class ConfigurationActivity extends BaseActivity {
 
     @OnClick(R.id.get_rssi_real_time)
     public void showRssi() {
+
+        //定时器
+        final TimerTask timerTask = new TimerTask() {
+            @Override
+            public void run() {
+                BleManager.getInstance().readRssi(device, new BleRssiCallback() {
+                    @Override
+                    public void onRssiFailure(BleException exception) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtil.ToastShort(ConfigurationActivity.this, "读取rssi失败");
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onRssiSuccess(final int rssi) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                showRssi(rssi + "");
+                            }
+                        });
+                    }
+                });
+            }
+        };
         if (mRssiShowDialog == null) {
             mRssiShowDialog = new AlertDialog.Builder(this).setTitle("实时显示Rssi")
                     .setMessage("当前值：" + 0 + "db")
@@ -677,62 +705,17 @@ public class ConfigurationActivity extends BaseActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             timer.cancel();
+                            timerTask.cancel();
                             mRssiShowDialog.dismiss();
                         }
                     })
-                    .show();
+                    .create();
         }
 
         mRssiShowDialog.show();
-
-/*        mShowRssiHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-
-            }
-        }, READ_RSSI_TIME);*/
+        timer = new Timer();
         timer.schedule(timerTask, 0, READ_RSSI_TIME);//延时1s，每隔500毫秒执行一次run方法
     }
-
-    //定时器
-    TimerTask timerTask = new TimerTask() {
-        @Override
-        public void run() {
-            BleManager.getInstance().readRssi(device, new BleRssiCallback() {
-                @Override
-                public void onRssiFailure(BleException exception) {
-                    ToastUtil.ToastShort(ConfigurationActivity.this, "读取rssi失败");
-                }
-
-                @Override
-                public void onRssiSuccess(final int rssi) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            showRssi(rssi + "");
-                        }
-                    });
-                }
-            });
-        }
-    };
-
-    //public static class ShowRssiHandler extends Handler {
-    //
-    //    WeakReference<ConfigurationActivity> mActivityReference;
-    //
-    //    ShowRssiHandler(ConfigurationActivity activity) {
-    //        mActivityReference = new WeakReference<ConfigurationActivity>(activity);
-    //    }
-    //
-    //    @Override
-    //    public void handleMessage(Message msg) {
-    //        ConfigurationActivity activity = mActivityReference.get();
-    //        if (activity != null) {
-    //            activity.showRssi("" + msg.arg1);
-    //        }
-    //    }
-    //}
 
     private void showRssi(String rssi) {
         if (null != mRssiShowDialog) {
