@@ -100,7 +100,7 @@ public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
         //                .setDeviceName(true, names)   // 只扫描指定广播名的设备，可选
         //                .setDeviceMac(mac)                  // 只扫描指定mac的设备，可选
         //                .setAutoConnect(isAutoConnect)      // 连接时的autoConnect参数，可选，默认false
-        builder.setScanTimeOut(10000);// 扫描超时时间，可选，默认10秒
+        builder.setScanTimeOut(5000);// 扫描超时时间，可选，默认10秒
 
         BleScanRuleConfig scanRuleConfig = builder.build();
         BleManager.getInstance().initScanRule(scanRuleConfig);
@@ -108,7 +108,9 @@ public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
 
     @Override
     public void scanBeacon() {
-        mDatas.clear();
+        if (mDatas != null) {
+            mDatas.clear();
+        }
         searchDevice();
     }
 

@@ -465,7 +465,9 @@ public class ConfigurationActivity extends BaseActivity {
         }
 
         //停止定时器
-        timer.cancel();
+        if (timer != null) {
+            timer.cancel();
+        }
         address = 2;
     }
 
