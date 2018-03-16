@@ -94,7 +94,7 @@ public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
         }
 
         if (config.enableUUID && !TextUtils.isEmpty(config.filterUUID)) {
-            builder.setServiceUuids(new UUID[] { UUID.fromString(config.filterUUID) });
+            builder.setServiceUuids(new UUID[]{UUID.fromString(config.filterUUID)});
         }
         //                .setServiceUuids(serviceUuids)      // 只扫描指定的服务的设备，可选
         //                .setDeviceName(true, names)   // 只扫描指定广播名的设备，可选
@@ -112,6 +112,12 @@ public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
             mDatas.clear();
         }
         searchDevice();
+    }
+
+    @Override
+    public void quit() {
+        bleManager.cancelScan();
+        bleManager.disableBluetooth();
     }
 
     private void searchDevice() {
@@ -141,7 +147,9 @@ public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
 
             @Override
             public void onScanFinished(List<BleDevice> scanResultList) {
-                mView.showLoading(false);
+                if (mView != null) {
+                    mView.showLoading(false);
+                }
             }
         });
     }
@@ -195,4 +203,5 @@ public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
         }
         mView.newBeacon();
     }
+
 }

@@ -30,8 +30,8 @@ public abstract class BaseMvpActivity<Data, T extends BasePresenter> extends Bas
 
     @Override
     protected void onDestroy() {
-        presenter.dettach();
         super.onDestroy();
+        presenter.dettach();
     }
 
     public abstract T initPresenter();
