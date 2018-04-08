@@ -59,6 +59,11 @@ public class HomePresenter extends MainPageContract.IHomePresenter {
         searchDevice();
     }
 
+    @Override
+    public void quit() {
+
+    }
+
     private void searchDevice() {
         SearchRequest request = new SearchRequest.Builder()
                 .searchBluetoothLeDevice(5000, 2).build();

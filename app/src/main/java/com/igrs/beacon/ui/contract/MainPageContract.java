@@ -31,5 +31,7 @@ public class MainPageContract {
         public abstract void beginBatch(int type);
 
         public abstract void scanBeacon();
+
+        public abstract void quit();
     }
 }

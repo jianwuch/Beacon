@@ -94,13 +94,13 @@ public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
         }
 
         if (config.enableUUID && !TextUtils.isEmpty(config.filterUUID)) {
-            builder.setServiceUuids(new UUID[] { UUID.fromString(config.filterUUID) });
+            builder.setServiceUuids(new UUID[]{UUID.fromString(config.filterUUID)});
         }
         //                .setServiceUuids(serviceUuids)      // 只扫描指定的服务的设备，可选
         //                .setDeviceName(true, names)   // 只扫描指定广播名的设备，可选
         //                .setDeviceMac(mac)                  // 只扫描指定mac的设备，可选
         //                .setAutoConnect(isAutoConnect)      // 连接时的autoConnect参数，可选，默认false
-        builder.setScanTimeOut(10000);// 扫描超时时间，可选，默认10秒
+        builder.setScanTimeOut(5000);// 扫描超时时间，可选，默认10秒
 
         BleScanRuleConfig scanRuleConfig = builder.build();
         BleManager.getInstance().initScanRule(scanRuleConfig);
@@ -108,8 +108,16 @@ public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
 
     @Override
     public void scanBeacon() {
-        mDatas.clear();
+        if (mDatas != null) {
+            mDatas.clear();
+        }
         searchDevice();
+    }
+
+    @Override
+    public void quit() {
+        bleManager.cancelScan();
+        bleManager.disableBluetooth();
     }
 
     private void searchDevice() {
@@ -139,7 +147,9 @@ public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
 
             @Override
             public void onScanFinished(List<BleDevice> scanResultList) {
-                mView.showLoading(false);
+                if (mView != null) {
+                    mView.showLoading(false);
+                }
             }
         });
     }
@@ -193,4 +203,5 @@ public class HomePresenterByFastBle extends MainPageContract.IHomePresenter {
         }
         mView.newBeacon();
     }
+
 }
