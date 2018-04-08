@@ -12,6 +12,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.text.method.ReplacementTransformationMethod;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -143,6 +144,9 @@ public class UUIDManagerActivity extends BaseActivity {
                 View view = getLayoutInflater().inflate(R.layout.dialog_add_uuid, null, false);
                 final EditText name = ((EditText) view.findViewById(R.id.name));
                 final EditText uuid = ((EditText) view.findViewById(R.id.uuid));
+
+                ((EditText) view.findViewById(R.id.uuid)).setTransformationMethod(new A2bigA());
+
                 nameLayout = view.findViewById(R.id.input_layout_name);
                 uuidLayout = view.findViewById(R.id.input_layout_uuid);
                 final AlertDialog alertDialog =
@@ -198,5 +202,26 @@ public class UUIDManagerActivity extends BaseActivity {
     private boolean isUUID(String uuid) {
         String reg = "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}";
         return Pattern.matches(reg, uuid);
+    }
+
+    class A2bigA extends ReplacementTransformationMethod {
+
+        @Override
+        protected char[] getOriginal() {
+            char[] cc = {
+                    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P',
+                    'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+            };
+            return cc;
+        }
+
+        @Override
+        protected char[] getReplacement() {
+            char[] aa = {
+                    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+                    'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+            };
+            return aa;
+        }
     }
 }
