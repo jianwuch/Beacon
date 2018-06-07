@@ -244,6 +244,7 @@ public class DeviceBatchBiz {
         writeInfo(device, mCurrentType, mNeedSetData);
     }
 
+
     public void setBleTXPower(iBeacon device, String value) {
         mCurrentType = AppConstans.RegAD.BLE_TX_POWER;
         mNeedSetData = value;
@@ -357,13 +358,9 @@ public class DeviceBatchBiz {
                                         LogUtil.d("密码验证成功");
                                         if (config.uuidEnable) {
                                             setUUID(mDevices.get(mCurrentIndex), config.uuid);
-                                        } else {
-
-                                            //如果不需要配置uuid,手动触发去修改major
-                                            setMajor(mDevices.get(mCurrentIndex), "" + (config.majorFrom
-                                                    + mCurrentIndex * config.majorStepLength));
+                                            break;
                                         }
-                                        break;
+
                                     case 2://uuid
                                         if (config.majroEnable) {
                                             setMajor(mDevices.get(mCurrentIndex), "" + (config.majorFrom
