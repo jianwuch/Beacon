@@ -569,7 +569,7 @@ public class ConfigurationActivity extends BaseActivity {
         int valueInt = Integer.parseInt(value);
         if (valueInt % 10 != 0) {
 
-            ToastUtil.ToastShort(this, "interval需要时10的倍数");
+            ToastUtil.ToastShort(this, "interval需要10的倍数");
             return;
         }
         mCurrentType = AppConstans.RegAD.INTERVAL;

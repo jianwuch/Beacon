@@ -232,12 +232,13 @@ public class DeviceBatchBiz {
 
     /**
      * 界面已10进制显示，发送修改的是需要value/0.625-->16进制发送
+     *
      * @param value
      */
     public void setInterva(iBeacon device, String value) {
         //int转16
         int valueInt = Integer.parseInt(value);
-        String hexData = HexIntUtil.decToHex((int) (valueInt/0.625F));
+        String hexData = HexIntUtil.decToHex((int) (valueInt / 0.625F));
         mCurrentType = AppConstans.RegAD.INTERVAL;
         mNeedSetData = hexData;
         writeInfo(device, mCurrentType, mNeedSetData);
@@ -364,13 +365,18 @@ public class DeviceBatchBiz {
                                         }
                                         break;
                                     case 2://uuid
-                                        setMajor(mDevices.get(mCurrentIndex), "" + (config.majorFrom
-                                                + mCurrentIndex * config.majorStepLength));
-                                        break;
+                                        if (config.majroEnable) {
+                                            setMajor(mDevices.get(mCurrentIndex), "" + (config.majorFrom
+                                                    + mCurrentIndex * config.majorStepLength));
+                                            break;
+                                        }
                                     case 3://major
-                                        setMinor(mDevices.get(mCurrentIndex), "" + (config.minorFrom
-                                                + mCurrentIndex * config.minorStepLength));
-                                        break;
+                                        if (config.minorEnable) {
+                                            setMinor(mDevices.get(mCurrentIndex), "" + (config.minorFrom
+                                                    + mCurrentIndex * config.minorStepLength));
+                                            break;
+                                        }
+
                                     case 4://minor
                                         if (config.txPowerEnable) {
                                             setTxPower(mDevices.get(mCurrentIndex),
@@ -417,7 +423,7 @@ public class DeviceBatchBiz {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case HANDLER_WHAT_NEXT:
-                    if (mCurrentIndex == (mDevices.size() -1)) {
+                    if (mCurrentIndex == (mDevices.size() - 1)) {
                         //结束批量设置
                         if (processChangedLinstener != null) {
                             processChangedLinstener.onFinished();

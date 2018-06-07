@@ -119,27 +119,44 @@ public class BatchConfigationActivty extends BaseActivity {
         String majorStepLen = majorPear.getText().toString().trim();
         String minorStepLen = minorPear.getText().toString().trim();
 
-        if (TextUtils.isEmpty(majorStr) || TextUtils.isEmpty(minorStr) || TextUtils.isEmpty(majorStepLen) ||
-                TextUtils.isEmpty(minorStepLen)) {
-            ToastUtil.ToastShort(this, "major,minor参数必填");
+        /**校验数据数据开始*/
+        if (mBatchConfig.majroEnable && (TextUtils.isEmpty(minorStr) || TextUtils.isEmpty(majorStepLen))) {
+            ToastUtil.ToastShort(this, "开启了major,需要填写major修改信息");
             return;
-        } else {
-            mBatchConfig.majorFrom = Integer.parseInt(majorStr);
-            mBatchConfig.minorFrom = Integer.parseInt(minorStr);
-            mBatchConfig.majorStepLength = Integer.parseInt(majorStepLen);
-            mBatchConfig.minorStepLength = Integer.parseInt(minorStepLen);
+        }
 
-            //校验数据
-            if (mBatchConfig.majorFrom >= 65532 || mBatchConfig.minorFrom >= 65532) {
-                ToastUtil.ToastShort(this, "marjor/minor数据超过范围");
-                return;
+        if (mBatchConfig.minorEnable && (TextUtils.isEmpty(majorStr) || TextUtils.isEmpty(minorStepLen))) {
+            ToastUtil.ToastShort(this, "开启了minor,需要填写minor修改信息");
+            return;
+        }
+
+        try {
+            if (mBatchConfig.minorEnable) {
+                mBatchConfig.minorFrom = Integer.parseInt(minorStr);
+                mBatchConfig.minorStepLength = Integer.parseInt(minorStepLen);
             }
 
-            if (mBatchConfig.minorFrom + mBatchConfig.minorStepLength * mDatas.size() >= 65532 ||
-                    mBatchConfig.majorFrom + mBatchConfig.majorStepLength * mDatas.size() >= 65532) {
-                ToastUtil.ToastShort(this, "步长设置错误，已超过最大限制值");
-                return;
+            if (mBatchConfig.majroEnable) {
+                mBatchConfig.majorFrom = Integer.parseInt(majorStr);
+                mBatchConfig.majorStepLength = Integer.parseInt(majorStepLen);
             }
+
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            ToastUtil.ToastShort(this, "请输入正确的major,minor数据");
+        }
+
+
+        //校验数据
+        if (mBatchConfig.majorFrom >= 65532 || mBatchConfig.minorFrom >= 65532) {
+            ToastUtil.ToastShort(this, "marjor/minor数据超过范围");
+            return;
+        }
+
+        if (mBatchConfig.minorFrom + mBatchConfig.minorStepLength * mDatas.size() >= 65532 ||
+                mBatchConfig.majorFrom + mBatchConfig.majorStepLength * mDatas.size() >= 65532) {
+            ToastUtil.ToastShort(this, "步长设置错误，已超过最大限制值");
+            return;
         }
 
         if (mBatchConfig.uuidEnable) {
@@ -204,6 +221,12 @@ public class BatchConfigationActivty extends BaseActivity {
             }
         }
 
+        /**校验数据数据结束End*/
+
+        if (!mBatchConfig.isHasEnable()) {
+            ToastUtil.ToastShort(this, "你未打任何需要修改的选项");
+            return;
+        }
         DeviceBatchBiz deviceBatchBiz = new DeviceBatchBiz();
         deviceBatchBiz.setProcessChangedLinstener(new DeviceBatchBiz.ProcessChangedLinstener() {
             @Override
@@ -228,7 +251,8 @@ public class BatchConfigationActivty extends BaseActivity {
     }
 
     //
-    @OnCheckedChanged({R.id.siwtch_tx_power, R.id.switch_name, R.id.switch_uuid, R.id.siwtch_bat, R.id.siwtch_interval, R.id.switch_ble_tx_power})
+    @OnCheckedChanged({R.id.siwtch_tx_power, R.id.switch_name, R.id.switch_uuid, R.id.siwtch_bat,
+            R.id.siwtch_interval, R.id.switch_ble_tx_power, R.id.switch_major, R.id.switch_minor})
     public void onCheckedChanged(SwitchCompat view, boolean isChecked) {
         switch (view.getId()) {
             case R.id.switch_name:
@@ -246,6 +270,16 @@ public class BatchConfigationActivty extends BaseActivity {
             case R.id.switch_uuid:
                 uuid.setEnabled(isChecked);
                 mBatchConfig.uuidEnable = isChecked;
+                break;
+            case R.id.switch_major:
+                majorFrom.setEnabled(isChecked);
+                majorPear.setEnabled(isChecked);
+                mBatchConfig.majroEnable = isChecked;
+                break;
+            case R.id.switch_minor:
+                minorFrom.setEnabled(isChecked);
+                minorPear.setEnabled(isChecked);
+                mBatchConfig.minorEnable = isChecked;
                 break;
             case R.id.siwtch_bat:
                 bat.setEnabled(isChecked);

@@ -12,6 +12,8 @@ public class BatchConfig {
     public int minorStepLength;
 
     public boolean uuidEnable;
+    public boolean majroEnable;
+    public boolean minorEnable;
     public boolean txPowerEnable;
     public boolean nameEnable;
     public boolean batEnable;
@@ -24,4 +26,8 @@ public class BatchConfig {
     public int txPower;
     public int interval;
     public String bleTxPower;//AppConstans.BLE_TX_POWER_STRING
+
+    public boolean isHasEnable() {
+        return uuidEnable || majroEnable || minorEnable || txPowerEnable || nameEnable || batEnable || intervalEnable || bleTxPowerEnable;
+    }
 }
