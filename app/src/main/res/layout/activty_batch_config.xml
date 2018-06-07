@@ -35,6 +35,7 @@
         <EditText
             android:id="@+id/major_from"
             android:layout_width="60dp"
+            android:enabled="false"
             android:layout_height="match_parent"
             android:gravity="center"
             android:hint="开始值"
@@ -49,6 +50,7 @@
 
         <EditText
             android:id="@+id/major_pear"
+            android:enabled="false"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:hint="步长"
@@ -81,6 +83,7 @@
         <EditText
             android:id="@+id/minor_from"
             android:layout_width="60dp"
+            android:enabled="false"
             android:layout_height="match_parent"
             android:gravity="center"
             android:hint="开始值"
@@ -96,6 +99,7 @@
         <EditText
             android:id="@+id/minor_pear"
             android:layout_width="wrap_content"
+            android:enabled="false"
             android:layout_height="match_parent"
             android:hint="步长"
             android:inputType="number"
@@ -120,15 +124,16 @@
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="80dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="UUID:" />
 
-        <EditText
+        <TextView
             android:id="@+id/uuid"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:gravity="left|center"
             android:enabled="false"
             android:hint="打开之后点击选择"
             android:textSize="12sp" />

@@ -48,7 +48,7 @@ public class BatchConfigationActivty extends BaseActivity {
     @BindView(R.id.minor_pear)
     EditText minorPear;
     @BindView(R.id.uuid)
-    EditText uuid;
+    TextView uuid;
     @BindView(R.id.switch_uuid)
     SwitchCompat siwtchUuid;
     @BindView(R.id.power)
