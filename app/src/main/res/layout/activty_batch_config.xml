@@ -159,7 +159,8 @@
 
         <EditText
             android:id="@+id/power"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:enabled="false"
             android:hint="输入要批量修改的tx_power"
@@ -167,9 +168,8 @@
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/siwtch_tx_power"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <LinearLayout
@@ -187,7 +187,8 @@
 
         <EditText
             android:id="@+id/name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:enabled="false"
             android:hint="输入要批量修改的名称"
@@ -195,9 +196,8 @@
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/switch_name"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <LinearLayout
@@ -215,7 +215,8 @@
 
         <EditText
             android:id="@+id/bat"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:enabled="false"
             android:hint="输入要批量修改的Bat"
@@ -223,9 +224,8 @@
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/siwtch_bat"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <LinearLayout
@@ -243,7 +243,8 @@
 
         <EditText
             android:id="@+id/interal"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="match_parent"
             android:enabled="false"
             android:hint="输入要批量修改的interval(20-10000)"
@@ -251,9 +252,8 @@
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/siwtch_interval"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout
@@ -281,9 +281,8 @@
 
         <android.support.v7.widget.SwitchCompat
             android:id="@+id/switch_ble_tx_power"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <Button

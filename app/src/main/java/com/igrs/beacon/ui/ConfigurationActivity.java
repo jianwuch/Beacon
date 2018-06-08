@@ -384,73 +384,80 @@ public class ConfigurationActivity extends BaseActivity {
                                         break;
 
                                     case READ:
-                                        if (infoData.length == 1 && ((int) infoData[0]) == 0) {
-                                            ToastUtil.ToastShort(ConfigurationActivity.this,
-                                                    "读取失败");
-                                            LogUtil.d(ConfigurationActivity.address + "写读取名称失败");
-                                            error_count++;
+                                        try {
+                                            if (infoData.length == 1 && ((int) infoData[0]) == 0) {
+                                                ToastUtil.ToastShort(ConfigurationActivity.this,
+                                                        "读取失败");
+                                                LogUtil.d(
+                                                        ConfigurationActivity.address + "写读取名称失败");
+                                                error_count++;
+                                                mHandler.postDelayed(new Runnable() {
+                                                    @Override
+                                                    public void run() {
+                                                        getAllInfo();
+                                                    }
+                                                }, 100);
+                                                return;
+                                            }
+
+                                            String addressStr = String.format("0%1$d",
+                                                    ConfigurationActivity.address);
+                                            LogUtil.d(addressStr + "写读取名称成功");
+                                            ConfigurationActivity.address++;
                                             mHandler.postDelayed(new Runnable() {
                                                 @Override
                                                 public void run() {
                                                     getAllInfo();
                                                 }
-                                            }, 100);
-                                            return;
-                                        }
+                                            }, 100);//延时下一个蓝牙的操作，因为不延时已经出现串notify的情况
+                                            switch (HexIntUtil.getInt(new byte[] { address },
+                                                    false)) {
+                                                case 1://password
+                                                    password.setText(
+                                                            HexUtil.encodeHexStr(infoData));
+                                                    break;
+                                                case 2://uuid
+                                                    pre_uuid = HexUtil.encodeHexStr(infoData);
+                                                    uuid.setText(pre_uuid);
+                                                    break;
+                                                case 3://major
+                                                    pre_major = HexIntUtil.lowByte2int(infoData);
+                                                    major.setText(pre_major + "");
+                                                    break;
+                                                case 4://minor
+                                                    pre_minor = HexIntUtil.lowByte2int(infoData);
+                                                    minor.setText(pre_minor + "");
 
-                                        String addressStr = String.format("0%1$d",
-                                                ConfigurationActivity.address);
-                                        LogUtil.d(addressStr + "写读取名称成功");
-                                        ConfigurationActivity.address++;
-                                        mHandler.postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                getAllInfo();
+                                                    break;
+                                                case 5://tx_power
+                                                    pre_tx_power = (int) infoData[0];
+                                                    txPower.setText(pre_tx_power + "");
+                                                    break;
+                                                case 6://ble_name
+                                                    pre_name = new String(infoData);
+                                                    bleName.setText(pre_name);
+                                                    break;
+
+                                                case 7://bat
+                                                    pre_bat = (int) infoData[0];
+                                                    bat.setText(pre_bat + "");
+                                                    break;
+
+                                                case 8://interval
+                                                    pre_interval = HexIntUtil.lowByte2int(infoData);
+                                                    interval.setText(pre_interval * 0.625 + "");
+                                                    break;
+
+                                                case 9://ble_tx_power
+                                                    int index = (int) infoData[0];
+                                                    bleTxPower.setText(
+                                                            AppConstans.BLE_TX_POWER_LIST[index]);
+                                                    break;
                                             }
-                                        }, 100);//延时下一个蓝牙的操作，因为不延时已经出现串notify的情况
-                                        switch (HexIntUtil.getInt(new byte[] { address }, false)) {
-                                            case 1://password
-                                                password.setText(HexUtil.encodeHexStr(infoData));
-                                                break;
-                                            case 2://uuid
-                                                pre_uuid = HexUtil.encodeHexStr(infoData);
-                                                uuid.setText(pre_uuid);
-                                                break;
-                                            case 3://major
-                                                pre_major = HexIntUtil.lowByte2int(infoData);
-                                                major.setText(pre_major + "");
-                                                break;
-                                            case 4://minor
-                                                pre_minor = HexIntUtil.lowByte2int(infoData);
-                                                minor.setText(pre_minor + "");
-
-                                                break;
-                                            case 5://tx_power
-                                                pre_tx_power = (int) infoData[0];
-                                                txPower.setText(pre_tx_power + "");
-                                                break;
-                                            case 6://ble_name
-                                                pre_name = new String(infoData);
-                                                bleName.setText(pre_name);
-                                                break;
-
-                                            case 7://bat
-                                                pre_bat = (int) infoData[0];
-                                                bat.setText(pre_bat + "");
-                                                break;
-
-                                            case 8://interval
-                                                pre_interval = HexIntUtil.lowByte2int(infoData);
-                                                interval.setText(pre_interval * 0.625 + "");
-                                                break;
-
-                                            case 9://ble_tx_power
-                                                int index = (int) infoData[0];
-                                                bleTxPower.setText(
-                                                        AppConstans.BLE_TX_POWER_LIST[index]);
-                                                break;
+                                            break;
+                                        } catch (Exception e) {
+                                            e.printStackTrace();
                                         }
-                                        break;
                                 }
                             }
                         });
